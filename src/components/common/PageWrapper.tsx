@@ -26,7 +26,8 @@ interface PageWrapperProps extends PropsWithChildren {
   theme?: 'dark' | 'light';
   lenis?: boolean | LenisOptions;
   className: string;
-  style: React.CSSProperties;
+  style?: React.CSSProperties;
+  showHeader?: boolean;
 }
 
 export default function PageWrapper(props: PageWrapperProps) {
@@ -39,6 +40,7 @@ export default function PageWrapper(props: PageWrapperProps) {
     theme = 'dark',
     lenis,
     className,
+    showHeader = true,
     ...rest
   } = props;
 
@@ -55,33 +57,35 @@ export default function PageWrapper(props: PageWrapperProps) {
 
   return (
     <div className="wp">
-      <header wp-theme={theme} className="wp__pageHeader">
-        <ul className="wp__pageHeader-navLinks">
-          {backButton ? (
-            <li>
-              <a href="/works">back</a>
-            </li>
-          ) : (
-            <Fragment>
-              {ROUTES.map((route, i) => (
-                <li
-                  key={`${route.path}-${i}`}
-                  className={pathname === route.path ? 'active' : ''}
-                >
-                  <a href={route.path}>{route.label}</a>
-                </li>
-              ))}
-            </Fragment>
-          )}
-        </ul>
+      {showHeader && (
+        <header wp-theme={theme} className="wp__pageHeader">
+          <ul className="wp__pageHeader-navLinks">
+            {backButton ? (
+              <li>
+                <a href="/works">back</a>
+              </li>
+            ) : (
+              <Fragment>
+                {ROUTES.map((route, i) => (
+                  <li
+                    key={`${route.path}-${i}`}
+                    className={pathname === route.path ? 'active' : ''}
+                  >
+                    <a href={route.path}>{route.label}</a>
+                  </li>
+                ))}
+              </Fragment>
+            )}
+          </ul>
 
-        <a href="/" className="wp__pageHeader-bigText">
-          <h1>Archive Of Selected</h1>
-          <h1>
-            Works <sup>&apos;21—2024</sup>
-          </h1>
-        </a>
-      </header>
+          <a href="/" className="wp__pageHeader-bigText">
+            <h1>Archive Of Selected</h1>
+            <h1>
+              Works <sup>&apos;21—2024</sup>
+            </h1>
+          </a>
+        </header>
+      )}
       <main className={className} {...rest}>
         {children}
         <script>
