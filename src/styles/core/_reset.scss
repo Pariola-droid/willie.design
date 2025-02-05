@@ -110,7 +110,7 @@ section {
 }
 
 body {
-  @extend %BS;
+  // @extend %BS;
   line-height: 1;
   color: $black;
 
@@ -124,7 +124,7 @@ body {
 }
 
 main {
-  @extend %BS;
+  // @extend %BS;
   color: $orange;
   background-color: $white;
 }

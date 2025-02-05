@@ -1,18 +1,15 @@
 .image-reveal {
   overflow: hidden;
   position: relative;
+  clip-path: inset(100% 0 0 0);
+  background-color: $white;
 
   img {
     will-change: transform;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
+    height: 100%;
     width: 100%;
-    background-color: $white;
-    inset: 0;
-    z-index: 1;
+    object-fit: contain;
+    object-position: center;
   }
 }
 
@@ -74,7 +71,7 @@
     }
 
     &-largeTxt {
-      @extend %CB;
+      // @extend %CB;
       font-size: toRem(1500);
       font-weight: 400;
       line-height: toRem(1875);
@@ -212,9 +209,12 @@
   }
 
   &__footer {
-    padding-left: 1rem;
+    padding-inline: 1rem;
     width: 100%;
     @include flex(space-between, flex-end);
+    // background-color: red;
+    overflow: hidden;
+    // min-height: toRem(355);
 
     & * {
       color: $black;
@@ -223,6 +223,8 @@
     &-reachOut {
       @include flexed(flex-end, flex-start, column);
       max-width: toRem(385);
+      position: relative;
+      // background-color: blue;
 
       &--location {
         font-size: toRem(24);
@@ -245,7 +247,7 @@
         line-height: toRem(32.4);
         letter-spacing: -0.02em;
         text-align: left;
-        margin-bottom: toRem(180);
+        margin-bottom: toRem(175);
       }
 
       &--credit {
@@ -263,7 +265,9 @@
     }
 
     &-photos {
+      // height: toRem(355);
       @include flex(flex-end, flex-end);
+      overflow: hidden;
 
       & img {
         height: 100%;

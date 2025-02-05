@@ -1,6 +1,7 @@
 'use client';
 
 import Cursor from '@/lib/cursor';
+import { initSplit } from '@/lib/split';
 import type { LenisOptions } from 'lenis';
 import { usePathname } from 'next/navigation';
 import { Fragment, PropsWithChildren, useEffect, useRef } from 'react';
@@ -50,6 +51,10 @@ export default function PageWrapper(props: PageWrapperProps) {
     ease: 'expo.out',
     visibleTimeout: 300,
   });
+
+  useEffect(() => {
+    initSplit();
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
