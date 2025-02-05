@@ -37,6 +37,7 @@ export function Lenis({ root, options }: LenisProps) {
       root={root}
       options={{
         ...options,
+        duration: 2,
         lerp: options?.lerp ?? 0.125,
         autoRaf: false,
         anchors: true,
