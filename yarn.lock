@@ -2039,6 +2039,11 @@ language-tags@^1.0.9:
   dependencies:
     language-subtag-registry "^0.3.20"
 
+lenis@^1.1.20:
+  version "1.1.20"
+  resolved "https://registry.yarnpkg.com/lenis/-/lenis-1.1.20.tgz#24c35199539b3c0064f50b9d26f85355171194aa"
+  integrity sha512-UE64mlJEN4W8DWP2tfHzPzygk94Q2BhjzeG/YHWoyeMJ2Fd6XziBCNN+IvHwmB4GkmKIYxgr0+TvRYTSAMTMFA==
+
 levn@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/levn/-/levn-0.4.1.tgz#ae4562c007473b932a6200d403268dd2fffc6ade"
@@ -2882,6 +2887,11 @@ tapable@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.2.1.tgz#1967a73ef4060a82f12ab96af86d52fdb76eeca0"
   integrity sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==
+
+tempus@^1.0.0-dev.10:
+  version "1.0.0-dev.10"
+  resolved "https://registry.yarnpkg.com/tempus/-/tempus-1.0.0-dev.10.tgz#87f4e6e3a423cc3e30c25da2d7ec604d85b2baaa"
+  integrity sha512-gsr82C8xlQO4Svh9ozJacJzfDgRc4BIFk3Oh495zZwKLgDN5wXfYZ9/HxrAfMCBymrMidGDcFrn5Bry8g7/XBg==
 
 text-table@^0.2.0:
   version "0.2.0"

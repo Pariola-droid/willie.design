@@ -1,10 +1,7 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-
-import React from 'react';
-// import { LazyMotion, domAnimation } from "framer-motion";
+import React, { Fragment, useEffect, useState } from 'react';
 
 import 'blaze-slider/dist/blaze.css';
 import 'splitting/dist/splitting-cells.css';
@@ -48,13 +45,13 @@ const AbstractApp = (pageProps: AbstractAppProps) => {
   }, []);
 
   return (
-    <div>
+    <Fragment>
       {isClientReady && (
         <QueryClientProvider client={queryClient}>
           {pageProps?.children}
         </QueryClientProvider>
       )}
-    </div>
+    </Fragment>
   );
 };
 

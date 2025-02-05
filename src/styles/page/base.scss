@@ -1,4 +1,4 @@
-[wp-theme="dark"] {
+[wp-theme='dark'] {
   * {
     color: $white !important;
   }
@@ -20,7 +20,7 @@
   }
 }
 
-[wp-theme="light"] {
+[wp-theme='light'] {
   * {
     color: $black !important;
   }
@@ -117,100 +117,6 @@
           vertical-align: super;
           margin-top: 4px;
           white-space: nowrap;
-        }
-      }
-    }
-  }
-
-  // &__content {
-  //   width: 100%;
-  //   height: auto;
-  // }
-
-  &__contactModal {
-    height: 100dvh;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgba(255, 255, 255, 0.6);
-    z-index: 999;
-    backdrop-filter: blur(36px);
-    @include flex(center, center);
-    cursor: zoom-out;
-
-    &--close {
-      margin-left: auto;
-      width: toRem(36);
-      aspect-ratio: 1/1;
-    }
-
-    &--content {
-      width: 100%;
-      max-width: toRem(850);
-      @include flexed(unset, flex-start, column);
-      row-gap: toRem(50);
-      cursor: default;
-    }
-
-    &--details {
-      width: 100%;
-      @include flex(space-between, flex-start);
-      padding-right: toRem(80);
-
-      & * {
-        color: $black;
-      }
-
-      %RepeatFont {
-        @extend %CB;
-        font-size: toRem(36);
-        font-weight: 400;
-        line-height: toRem(36);
-        letter-spacing: 0.02em;
-        text-align: left;
-      }
-
-      &Email {
-        @extend %RepeatFont;
-      }
-
-      &Slash {
-        @extend %RepeatFont;
-        padding-left: toRem(200);
-      }
-
-      &Deets {
-        width: max-content;
-        @include flexed(unset, flex-start, column);
-        row-gap: toRem(36);
-
-        & h3 {
-          @extend %RepeatFont;
-        }
-
-        &-row {
-          @include flexed(unset, flex-start, column);
-          row-gap: toRem(33);
-
-          & p {
-            @extend %BodyText;
-            font-weight: 400;
-
-            &:not(:last-child) {
-              margin-bottom: toRem(3);
-            }
-
-            & a {
-              padding-bottom: 2px !important;
-
-              &::before,
-              &::after {
-                height: 1px !important;
-                bottom: 0% !important;
-              }
-            }
-          }
         }
       }
     }

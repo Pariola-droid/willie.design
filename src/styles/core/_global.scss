@@ -1,6 +1,7 @@
 body,
 main {
   position: relative;
+  width: 100%;
 }
 
 html {
@@ -13,15 +14,15 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 
-  @include media("<=tablet") {
+  @include media('<=tablet') {
     font-size: calc(100vw / 768 * 16);
   }
 
-  @include media("<=phone") {
+  @include media('<=phone') {
     font-size: calc(100vw / 425 * 16);
   }
 
-  @include media("<=375px") {
+  @include media('<=375px') {
     font-size: calc(100vw / 375 * 16);
   }
 }
@@ -29,18 +30,8 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family:
-    sans-serif,
-    -apple-system,
-    BlinkMacSystemFont,
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    Fira Sans,
-    Droid Sans,
-    Helvetica Neue,
-    Segoe UI,
+  font-family: sans-serif, -apple-system, BlinkMacSystemFont, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, Segoe UI,
     sans-serif;
   background-color: $grey-white;
 

@@ -84,6 +84,7 @@ video {
   border: 0;
   font: inherit;
   vertical-align: baseline;
+  box-sizing: border-box;
 }
 
 article,
@@ -106,7 +107,6 @@ section {
   box-sizing: border-box;
   outline: none;
   -webkit-touch-callout: none;
-  // scroll-behavior: smooth;
 }
 
 body {
@@ -143,7 +143,7 @@ blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-  content: "";
+  content: '';
   content: none;
 }
 
@@ -167,12 +167,8 @@ a {
   text-decoration: none;
   -webkit-transition-duration: 300ms;
   transition-duration: 300ms;
-  -webkit-transition-property:
-    opacity,
-    color,
-    background-color,
-    -webkit-transform,
-    border;
+  -webkit-transition-property: opacity, color, background-color,
+    -webkit-transform, border;
   -webkit-transition-property: opacity, color, background-color, transform,
     border;
   transition-property: opacity, color, background-color, transform, border;
