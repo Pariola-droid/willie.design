@@ -1,74 +1,32 @@
-import { Inter, VT323 } from 'next/font/google';
 import localFont from 'next/font/local';
 
-export const sanesans = localFont({
-  variable: '--font-sane-sans',
+// bagoss
+export const bagoss = localFont({
+  variable: '--font-bagoss',
   display: 'swap',
   src: [
     {
-      path: '../../public/fonts/sanesans/SaneSans-Slim.woff2',
+      path: '../../public/fonts/bs/BSL.woff2',
       weight: '300',
       style: 'normal',
     },
     {
-      path: '../../public/fonts/sanesans/SaneSans-Neutral.woff2',
+      path: '../../public/fonts/bs/BSR.woff2',
       weight: 'normal',
-      style: 'normal',
-    },
-    {
-      path: '../../public/fonts/sanesans/SaneSans-Median.woff2',
-      weight: '600',
-      style: 'normal',
-    },
-    {
-      path: '../../public/fonts/sanesans/SaneSans-Bulky.woff2',
-      weight: 'bold',
       style: 'normal',
     },
   ],
 });
 
-export const sanenik = localFont({
-  variable: '--font-sane-nik',
+// cowboy
+export const cowboy = localFont({
+  variable: '--font-cowboy',
   display: 'swap',
   src: [
     {
-      path: '../../public/fonts/sanenik/Sanenik-Light.woff2',
-      weight: '300',
-      style: 'normal',
-    },
-    {
-      path: '../../public/fonts/sanenik/Sanenik-Regular.woff2',
-      weight: 'normal',
-      style: 'normal',
-    },
-    {
-      path: '../../public/fonts/sanenik/Sanenik-Medium.woff2',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: '../../public/fonts/sanenik/Sanenik-Bold.woff2',
-      weight: 'bold',
-      style: 'normal',
-    },
-    {
-      path: '../../public/fonts/sanenik/Sanenik-Black.woff2',
-      weight: '900',
+      path: '../../public/fonts/cowboy/Mersey-Cowboy.otf',
+      weight: '400',
       style: 'normal',
     },
   ],
-});
-
-export const vt323 = VT323({
-  weight: '400',
-  variable: '--font-vt323',
-  subsets: ['latin'],
-  display: 'swap',
-});
-
-export const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'swap',
 });

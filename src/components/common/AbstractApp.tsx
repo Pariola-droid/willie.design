@@ -1,18 +1,15 @@
 'use client';
 
-import { darkTheme, globalStyles } from '@/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 import React from 'react';
 // import { LazyMotion, domAnimation } from "framer-motion";
-import { Theme as RadixTheme } from '@radix-ui/themes';
-import { ThemeProvider } from 'next-themes';
-import { Toaster } from 'sonner';
 
-import '@radix-ui/themes/styles.css';
 import 'blaze-slider/dist/blaze.css';
-import '../../styles/animations.scss';
+import 'splitting/dist/splitting-cells.css';
+import 'splitting/dist/splitting.css';
+import '../../styles/index.scss';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -44,7 +41,6 @@ interface AbstractAppProps extends React.PropsWithChildren {
 }
 
 const AbstractApp = (pageProps: AbstractAppProps) => {
-  globalStyles();
   const [isClientReady, setIsClientReady] = useState(false);
 
   useEffect(() => {
@@ -52,28 +48,13 @@ const AbstractApp = (pageProps: AbstractAppProps) => {
   }, []);
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="light"
-      value={{ light: 'light', dark: darkTheme.className }}
-    >
-      <RadixTheme hasBackground={false}>
-        <div>
-          {isClientReady && (
-            <QueryClientProvider client={queryClient}>
-              {pageProps?.children}
-            </QueryClientProvider>
-          )}
-        </div>
-      </RadixTheme>
-      <Toaster
-        richColors
-        position="top-right"
-        style={{
-          zIndex: 9999999999,
-        }}
-      />
-    </ThemeProvider>
+    <div>
+      {isClientReady && (
+        <QueryClientProvider client={queryClient}>
+          {pageProps?.children}
+        </QueryClientProvider>
+      )}
+    </div>
   );
 };
 

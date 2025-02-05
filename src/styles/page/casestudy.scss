@@ -1,0 +1,236 @@
+.pageCaseStudy {
+  width: 100%;
+  background-color: $white;
+  padding-inline: 1rem;
+  position: relative;
+  padding-block: toRem(370) toRem(56);
+
+  &__hero {
+    width: 100%;
+    @include flexed(unset, flex-start, column);
+
+    & * {
+      color: $black;
+    }
+
+    & h2 {
+      font-size: toRem(36);
+      font-weight: 400;
+      line-height: toRem(40.36);
+      letter-spacing: -0.02em;
+      text-align: left;
+    }
+
+    &-imgWrapper {
+      width: 100%;
+      max-width: toRem(1166);
+      @include flexed(unset, flex-start, column);
+      row-gap: toRem(16);
+      margin-top: toRem(36);
+
+      &--img {
+        width: 100%;
+        height: toRem(700);
+        background-color: $black;
+
+        &Caption {
+          width: 100%;
+          @include flex(space-between, center);
+          row-gap: toRem(16);
+          max-width: 66.8%;
+
+          & p {
+            font-size: toRem(14);
+            font-weight: 400;
+            line-height: toRem(16.59);
+            letter-spacing: -0.02em;
+            text-align: left;
+          }
+        }
+      }
+    }
+
+    &-descWrapper {
+      width: 100%;
+      max-width: toRem(575);
+      margin-top: toRem(24);
+      @include flexed(unset, flex-start, column);
+      row-gap: toRem(24);
+
+      & p {
+        @extend %BodyText;
+        line-height: toRem(21);
+      }
+
+      & a {
+        @extend %BodyText;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+    }
+  }
+
+  &__gallery {
+    width: 100%;
+    margin-top: toRem(96);
+    @include flexed(unset, flex-start, column);
+
+    &--imgOne {
+      width: 100%;
+
+      &.img {
+        width: toRem(575);
+        height: toRem(427);
+        background-color: $black;
+      }
+    }
+
+    &--imgTwo {
+      width: 100%;
+      padding-left: toRem(238);
+      margin-top: toRem(96);
+
+      &.img {
+        width: toRem(694);
+        height: toRem(750);
+        background-color: $black;
+      }
+    }
+
+    &--imgThree {
+      width: 100%;
+      padding-right: toRem(218);
+      margin-left: auto;
+      margin-top: toRem(93);
+
+      &.img {
+        width: toRem(238);
+        height: toRem(175);
+        background-color: $black;
+      }
+    }
+
+    &--imgFour {
+      width: 100%;
+      padding-left: toRem(238);
+      margin-top: toRem(128);
+
+      &.img {
+        width: toRem(456);
+        height: toRem(350);
+        background-color: $black;
+      }
+    }
+  }
+
+  &__moreDetails {
+    width: 100%;
+    margin-top: toRem(175);
+    @include flexed(unset, flex-start, column);
+
+    & * {
+      color: $black;
+    }
+
+    & h3 {
+      font-size: toRem(24);
+      font-weight: 400;
+      line-height: toRem(26.9);
+      letter-spacing: -0.02em;
+      text-align: left;
+    }
+
+    &--credit {
+      width: 100%;
+      margin-top: toRem(56);
+      max-width: toRem(430);
+      @include flexed(unset, flex-start, column);
+      row-gap: toRem(64);
+
+      &Col {
+        @include flex(flex-start, flex-start);
+        column-gap: toRem(175);
+      }
+
+      &Label {
+        @extend %BodyText;
+        min-width: toRem(64);
+      }
+
+      &Content {
+        @extend %BodyText;
+        @include flexed(unset, flex-start, column);
+        row-gap: toRem(4);
+
+        & p {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  &__nextProject {
+    padding-left: toRem(238);
+    width: 100%;
+    margin-top: toRem(165);
+    @include flexed(unset, flex-start, column);
+    row-gap: toRem(5);
+
+    & * {
+      color: $black;
+    }
+
+    &--CTA {
+      width: 100%;
+      max-width: toRem(603);
+      @include flex(space-between, flex-end);
+    }
+
+    &--leftSlot {
+      width: toRem(218);
+      @include flexed(unset, flex-start, column);
+      row-gap: toRem(5);
+    }
+
+    &--img {
+      width: toRem(218);
+      height: toRem(143);
+      background-color: $black;
+    }
+
+    &--progress {
+      width: 100%;
+      height: 1px;
+      background-color: rgba(0, 0, 0, 0.1);
+      position: relative;
+      @include flex(center, center);
+
+      &Bar {
+        left: 0;
+        width: 50%;
+        height: 1px;
+        background-color: $black;
+        position: absolute;
+      }
+    }
+
+    &--content {
+      @include flexed(unset, flex-start, column);
+      width: max-content;
+      gap: toRem(8);
+      padding-bottom: toRem(16);
+
+      & p {
+        @extend %BodyText;
+      }
+
+      & h4 {
+        font-size: toRem(24);
+        font-weight: 400;
+        line-height: toRem(26.9);
+        letter-spacing: -0.02em;
+        text-align: left;
+      }
+    }
+  }
+}

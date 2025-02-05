@@ -1,9 +1,8 @@
 import AbstractApp from '@/components/common/AbstractApp';
 import { GOOGLE_ANALYTICS } from '@/config/env';
 import { GoogleAnalytics } from '@next/third-parties/google';
-import { GeistSans } from 'geist/font/sans';
 import type { Metadata, Viewport } from 'next';
-import { inter, sanenik, sanesans, vt323 } from './font';
+import { bagoss, cowboy } from './font';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://willie.design'),
@@ -54,8 +53,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f5f5f5' },
-    { media: '(prefers-color-scheme: dark)', color: '#f5f5f5' },
+    { media: '(prefers-color-scheme: light)', color: '#000000' },
+    { media: '(prefers-color-scheme: dark)', color: '#ffffff' },
   ],
   initialScale: 1,
   maximumScale: 1,
@@ -69,10 +68,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${sanesans.className} ${sanenik.variable} ${inter.variable} ${vt323.variable} ${GeistSans.variable}`}
-    >
+    <html lang="en" className={`${bagoss.className} ${cowboy.variable}`}>
       <body>
         <AbstractApp>{children}</AbstractApp>
         <GoogleAnalytics gaId={`${GOOGLE_ANALYTICS}`} />

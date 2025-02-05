@@ -1,0 +1,9 @@
+@import "../utils/mixins";
+
+%BodyText {
+  font-size: toRem(14);
+  font-weight: 300;
+  line-height: toRem(15.69);
+  letter-spacing: -0.02em;
+  text-align: left;
+}

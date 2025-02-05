@@ -1,0 +1,171 @@
+.pageWorks {
+  width: 100%;
+  min-height: 100vh;
+  background-color: $white;
+  padding-inline: 1rem;
+  position: relative;
+  padding-left: toRem(254);
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &__workCard {
+    width: 100%;
+    max-width: toRem(456);
+    min-height: toRem(322);
+    margin-bottom: toRem(56);
+    @include flexed(unset, flex-start, column);
+    row-gap: toRem(16);
+    z-index: 2;
+
+    &:first-child {
+      margin-top: toRem(135);
+    }
+
+    &-wImg {
+      width: 100%;
+      height: toRem(300);
+      background-color: $black;
+
+      & img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    &-wInfo {
+      width: 100%;
+      @include flex(flex-start, center);
+      column-gap: toRem(42);
+
+      & * {
+        color: $black;
+      }
+
+      & small {
+        font-size: toRem(10);
+        font-weight: 300;
+        line-height: toRem(11.21);
+        letter-spacing: -0.02em;
+        text-align: left;
+      }
+
+      & p {
+        font-size: toRem(14);
+        font-weight: 400;
+        line-height: toRem(16.59);
+        letter-spacing: -0.02em;
+        text-align: left;
+      }
+    }
+  }
+
+  &__footer {
+    padding-inline: 1rem toRem(35);
+    padding-bottom: toRem(20);
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    position: sticky;
+    z-index: 2;
+    @include flex(space-between, flex-end);
+
+    & * {
+      color: $black;
+    }
+
+    &-layoutControl {
+      position: absolute;
+      left: 1rem;
+      width: 100%;
+      max-width: toRem(92);
+      height: toRem(72);
+      @include flexed(space-between, flex-start, column);
+
+      &:hover {
+        & span {
+          border: toRem(1.5) solid $black;
+        }
+      }
+    }
+
+    &-layoutBtn {
+      display: grid;
+      gap: toRem(4);
+      cursor: pointer;
+
+      &.horizontal {
+        width: toRem(28);
+        height: toRem(44);
+        grid-template-rows: repeat(3, 1fr);
+      }
+
+      &.vertical {
+        width: toRem(92);
+        height: toRem(12);
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      & span {
+        border: 1px solid $black;
+      }
+    }
+
+    &-label {
+      font-size: toRem(14);
+      font-weight: 300;
+      line-height: toRem(15.69);
+      letter-spacing: -0.02em;
+      text-align: left;
+    }
+
+    &-shuffleContainer {
+      width: 100%;
+      max-width: toRem(218.5);
+      position: absolute;
+      right: toRem(35);
+
+      & p {
+        @extend %BodyText;
+      }
+    }
+
+    &-scTop {
+      @include flex(flex-start, flex-end);
+      column-gap: toRem(20);
+    }
+
+    &-scImgWrapper {
+      height: toRem(90);
+      width: toRem(80);
+      position: relative;
+      overflow: hidden;
+    }
+
+    &-scImgContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: toRem(85);
+      overflow: hidden;
+    }
+
+    &-scImg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: $black;
+      background-size: cover;
+      background-position: center;
+      will-change: transform;
+      backface-visibility: hidden;
+      transform: translateY(0);
+    }
+
+    &-scCaption {
+      @extend %BodyText;
+    }
+  }
+}
