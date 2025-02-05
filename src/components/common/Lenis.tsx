@@ -1,10 +1,11 @@
 'use client';
 
+import { useStore } from '@/lib/store';
 import type { LenisOptions } from 'lenis';
 import 'lenis/dist/lenis.css';
 import type { LenisRef, LenisProps as ReactLenisProps } from 'lenis/react';
 import { ReactLenis, useLenis } from 'lenis/react';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTempus } from 'tempus/react';
 
 interface LenisProps extends Omit<ReactLenisProps, 'ref'> {
@@ -14,7 +15,7 @@ interface LenisProps extends Omit<ReactLenisProps, 'ref'> {
 
 export function Lenis({ root, options }: LenisProps) {
   const lenisRef = useRef<LenisRef>(null);
-  //   const isNavOpened = useStore((state) => state.isNavOpened)
+  const isNavOpened = useStore((state) => state.isNavOpened);
   const lenis = useLenis();
 
   useTempus((time: number) => {
@@ -23,13 +24,13 @@ export function Lenis({ root, options }: LenisProps) {
     }
   });
 
-  //   useEffect(() => {
-  //     if (isNavOpened) {
-  //       lenis?.stop()
-  //     } else {
-  //       lenis?.start()
-  //     }
-  //   }, [isNavOpened, lenis])
+  useEffect(() => {
+    if (isNavOpened) {
+      lenis?.stop();
+    } else {
+      lenis?.start();
+    }
+  }, [isNavOpened, lenis]);
 
   return (
     <ReactLenis

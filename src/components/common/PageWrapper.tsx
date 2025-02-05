@@ -1,5 +1,6 @@
 'use client';
 
+import Cursor from '@/lib/cursor';
 import type { LenisOptions } from 'lenis';
 import { usePathname } from 'next/navigation';
 import { Fragment, PropsWithChildren, useEffect, useRef } from 'react';
@@ -40,6 +41,13 @@ export default function PageWrapper(props: PageWrapperProps) {
     className,
     ...rest
   } = props;
+
+  const cursor = new Cursor({
+    container: 'body',
+    speed: 0.7,
+    ease: 'expo.out',
+    visibleTimeout: 300,
+  });
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
