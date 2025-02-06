@@ -177,10 +177,7 @@ export default function InfoPage() {
       });
     });
 
-    const footerPhotos = gsap.utils.toArray('.image-reveal');
-    const footerPhotoMasks = footerPhotos.map((photo) =>
-      CSSRulePlugin.getRule(`.image-reveal::after`)
-    );
+    const footerPhotos = gsap.utils.toArray('.iImg-reveal');
 
     footerPhotos.forEach((image: any, i) => {
       const img = image.querySelector('img');
@@ -226,7 +223,7 @@ export default function InfoPage() {
   }, []);
 
   return (
-    <PageWrapper theme="dark" className="pageInfo" lenis={{}}>
+    <PageWrapper theme="dark" className="pageInfo" lenis>
       <section className="pageInfo__hero">
         <div className="pageInfo__hero-middleFace">
           <div className="pageInfo__hero-middleFaceImg middleFace">
@@ -375,10 +372,7 @@ export default function InfoPage() {
         </div>
 
         <div className="pageInfo__footer-photos">
-          <div
-            className="pageInfo__footer-photos img3 image-reveal"
-            data-animation="image-reveal"
-          >
+          <div className="pageInfo__footer-photos img3 iImg-reveal">
             <Image
               width={218}
               height={127}
@@ -387,10 +381,7 @@ export default function InfoPage() {
             />
           </div>
 
-          <div
-            className="pageInfo__footer-photos img2 image-reveal"
-            data-animation="image-reveal"
-          >
+          <div className="pageInfo__footer-photos img2 iImg-reveal">
             <Image
               width={258}
               height={200}
@@ -398,10 +389,7 @@ export default function InfoPage() {
               alt="willie's face"
             />
           </div>
-          <div
-            className="pageInfo__footer-photos img1 image-reveal"
-            data-animation="image-reveal"
-          >
+          <div className="pageInfo__footer-photos img1 iImg-reveal">
             <Image
               width={337}
               height={355}
