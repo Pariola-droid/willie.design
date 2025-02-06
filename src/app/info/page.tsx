@@ -9,6 +9,8 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Image from 'next/image';
 import { useEffect } from 'react';
 
+gsap.registerPlugin(ScrollTrigger, CustomEase, CSSRulePlugin);
+
 export default function InfoPage() {
   const { basicFormat } = useCurrentTime();
 
@@ -16,8 +18,6 @@ export default function InfoPage() {
   CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger, CustomEase, CSSRulePlugin);
-
     const serviceTl = gsap.timeline({
       scrollTrigger: {
         trigger: '.pageInfo__services',
@@ -78,7 +78,7 @@ export default function InfoPage() {
     footerReachout.forEach((reachout: any) => {
       gsap.set(reachout, {
         autoAlpha: 0,
-        y: 30,
+        y: 20,
       });
 
       gsap.to(reachout, {
@@ -164,9 +164,9 @@ export default function InfoPage() {
         <div className="pageInfo__hero-largeTxt">Folio</div>
 
         <div className="pageInfo__hero-bottomBar">
-          <small data-animation="skew-split-paragraph">creative designer</small>
-          <small data-animation="skew-split-paragraph">CR7 fanboy</small>
-          <small data-animation="skew-split-paragraph">scroll</small>
+          <small>creative designer</small>
+          <small>CR7 fanboy</small>
+          <small>scroll</small>
         </div>
       </section>
 
