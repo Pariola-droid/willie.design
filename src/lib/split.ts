@@ -121,10 +121,10 @@ export function initSplit(): void {
       transformStyle: 'preserve-3d',
     };
 
-    gsap.set(item.querySelectorAll('.split-word'), initialAnimation);
+    gsap.set(item.querySelectorAll('.word-line'), initialAnimation);
 
     IO(item, { threshold: 0.8 }).then(() => {
-      const words = item.querySelectorAll('.split-word');
+      const words = item.querySelectorAll('.word-line');
       gsap.to(words, {
         autoAlpha: 1,
         yPercent: 0,
