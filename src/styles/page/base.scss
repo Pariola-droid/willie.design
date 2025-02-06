@@ -97,7 +97,7 @@
 
     &-bigText {
       & h1 {
-        // @extend %CB;
+        @extend %CB;
         font-size: toRem(36);
         font-weight: 400;
         line-height: toRem(36);
@@ -107,7 +107,7 @@
         text-transform: uppercase;
 
         & sup {
-          // @extend %BS;
+          @extend %BS;
           font-size: toRem(14);
           font-weight: 300;
           line-height: toRem(15.7);

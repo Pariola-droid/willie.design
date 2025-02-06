@@ -68,7 +68,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${bagoss.className} ${cowboy.variable}`}>
+    <html lang="en" className={`${bagoss.variable} ${cowboy.variable}`}>
       <body>
         <AbstractApp>{children}</AbstractApp>
         <GoogleAnalytics gaId={`${GOOGLE_ANALYTICS}`} />

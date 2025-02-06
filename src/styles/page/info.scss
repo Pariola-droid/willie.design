@@ -71,7 +71,7 @@
     }
 
     &-largeTxt {
-      // @extend %CB;
+      @extend %CB;
       font-size: toRem(1500);
       font-weight: 400;
       line-height: toRem(1875);
