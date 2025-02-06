@@ -13,6 +13,11 @@
   }
 }
 
+.middleFace {
+  clip-path: inset(0 0 100% 0);
+  background-color: $black;
+}
+
 .pageInfo {
   width: 100%;
   position: relative;
@@ -37,6 +42,8 @@
         height: toRem(330);
         width: toRem(250);
         background-color: #d9d9d9;
+        overflow: hidden;
+        position: relative;
 
         & img {
           width: 100%;

@@ -16,6 +16,7 @@ interface LenisProps extends Omit<ReactLenisProps, 'ref'> {
 export function Lenis({ root, options }: LenisProps) {
   const lenisRef = useRef<LenisRef>(null);
   const isNavOpened = useStore((state) => state.isNavOpened);
+  const isAnimating = useStore((state) => state.isAnimating);
   const lenis = useLenis();
 
   useTempus((time: number) => {
@@ -25,12 +26,12 @@ export function Lenis({ root, options }: LenisProps) {
   });
 
   useEffect(() => {
-    if (isNavOpened) {
+    if (isNavOpened || isAnimating) {
       lenis?.stop();
     } else {
       lenis?.start();
     }
-  }, [isNavOpened, lenis]);
+  }, [isAnimating, isNavOpened, lenis]);
 
   return (
     <ReactLenis
