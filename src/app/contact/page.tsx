@@ -129,7 +129,7 @@ export default function ContactPage() {
         .to(
           '.pageContact__footer small',
           {
-            autoAlpha: 1,
+            autoAlpha: 0.4,
             x: 0,
             stagger: 0.1,
             duration: 0.6,
