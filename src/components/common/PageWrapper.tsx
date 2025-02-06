@@ -2,6 +2,7 @@
 
 import Cursor from '@/lib/cursor';
 import { initSplit } from '@/lib/split';
+import { format } from 'date-fns';
 import type { LenisOptions } from 'lenis';
 import { usePathname } from 'next/navigation';
 import { Fragment, PropsWithChildren, useEffect, useRef } from 'react';
@@ -86,7 +87,7 @@ export default function PageWrapper(props: PageWrapperProps) {
           <a href="/" className="wp__pageHeader-bigText">
             <h1>Archive Of Selected</h1>
             <h1>
-              Works <sup>&apos;21—2024</sup>
+              Works <sup>&apos;21—{format(new Date(), 'YYY')}</sup>
             </h1>
           </a>
         </header>
