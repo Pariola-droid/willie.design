@@ -77,6 +77,10 @@
         margin-left: toRem(38);
         position: relative;
 
+        &.socials {
+          margin-left: calc(toRem(38) + 1.15rem);
+        }
+
         & span {
           position: absolute;
           top: -6px;

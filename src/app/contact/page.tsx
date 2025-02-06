@@ -160,14 +160,14 @@ export default function ContactPage() {
           </h4>
 
           {CONTACT_DETAILS.map((contact, i: number) => (
-            <div key={i} className="pageContact__main-details--list">
+            <div key={i} className={`pageContact__main-details--list`}>
               <div className="pageContact__main-details--listTitle cTitleItem">
                 {contact.title}:
               </div>
               {contact.links.map((link, j: number) => (
                 <p
                   key={j}
-                  className="pageContact__main-details--listItem cListItem"
+                  className={`pageContact__main-details--listItem ${contact.title} cListItem"`}
                 >
                   {contact.title !== 'email' ? <span>({j + 1})</span> : ''}
                   <a
