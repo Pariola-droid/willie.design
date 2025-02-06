@@ -21,16 +21,17 @@ export default function InfoPage() {
 
   useEffect(() => {
     gsap.set('.middleFace', {
-      clipPath: 'inset(0 0 100% 0)',
+      clipPath: 'inset(100% 0 0 0)',
     });
 
     gsap.set('.middleFace img', {
       filter: 'brightness(20%)',
+      scale: 1.4,
     });
 
     gsap.set(['.pageInfo__hero-faceCaption'], {
       autoAlpha: 0,
-      y: 20,
+      y: -10,
     });
 
     gsap.set('.pageInfo__hero-bottomBar small', {
@@ -53,12 +54,13 @@ export default function InfoPage() {
 
     heroTl
       .to('.middleFace', {
-        clipPath: 'inset(0 0 0% 0)',
+        clipPath: 'inset(0% 0 0 0)',
         duration: 1.2,
       })
       .to(
         '.middleFace img',
         {
+          scale: 1,
           filter: 'brightness(100%)',
           duration: 1.2,
         },
