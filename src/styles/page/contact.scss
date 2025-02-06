@@ -78,7 +78,9 @@
         position: relative;
 
         &.socials {
-          margin-left: calc(toRem(38) + 1.15rem);
+          & a {
+            margin-left: 1.15rem;
+          }
         }
 
         & span {
@@ -92,7 +94,6 @@
         }
 
         & a {
-          margin-left: 1.15rem;
           &::before,
           &::after {
             height: 1px !important;
