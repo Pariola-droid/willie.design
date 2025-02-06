@@ -161,21 +161,21 @@ export default function ContactPage() {
 
           {CONTACT_DETAILS.map((contact, i: number) => (
             <div key={i} className="pageContact__main-details--list">
-              <small className="pageContact__main-details--listTitle cTitleItem">
+              <div className="pageContact__main-details--listTitle cTitleItem">
                 {contact.title}:
-              </small>
+              </div>
               {contact.links.map((link, j: number) => (
                 <p
                   key={j}
                   className="pageContact__main-details--listItem cListItem"
                 >
+                  {contact.title !== 'email' ? <span>({j + 1})</span> : ''}
                   <a
                     href={link.href}
                     link-interaction="underline"
                     target="_blank"
                     rel="noopener"
                   >
-                    {contact.title !== 'email' ? <span>({j + 1})</span> : ''}
                     {link.label}
                   </a>
                 </p>

@@ -15,19 +15,20 @@
   background-color: $black;
   padding-inline: 1rem;
   position: relative;
-  @include flex(center, center);
+  @include flexed(flex-end, center, column);
   position: relative;
 
   &__main {
     width: 100%;
-    max-width: toRem(910);
-    min-height: toRem(500);
-    @include flex(space-between, center);
-    padding-top: toRem(70);
+    min-height: toRem(300);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: toRem(32);
+    padding-inline: 1rem;
 
     &-contactImg {
-      height: toRem(500);
-      width: toRem(377);
+      height: toRem(250);
+      width: toRem(218);
       background-color: $black;
 
       & img {
@@ -73,8 +74,20 @@
         letter-spacing: -0.02em;
         text-align: left;
         margin-left: toRem(38);
+        position: relative;
+
+        & span {
+          position: absolute;
+          top: -6px;
+          left: 0;
+          font-size: toRem(14);
+          font-weight: 400;
+          line-height: toRem(32.4);
+          letter-spacing: -0.02em;
+        }
 
         & a {
+          margin-left: 1.15rem;
           &::before,
           &::after {
             height: 1px !important;
