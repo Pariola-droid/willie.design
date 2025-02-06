@@ -91,7 +91,7 @@ export default function InfoPage() {
           trigger: reachout,
           start: 'top 80%',
           end: 'top 20%',
-          toggleActions: 'play none none reverse',
+          // toggleActions: 'play none none reverse',
         },
       });
     });
