@@ -2,7 +2,6 @@
 
 import PageWrapper from '@/components/common/PageWrapper';
 import { useCurrentTime } from '@/hooks/useCurrentTime';
-import { initSplit } from '@/lib/split';
 import { format } from 'date-fns';
 import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
@@ -51,10 +50,26 @@ export default function ContactPage() {
   CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
   useEffect(() => {
-    initSplit(); // Initialize split text first
+    const listItems = document.querySelectorAll('.cTitleItem');
+    const titleItem = document.querySelectorAll('.cListItem');
+
+    titleItem.forEach((item) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'cText-wrapper';
+      item.parentNode?.insertBefore(wrapper, item);
+      wrapper.appendChild(item);
+    });
+
+    listItems.forEach((item) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'cText-wrapper';
+      item.parentNode?.insertBefore(wrapper, item);
+      wrapper.appendChild(item);
+    });
 
     const imageWrapper = document.querySelector('.cImg-reveal');
     const image = imageWrapper?.querySelector('img');
+    const revealWrappers = gsap.utils.toArray('.cText-wrapper');
 
     const tl = gsap.timeline({
       defaults: {
@@ -63,7 +78,6 @@ export default function ContactPage() {
     });
 
     if (imageWrapper && image) {
-      // Initial states
       gsap.set(imageWrapper, {
         clipPath: 'inset(100% 0 0 0)',
       });
@@ -73,7 +87,21 @@ export default function ContactPage() {
         scale: 1.4,
       });
 
-      // Animation sequence
+      gsap.set(revealWrappers, {
+        autoAlpha: 1,
+      });
+
+      gsap.set('.pageContact__footer small', {
+        autoAlpha: 0,
+        x: -10,
+      });
+
+      gsap.set(['.cTitleItem', '.cListItem'], {
+        y: 40,
+        autoAlpha: 0,
+        transformStyle: 'preserve-3d',
+      });
+
       tl.to(imageWrapper, {
         clipPath: 'inset(0% 0 0 0)',
         duration: 1.2,
@@ -87,38 +115,27 @@ export default function ContactPage() {
           },
           '<'
         )
-        // Start text animations when image is 80% done
-        .add(() => {
-          // Split text animations
-          const title = document.querySelector(
-            '[data-animation="skew-rotate-heading"]'
-          );
-          const details = document.querySelectorAll(
-            '[data-animation="skew-split-paragraph"]'
-          );
-
-          if (title) {
-            gsap.to(title.querySelectorAll('.word-line'), {
-              autoAlpha: 1,
-              rotationX: 0,
-              yPercent: 0,
-              stagger: 0.1,
-              duration: 1.2,
-              ease: 'power2.out',
-            });
-          }
-
-          details.forEach((detail, index) => {
-            gsap.to(detail.querySelectorAll('.word'), {
-              autoAlpha: 1,
-              yPercent: 0,
-              stagger: 0.05,
-              duration: 1,
-              ease: 'power2.out',
-              delay: index * 0.1,
-            });
-          });
-        }, '-=0.3'); // Start text reveal when image is almost done
+        .to(
+          ['.cTitleItem', '.cListItem'],
+          {
+            y: 0,
+            autoAlpha: 1,
+            stagger: 0.05,
+            duration: 0.8,
+            ease: 'power2.out',
+          },
+          '-=0.5'
+        )
+        .to(
+          '.pageContact__footer small',
+          {
+            autoAlpha: 1,
+            x: 0,
+            stagger: 0.1,
+            duration: 0.6,
+          },
+          '-=0.8'
+        );
     }
 
     return () => {
@@ -138,26 +155,19 @@ export default function ContactPage() {
           />
         </div>
         <div className="pageContact__main-details">
-          <h4
-            className="pageContact__main-details--title opacity-on"
-            data-animation="skew-rotate-heading"
-          >
+          <h4 className="pageContact__main-details--title cTitleItem">
             Let&apos;s collaborate and make good work together
           </h4>
 
           {CONTACT_DETAILS.map((contact, i: number) => (
-            <div key={i} className="pageContact__main-details--list opacity-on">
-              <small
-                className="pageContact__main-details--listTitle"
-                data-animation="skew-split-paragraph"
-              >
+            <div key={i} className="pageContact__main-details--list">
+              <small className="pageContact__main-details--listTitle cTitleItem">
                 {contact.title}:
               </small>
               {contact.links.map((link, j: number) => (
                 <p
                   key={j}
-                  className="pageContact__main-details--listItem"
-                  data-animation="skew-split-paragraph"
+                  className="pageContact__main-details--listItem cListItem"
                 >
                   <a
                     href={link.href}
@@ -165,6 +175,7 @@ export default function ContactPage() {
                     target="_blank"
                     rel="noopener"
                   >
+                    {contact.title !== 'email' ? <span>({j + 1})</span> : ''}
                     {link.label}
                   </a>
                 </p>
