@@ -144,7 +144,7 @@ export default function ContactPage() {
   }, []);
 
   return (
-    <PageWrapper className="pageContact">
+    <PageWrapper className="pageContact" lenis>
       <section className="pageContact__main">
         <div className="pageContact__main-contactImg cImg-reveal">
           <Image
