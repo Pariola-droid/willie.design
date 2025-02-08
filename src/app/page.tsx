@@ -66,20 +66,32 @@ CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function HomePage() {
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [indicators, setIndicators] = useState<number[]>(
-    new Array(REELS_DATA.length).fill(0)
-  );
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const progressRefs = useRef<(HTMLDivElement | null)[]>([]);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
   const progressTimeline = useRef<gsap.core.Timeline | null>(null);
 
-  // Initialize GSAP timeline
   useEffect(() => {
-    timelineRef.current = gsap.timeline({ paused: true });
-    progressTimeline.current = gsap.timeline({ paused: true });
+    timelineRef.current = gsap.timeline();
+    progressTimeline.current = gsap.timeline();
+
+    // Set initial states for all slides
+    slideRefs.current.forEach((ref, index) => {
+      if (ref) {
+        gsap.set(ref, {
+          zIndex: index === 0 ? 2 : 1,
+          clipPath:
+            index === 0
+              ? 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)'
+              : 'polygon(100% -20%, 100% -20%, 100% 120%, 100% 120%)',
+        });
+      }
+    });
+
+    updateProgressIndicator(0);
 
     return () => {
       if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
@@ -89,90 +101,121 @@ export default function HomePage() {
   }, []);
 
   const updateProgressIndicator = (index: number) => {
-    const timeline = progressTimeline.current;
-    if (!timeline) return;
+    if (progressTimeline.current) {
+      progressTimeline.current.kill();
+    }
 
-    timeline.clear();
-
-    setIndicators((prev) => prev.map((_, i) => (i === index ? 100 : 0)));
-
+    // Reset all progress bars first
     progressRefs.current.forEach((ref) => {
       if (ref) {
-        gsap.set(ref, { width: '0%' });
+        gsap.set(ref, { scaleX: 0, transformOrigin: 'bottom left' });
       }
     });
 
-    timeline
-      .set(progressRefs.current[index], { width: '0%' })
+    // Create new timeline for this progress
+    progressTimeline.current = gsap.timeline();
+    progressTimeline.current
+      .set(progressRefs.current[index], {
+        scaleX: 0,
+        transformOrigin: 'bottom left',
+      })
       .to(progressRefs.current[index], {
-        width: '100%',
+        scaleX: 1,
         duration: SLIDE_DURATION,
         ease: 'none',
       });
-
-    timeline.play();
   };
 
   const transitionSlide = (
     nextIndex: number,
     direction: 'next' | 'prev' = 'next'
   ) => {
+    // Prevent transitions if already transitioning
+    if (isTransitioning) return;
+
     const currentElement = slideRefs.current[currentSlide];
     const nextElement = slideRefs.current[nextIndex];
-    const timeline = timelineRef.current;
 
-    if (!currentElement || !nextElement || !timeline) return;
+    if (!currentElement || !nextElement) return;
 
-    // Reset timeline
-    timeline.clear();
+    setIsTransitioning(true);
 
-    // Simple slanted clip-path
-    timeline
-      .set(nextElement, {
-        clipPath:
-          direction === 'next'
-            ? 'polygon(120% -20%, 100% -20%, 100% 120%, 120% 120%)'
-            : 'polygon(-20% -20%, 0% -20%, 0% 120%, -20% 120%)',
-        zIndex: 2,
-      })
+    // Clear existing animations and timeouts
+    if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
+    if (timelineRef.current) timelineRef.current.kill();
+    if (progressTimeline.current) progressTimeline.current.kill();
+
+    // Reset z-indices for all slides
+    slideRefs.current.forEach((ref, index) => {
+      if (ref && index !== currentSlide && index !== nextIndex) {
+        gsap.set(ref, { zIndex: 1 });
+      }
+    });
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setIsTransitioning(false);
+        if (direction === 'next') {
+          autoPlayRef.current = setTimeout(() => {
+            const nextSlide = (nextIndex + 1) % REELS_DATA.length;
+            transitionSlide(nextSlide, 'next');
+          }, SLIDE_DURATION * 1000);
+        }
+      },
+    });
+
+    // Set up the new slide
+    tl.set(nextElement, {
+      zIndex: 3,
+      clipPath:
+        direction === 'next'
+          ? 'polygon(120% -20%, 100% -20%, 100% 120%, 120% 120%)'
+          : 'polygon(-20% -20%, 0% -20%, 0% 120%, -20% 120%)',
+    })
+      .set(currentElement, { zIndex: 2 })
       .to(nextElement, {
-        clipPath:
-          direction === 'next'
-            ? 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)'
-            : 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
+        clipPath: 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
         duration: 1.8,
         ease: 'ease-in-out-cubic',
       })
       .set(currentElement, { zIndex: 1 });
 
-    timeline.play();
     setCurrentSlide(nextIndex);
     updateProgressIndicator(nextIndex);
-
-    // Setup next auto transition
-    if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
-    autoPlayRef.current = setTimeout(() => {
-      const nextSlide = (nextIndex + 1) % REELS_DATA.length;
-      transitionSlide(nextSlide, 'next');
-    }, SLIDE_DURATION * 1000);
   };
 
   const handleNext = () => {
-    if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
+    if (isTransitioning) return; // Prevent rapid clicks
     const nextSlide = (currentSlide + 1) % REELS_DATA.length;
     transitionSlide(nextSlide, 'next');
   };
 
   const handlePrev = () => {
-    if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
+    if (isTransitioning) return; // Prevent rapid clicks
     const prevSlide =
       (currentSlide - 1 + REELS_DATA.length) % REELS_DATA.length;
     transitionSlide(prevSlide, 'prev');
   };
 
-  // Start autoplay on mount
+  // Start without animation for initial slide
   useEffect(() => {
-    transitionSlide(0);
+    // Set initial states without animation
+    if (slideRefs.current[0]) {
+      gsap.set(slideRefs.current[0], {
+        clipPath: 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
+        zIndex: 2,
+      });
+    }
+    updateProgressIndicator(0);
+
+    // Start auto-slide timer
+    autoPlayRef.current = setTimeout(() => {
+      transitionSlide(1, 'next');
+    }, SLIDE_DURATION * 1000);
+
+    return () => {
+      if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
+    };
   }, []);
 
   return (
@@ -190,10 +233,20 @@ export default function HomePage() {
                 zIndex: index === 0 ? 2 : 1,
                 clipPath:
                   index === 0
-                    ? 'polygon(-20% -20%, 100% -20%, 100% 100%, -20% 100%)'
-                    : 'polygon(100% -20%, 100% -20%, 100% 100%, 100% 100%)',
+                    ? 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)'
+                    : 'polygon(100% -20%, 100% -20%, 100% 120%, 100% 120%)',
               }}
             >
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '1rem',
+                  color: 'red',
+                  zIndex: 10,
+                }}
+              >
+                {reel.title} buggy
+              </span>
               <img src={reel.img} alt={reel.title} />
             </div>
           ))}
@@ -203,31 +256,42 @@ export default function HomePage() {
             <div className="pageHome__main--overlayTop-indicatorWrapper">
               {REELS_DATA.map((reel, index) => (
                 <div
+                  role="button"
                   key={reel.id}
-                  className="pageHome__main--overlayTop-indicator"
-                  style={{
-                    position: currentSlide === index ? 'relative' : undefined,
-                  }}
+                  className={`pageHome__main--overlayTop-indicator ${
+                    currentSlide === index ? 'active' : ''
+                  }`}
+                  onClick={() => transitionSlide(index)}
                 >
                   <div
                     ref={(el) => {
                       progressRefs.current[index] = el;
                     }}
                     className="pageHome__main--overlayTop-indicatorBefore"
-                    style={{
-                      width: `${indicators[index]}%`,
-                      transition: 'width 0.3s linear',
-                    }}
                   />
                 </div>
               ))}
             </div>
             <p>show.reelz</p>
           </div>
+
           <div className="pageHome__main--overlayMiddle">
-            <button onClick={handlePrev}>prev</button>
-            <button onClick={handleNext}>next</button>
+            <button
+              disabled={isTransitioning}
+              className="pageHome__main--overlayMiddle-button"
+              onClick={handlePrev}
+            >
+              prev
+            </button>
+            <button
+              disabled={isTransitioning}
+              className="pageHome__main--overlayMiddle-button"
+              onClick={handleNext}
+            >
+              next
+            </button>
           </div>
+
           <div className="pageHome__main--overlayBottom">
             <h2>
               Williams Alamu’s digital portfolio archived works : ‘21—
