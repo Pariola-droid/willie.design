@@ -50,8 +50,8 @@ export default function ContactPage() {
   CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
   useEffect(() => {
-    const listItems = document.querySelectorAll('.cTitleItem');
-    const titleItem = document.querySelectorAll('.cListItem');
+    const titleItem = document.querySelectorAll('.cTitleItem');
+    const listItems = document.querySelectorAll('.cListItem');
 
     titleItem.forEach((item) => {
       const wrapper = document.createElement('div');
@@ -167,7 +167,7 @@ export default function ContactPage() {
               {contact.links.map((link, j: number) => (
                 <p
                   key={j}
-                  className={`pageContact__main-details--listItem ${contact.title} cListItem"`}
+                  className={`pageContact__main-details--listItem ${contact.title} cListItem`}
                 >
                   {contact.title !== 'email' ? <span>({j + 1})</span> : ''}
                   <a

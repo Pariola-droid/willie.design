@@ -4,6 +4,7 @@ import PageWrapper from '@/components/common/PageWrapper';
 import { format } from 'date-fns';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 const REELS_DATA = [
@@ -66,6 +67,8 @@ CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function HomePage() {
+  const router = useRouter();
+
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -130,7 +133,6 @@ export default function HomePage() {
     nextIndex: number,
     direction: 'next' | 'prev' = 'next'
   ) => {
-    // Prevent transitions if already transitioning
     if (isTransitioning) return;
 
     const currentElement = slideRefs.current[currentSlide];
@@ -185,13 +187,13 @@ export default function HomePage() {
   };
 
   const handleNext = () => {
-    if (isTransitioning) return; // Prevent rapid clicks
+    if (isTransitioning) return;
     const nextSlide = (currentSlide + 1) % REELS_DATA.length;
     transitionSlide(nextSlide, 'next');
   };
 
   const handlePrev = () => {
-    if (isTransitioning) return; // Prevent rapid clicks
+    if (isTransitioning) return;
     const prevSlide =
       (currentSlide - 1 + REELS_DATA.length) % REELS_DATA.length;
     transitionSlide(prevSlide, 'prev');
@@ -297,7 +299,7 @@ export default function HomePage() {
               Williams Alamu’s digital portfolio archived works : ‘21—
               {format(new Date(), 'yyy')}
             </h2>
-            <button>
+            <button onClick={() => router.push('/works')}>
               <p>
                 ↳ <span link-interaction="underline">enter site</span>
               </p>
