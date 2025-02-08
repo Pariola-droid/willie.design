@@ -62,26 +62,57 @@ const REELS_DATA = [
 const SLIDE_DURATION = 5;
 gsap.registerPlugin(CustomEase);
 
-export default function HomePage() {
-  CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
-  CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
+CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
+CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
+export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [indicators, setIndicators] = useState<number[]>(
+    new Array(REELS_DATA.length).fill(0)
+  );
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const progressRefs = useRef<(HTMLDivElement | null)[]>([]);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
+  const progressTimeline = useRef<gsap.core.Timeline | null>(null);
 
   // Initialize GSAP timeline
   useEffect(() => {
     timelineRef.current = gsap.timeline({ paused: true });
+    progressTimeline.current = gsap.timeline({ paused: true });
+
     return () => {
       if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
       if (timelineRef.current) timelineRef.current.kill();
+      if (progressTimeline.current) progressTimeline.current.kill();
     };
   }, []);
 
-  // Handle slide transitions
+  const updateProgressIndicator = (index: number) => {
+    const timeline = progressTimeline.current;
+    if (!timeline) return;
+
+    timeline.clear();
+
+    setIndicators((prev) => prev.map((_, i) => (i === index ? 100 : 0)));
+
+    progressRefs.current.forEach((ref) => {
+      if (ref) {
+        gsap.set(ref, { width: '0%' });
+      }
+    });
+
+    timeline
+      .set(progressRefs.current[index], { width: '0%' })
+      .to(progressRefs.current[index], {
+        width: '100%',
+        duration: SLIDE_DURATION,
+        ease: 'none',
+      });
+
+    timeline.play();
+  };
+
   const transitionSlide = (
     nextIndex: number,
     direction: 'next' | 'prev' = 'next'
@@ -95,26 +126,13 @@ export default function HomePage() {
     // Reset timeline
     timeline.clear();
 
-    // Animate progress bar
-    if (progressRefs.current[currentSlide] && progressRefs.current[nextIndex]) {
-      gsap.to(progressRefs.current[currentSlide], {
-        width: '0%',
-        duration: 0.3,
-      });
-
-      gsap.to(progressRefs.current[nextIndex], {
-        width: '100%',
-        duration: SLIDE_DURATION,
-      });
-    }
-
-    // Slide transition with clip-path
+    // Simple slanted clip-path
     timeline
       .set(nextElement, {
         clipPath:
           direction === 'next'
-            ? 'polygon(100% -20%, 100% -20%, 100% 120%, 100% 120%)'
-            : 'polygon(0% -20%, 0% -20%, 0% 120%, 0% 120%)',
+            ? 'polygon(120% -20%, 100% -20%, 100% 120%, 120% 120%)'
+            : 'polygon(-20% -20%, 0% -20%, 0% 120%, -20% 120%)',
         zIndex: 2,
       })
       .to(nextElement, {
@@ -122,19 +140,20 @@ export default function HomePage() {
           direction === 'next'
             ? 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)'
             : 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
-        duration: 1.5,
+        duration: 1.8,
         ease: 'ease-in-out-cubic',
       })
       .set(currentElement, { zIndex: 1 });
 
     timeline.play();
     setCurrentSlide(nextIndex);
+    updateProgressIndicator(nextIndex);
 
     // Setup next auto transition
     if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
     autoPlayRef.current = setTimeout(() => {
       const nextSlide = (nextIndex + 1) % REELS_DATA.length;
-      transitionSlide(nextSlide);
+      transitionSlide(nextSlide, 'next');
     }, SLIDE_DURATION * 1000);
   };
 
@@ -171,8 +190,8 @@ export default function HomePage() {
                 zIndex: index === 0 ? 2 : 1,
                 clipPath:
                   index === 0
-                    ? 'polygon(0 0, 100% 0, 100% 100%, 0 100%)'
-                    : 'polygon(100% 0, 100% 0, 100% 100%, 100% 100%)',
+                    ? 'polygon(-20% -20%, 100% -20%, 100% 100%, -20% 100%)'
+                    : 'polygon(100% -20%, 100% -20%, 100% 100%, 100% 100%)',
               }}
             >
               <img src={reel.img} alt={reel.title} />
@@ -186,13 +205,19 @@ export default function HomePage() {
                 <div
                   key={reel.id}
                   className="pageHome__main--overlayTop-indicator"
+                  style={{
+                    position: currentSlide === index ? 'relative' : undefined,
+                  }}
                 >
                   <div
                     ref={(el) => {
                       progressRefs.current[index] = el;
                     }}
                     className="pageHome__main--overlayTop-indicatorBefore"
-                    style={{ width: index === 0 ? '100%' : '0%' }}
+                    style={{
+                      width: `${indicators[index]}%`,
+                      transition: 'width 0.3s linear',
+                    }}
                   />
                 </div>
               ))}
