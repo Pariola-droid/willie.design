@@ -103,32 +103,6 @@ export default function HomePage() {
     };
   }, []);
 
-  const updateProgressIndicator = (index: number) => {
-    if (progressTimeline.current) {
-      progressTimeline.current.kill();
-    }
-
-    // Reset all progress bars first
-    progressRefs.current.forEach((ref) => {
-      if (ref) {
-        gsap.set(ref, { scaleX: 0, transformOrigin: 'bottom left' });
-      }
-    });
-
-    // Create new timeline for this progress
-    progressTimeline.current = gsap.timeline();
-    progressTimeline.current
-      .set(progressRefs.current[index], {
-        scaleX: 0,
-        transformOrigin: 'bottom left',
-      })
-      .to(progressRefs.current[index], {
-        scaleX: 1,
-        duration: SLIDE_DURATION,
-        ease: 'none',
-      });
-  };
-
   const transitionSlide = (
     nextIndex: number,
     direction: 'next' | 'prev' = 'next'
@@ -147,43 +121,72 @@ export default function HomePage() {
     if (timelineRef.current) timelineRef.current.kill();
     if (progressTimeline.current) progressTimeline.current.kill();
 
-    // Reset z-indices for all slides
+    // Set z-indices properly before transition
     slideRefs.current.forEach((ref, index) => {
-      if (ref && index !== currentSlide && index !== nextIndex) {
-        gsap.set(ref, { zIndex: 1 });
+      if (ref) {
+        gsap.set(ref, {
+          zIndex: index === nextIndex ? 3 : index === currentSlide ? 2 : 1,
+        });
       }
     });
 
     const tl = gsap.timeline({
       onComplete: () => {
         setIsTransitioning(false);
-        if (direction === 'next') {
-          autoPlayRef.current = setTimeout(() => {
-            const nextSlide = (nextIndex + 1) % REELS_DATA.length;
-            transitionSlide(nextSlide, 'next');
-          }, SLIDE_DURATION * 1000);
-        }
+        // Don't set autoPlayRef here anymore
       },
     });
 
-    // Set up the new slide
+    // Set up the new slide position
     tl.set(nextElement, {
-      zIndex: 3,
       clipPath:
         direction === 'next'
-          ? 'polygon(120% -20%, 100% -20%, 100% 120%, 120% 120%)'
-          : 'polygon(-20% -20%, 0% -20%, 0% 120%, -20% 120%)',
-    })
-      .set(currentElement, { zIndex: 2 })
-      .to(nextElement, {
-        clipPath: 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
-        duration: 1.8,
-        ease: 'ease-in-out-cubic',
-      })
-      .set(currentElement, { zIndex: 1 });
+          ? 'polygon(100% -20%, 100% -20%, 100% 120%, 100% 120%)'
+          : 'polygon(0% -20%, 0% -20%, 0% 120%, 0% 120%)',
+    }).to(nextElement, {
+      clipPath: 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
+      duration: 1.8,
+      ease: 'ease-in-out-cubic',
+    });
 
+    // Start progress and auto-advance simultaneously
     setCurrentSlide(nextIndex);
     updateProgressIndicator(nextIndex);
+
+    // Set up next auto-advance immediately
+    if (direction === 'next') {
+      autoPlayRef.current = setTimeout(() => {
+        const nextSlide = (nextIndex + 1) % REELS_DATA.length;
+        transitionSlide(nextSlide, 'next');
+      }, SLIDE_DURATION * 1000);
+    }
+  };
+
+  const updateProgressIndicator = (index: number) => {
+    if (progressTimeline.current) {
+      progressTimeline.current.kill();
+    }
+
+    // Reset all progress bars
+    progressRefs.current.forEach((ref) => {
+      if (ref) {
+        gsap.set(ref, { scaleX: 0 });
+      }
+    });
+
+    // Start new progress immediately
+    progressTimeline.current = gsap
+      .timeline()
+      .set(progressRefs.current[index], {
+        scaleX: 0,
+        transformOrigin: 'bottom left',
+      })
+      .to(progressRefs.current[index], {
+        scaleX: 1,
+        duration: SLIDE_DURATION,
+        ease: 'none',
+        immediateRender: true, // Ensures immediate start
+      });
   };
 
   const handleNext = () => {
@@ -199,9 +202,7 @@ export default function HomePage() {
     transitionSlide(prevSlide, 'prev');
   };
 
-  // Start without animation for initial slide
   useEffect(() => {
-    // Set initial states without animation
     if (slideRefs.current[0]) {
       gsap.set(slideRefs.current[0], {
         clipPath: 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
@@ -210,7 +211,6 @@ export default function HomePage() {
     }
     updateProgressIndicator(0);
 
-    // Start auto-slide timer
     autoPlayRef.current = setTimeout(() => {
       transitionSlide(1, 'next');
     }, SLIDE_DURATION * 1000);
