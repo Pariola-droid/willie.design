@@ -121,39 +121,57 @@ export default function HomePage() {
     if (timelineRef.current) timelineRef.current.kill();
     if (progressTimeline.current) progressTimeline.current.kill();
 
-    // Set z-indices properly before transition
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setIsTransitioning(false);
+
+        // After transition completes, reset all other slides
+        slideRefs.current.forEach((ref, index) => {
+          if (ref && index !== nextIndex) {
+            gsap.set(ref, {
+              zIndex: 1,
+              clipPath: 'polygon(100% -20%, 100% -20%, 100% 120%, 100% 120%)',
+            });
+          }
+        });
+      },
+    });
+
+    // First, reset all slides except current and next
     slideRefs.current.forEach((ref, index) => {
-      if (ref) {
+      if (ref && index !== currentSlide && index !== nextIndex) {
         gsap.set(ref, {
-          zIndex: index === nextIndex ? 3 : index === currentSlide ? 2 : 1,
+          zIndex: 1,
+          clipPath: 'polygon(100% -20%, 100% -20%, 100% 120%, 100% 120%)',
         });
       }
     });
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setIsTransitioning(false);
-        // Don't set autoPlayRef here anymore
-      },
+    // Set up current and next slides
+    gsap.set(currentElement, {
+      zIndex: 2,
+      clipPath: 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
     });
 
-    // Set up the new slide position
-    tl.set(nextElement, {
+    gsap.set(nextElement, {
+      zIndex: 3,
       clipPath:
         direction === 'next'
           ? 'polygon(100% -20%, 100% -20%, 100% 120%, 100% 120%)'
           : 'polygon(0% -20%, 0% -20%, 0% 120%, 0% 120%)',
-    }).to(nextElement, {
+    });
+
+    // Animate the transition
+    tl.to(nextElement, {
       clipPath: 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
-      duration: 1.8,
+      duration: 1,
       ease: 'ease-in-out-cubic',
     });
 
-    // Start progress and auto-advance simultaneously
+    // Update state and start next timer
     setCurrentSlide(nextIndex);
     updateProgressIndicator(nextIndex);
 
-    // Set up next auto-advance immediately
     if (direction === 'next') {
       autoPlayRef.current = setTimeout(() => {
         const nextSlide = (nextIndex + 1) % REELS_DATA.length;
