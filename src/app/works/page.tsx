@@ -2,14 +2,20 @@
 
 import PageWrapper from '@/components/common/PageWrapper';
 import { gsap } from 'gsap';
+import { Flip } from 'gsap/dist/Flip';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { FEATURED_WORKS, WORKS } from '../../utils/constant';
 
+gsap.registerPlugin(Flip);
+
 export default function WorksPage() {
   const [bgColor, setBgColor] = useState('#ffffff');
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [isVertical, setIsVertical] = useState<Boolean>(true);
 
+  const containerRef = useRef(null);
+  const itemsRef = useRef(null);
   const imageRefs = useRef<(HTMLDivElement | null)[]>(
     FEATURED_WORKS.map(() => null)
   );
@@ -17,6 +23,37 @@ export default function WorksPage() {
   const isAnimating = useRef<boolean>(false);
 
   const displayWorks = [...WORKS, ...WORKS, ...WORKS];
+
+  const handleLayoutChange = () => {
+    // Capture state of both container and spans
+    const state = Flip.getState([
+      '.pageWorks__footer-layoutBtn', // capture container
+      '.layoutBtn-span', // capture spans
+    ]);
+
+    // Toggle the layout
+    setIsVertical(!isVertical);
+
+    // Create FLIP animation
+    Flip.from(state, {
+      absolute: true,
+      duration: 0.8,
+      ease: 'power2.inOut',
+      // nested: true, // Important! This helps with nested elements
+      // spin: false, // Prevent any accidental spinning
+      stagger: {
+        each: 0.05,
+        from: 'start',
+      },
+      onEnter: (elements) => {
+        gsap.fromTo(
+          elements,
+          { opacity: 0, scale: 0 },
+          { opacity: 1, scale: 1, duration: 0.8 }
+        );
+      },
+    });
+  };
 
   const updateZIndices = (currentIndex: number) => {
     imageRefs.current.forEach((ref, index) => {
@@ -67,10 +104,10 @@ export default function WorksPage() {
     <>
       <PageWrapper
         theme="light"
-        className="pageWorks"
+        className={`pageWorks`}
         style={{ backgroundColor: bgColor }}
         lenis={{
-          infinite: true,
+          infinite: Boolean(isVertical),
         }}
       >
         {displayWorks.map((work, i) => (
@@ -93,18 +130,23 @@ export default function WorksPage() {
       </PageWrapper>
 
       <div className="pageWorks__footer">
-        <div className="pageWorks__footer-layoutControl">
+        <button
+          onClick={handleLayoutChange}
+          className="pageWorks__footer-layoutControl"
+        >
           <div
             role="button"
             aria-label="Change view"
-            className="pageWorks__footer-layoutBtn vertical"
+            className={`pageWorks__footer-layoutBtn ${
+              isVertical ? 'horizontal' : ''
+            }`}
           >
-            <span></span>
-            <span></span>
-            <span></span>
+            <span className="layoutBtn-span"></span>
+            <span className="layoutBtn-span"></span>
+            <span className="layoutBtn-span"></span>
           </div>
           <p className="pageWorks__footer-label">Change view</p>
-        </div>
+        </button>
 
         <div className="pageWorks__footer-shuffleContainer">
           <div className="pageWorks__footer-scTop">
