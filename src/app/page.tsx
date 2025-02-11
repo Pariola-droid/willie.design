@@ -69,8 +69,6 @@ CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 export default function HomePage() {
   const router = useRouter();
 
-  // transform: translate(-480px, 0px) rotate(-7deg) scale(1.8, 1.8);
-
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -183,35 +181,6 @@ export default function HomePage() {
     transitionSlide(prevSlide, 'prev');
   };
 
-  // useEffect(() => {
-  //   timelineRef.current = gsap.timeline();
-  //   progressTimeline.current = gsap.timeline();
-
-  //   slideRefs.current.forEach((ref, index) => {
-  //     if (ref) {
-  //       gsap.set(ref, {
-  //         zIndex: index === 0 ? 2 : 1,
-  //         clipPath:
-  //           index === 0
-  //             ? 'polygon(-20% -80%, 120% -20%, 120% 180%, -20% 120%)'
-  //             : 'polygon(100% -20%, 100% -20%, 100% 180%, 100% 180%)',
-  //       });
-  //     }
-  //   });
-
-  //   updateProgressIndicator(0);
-
-  //   autoPlayRef.current = setTimeout(() => {
-  //     transitionSlide(1, 'next');
-  //   }, SLIDE_DURATION * 1000);
-
-  //   return () => {
-  //     if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
-  //     if (timelineRef.current) timelineRef.current.kill();
-  //     if (progressTimeline.current) progressTimeline.current.kill();
-  //   };
-  // }, []);
-
   useEffect(() => {
     let lastVisibleTime = Date.now();
 
@@ -283,7 +252,6 @@ export default function HomePage() {
       transitionSlide(1, 'next');
     }, SLIDE_DURATION * 1000);
 
-    // Cleanup
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
