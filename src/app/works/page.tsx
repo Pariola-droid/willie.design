@@ -37,12 +37,14 @@ export default function WorksPage() {
       absolute: true,
       duration: 0.4,
       ease: 'power2.inOut',
-      stagger: {
-        each: 0.08,
-        from: 'start',
-      },
+      immediateRender: true, // Forces immediate start
+      simple: true,
       onEnter: (elements) => {
-        gsap.fromTo(elements, { opacity: 0 }, { opacity: 1, duration: 0.4 });
+        gsap.fromTo(
+          elements,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.4, immediateRender: true }
+        );
       },
     });
   };
