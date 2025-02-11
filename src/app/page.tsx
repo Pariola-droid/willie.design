@@ -87,61 +87,54 @@ export default function HomePage() {
 
     const currentElement = slideRefs.current[currentSlide];
     const nextElement = slideRefs.current[nextIndex];
+
     if (!currentElement || !nextElement) return;
 
     setIsTransitioning(true);
 
-    // Clear existing animations and timeouts
     if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
     if (timelineRef.current) timelineRef.current.kill();
     if (progressTimeline.current) progressTimeline.current.kill();
 
-    // Create main timeline
     const tl = gsap.timeline({
       onComplete: () => {
         setIsTransitioning(false);
-
-        // Only after transition is complete, reset states
         slideRefs.current.forEach((ref, index) => {
           if (ref) {
             gsap.set(ref, {
               zIndex: index === nextIndex ? 2 : 1,
               clipPath:
                 index === nextIndex
-                  ? 'polygon(-20% -40%, 120% 0%, 120% 140%, -20% 100%)'
-                  : 'polygon(100% -40%, 100% 0%, 100% 140%, 100% 100%)',
+                  ? 'polygon(-20% -80%, 120% -20%, 120% 180%, -20% 120%)'
+                  : 'polygon(100% -20%, 100% -20%, 100% 180%, 100% 180%)',
             });
           }
         });
       },
     });
 
-    // Keep current slide fully visible with slanted edges
     gsap.set(currentElement, {
       zIndex: 2,
-      clipPath: 'polygon(-20% -40%, 120% 0%, 120% 140%, -20% 100%)',
+      clipPath: 'polygon(-20% -80%, 120% -20%, 120% 180%, -20% 120%)',
     });
 
-    // Set next slide on top and hidden
     gsap.set(nextElement, {
       zIndex: 3,
       clipPath:
         direction === 'next'
-          ? 'polygon(100% -40%, 100% 0%, 100% 140%, 100% 100%)'
-          : 'polygon(-120% -40%, -120% 0%, -120% 140%, -120% 100%)',
+          ? 'polygon(100% -20%, 100% -20%, 100% 180%, 100% 180%)'
+          : 'polygon(-120% -80%, -120% -20%, -120% 180%, -120% 120%)',
     });
 
     tl.to(nextElement, {
-      clipPath: 'polygon(-20% -40%, 120% 0%, 120% 140%, -20% 100%)',
+      clipPath: 'polygon(-20% -80%, 120% -20%, 120% 180%, -20% 120%)',
       duration: 1.6,
       ease: 'ease-in-out-cubic',
     });
 
-    // Update state and start progress
     setCurrentSlide(nextIndex);
     updateProgressIndicator(nextIndex);
 
-    // Set up next automatic transition
     if (direction === 'next') {
       autoPlayRef.current = setTimeout(() => {
         const nextSlide = (nextIndex + 1) % REELS_DATA.length;
@@ -190,47 +183,112 @@ export default function HomePage() {
     transitionSlide(prevSlide, 'prev');
   };
 
+  // useEffect(() => {
+  //   timelineRef.current = gsap.timeline();
+  //   progressTimeline.current = gsap.timeline();
+
+  //   slideRefs.current.forEach((ref, index) => {
+  //     if (ref) {
+  //       gsap.set(ref, {
+  //         zIndex: index === 0 ? 2 : 1,
+  //         clipPath:
+  //           index === 0
+  //             ? 'polygon(-20% -80%, 120% -20%, 120% 180%, -20% 120%)'
+  //             : 'polygon(100% -20%, 100% -20%, 100% 180%, 100% 180%)',
+  //       });
+  //     }
+  //   });
+
+  //   updateProgressIndicator(0);
+
+  //   autoPlayRef.current = setTimeout(() => {
+  //     transitionSlide(1, 'next');
+  //   }, SLIDE_DURATION * 1000);
+
+  //   return () => {
+  //     if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
+  //     if (timelineRef.current) timelineRef.current.kill();
+  //     if (progressTimeline.current) progressTimeline.current.kill();
+  //   };
+  // }, []);
+
   useEffect(() => {
+    let lastVisibleTime = Date.now();
+
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        // Page is hidden, clear the timeout
+        if (autoPlayRef.current) {
+          clearTimeout(autoPlayRef.current);
+          autoPlayRef.current = null;
+        }
+      } else {
+        // Page is visible again
+        const currentTime = Date.now();
+        const timePassed = currentTime - lastVisibleTime;
+
+        // Calculate how many slides we should have moved
+        const slidesToMove = Math.floor(timePassed / (SLIDE_DURATION * 1000));
+        const targetSlide = (currentSlide + slidesToMove) % REELS_DATA.length;
+
+        // Instead of rapid transitions, just set to the correct slide
+        if (slidesToMove > 0) {
+          // Immediately set the current slide without animation
+          slideRefs.current.forEach((ref, index) => {
+            if (ref) {
+              gsap.set(ref, {
+                zIndex: index === targetSlide ? 2 : 1,
+                clipPath:
+                  index === targetSlide
+                    ? 'polygon(-20% -80%, 120% -20%, 120% 180%, -20% 120%)'
+                    : 'polygon(100% -20%, 100% -20%, 100% 180%, 100% 180%)',
+              });
+            }
+          });
+          setCurrentSlide(targetSlide);
+          updateProgressIndicator(targetSlide);
+        }
+
+        // Restart the autoplay from current position
+        autoPlayRef.current = setTimeout(() => {
+          const nextSlide = (targetSlide + 1) % REELS_DATA.length;
+          transitionSlide(nextSlide, 'next');
+        }, SLIDE_DURATION * 1000);
+      }
+      lastVisibleTime = Date.now();
+    }
+
+    // Add visibility change listener
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Initial setup
     timelineRef.current = gsap.timeline();
     progressTimeline.current = gsap.timeline();
 
-    // Set initial states for all slides
     slideRefs.current.forEach((ref, index) => {
       if (ref) {
         gsap.set(ref, {
           zIndex: index === 0 ? 2 : 1,
           clipPath:
             index === 0
-              ? 'polygon(-20% -40%, 120% 0%, 120% 140%, -20% 100%)'
-              : 'polygon(100% -40%, 100% 0%, 100% 140%, 100% 100%)',
+              ? 'polygon(-20% -80%, 120% -20%, 120% 180%, -20% 120%)'
+              : 'polygon(100% -20%, 100% -20%, 100% 180%, 100% 180%)',
         });
       }
     });
 
     updateProgressIndicator(0);
 
-    return () => {
-      if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
-      if (timelineRef.current) timelineRef.current.kill();
-      if (progressTimeline.current) progressTimeline.current.kill();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (slideRefs.current[0]) {
-      gsap.set(slideRefs.current[0], {
-        clipPath: 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
-        zIndex: 2,
-      });
-    }
-    updateProgressIndicator(0);
-
     autoPlayRef.current = setTimeout(() => {
       transitionSlide(1, 'next');
     }, SLIDE_DURATION * 1000);
 
+    // Cleanup
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
+      if (timelineRef.current) timelineRef.current.kill();
+      if (progressTimeline.current) progressTimeline.current.kill();
     };
   }, []);
 
@@ -249,8 +307,8 @@ export default function HomePage() {
                 zIndex: index === 0 ? 2 : 1,
                 clipPath:
                   index === 0
-                    ? 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)'
-                    : 'polygon(100% -20%, 100% -20%, 100% 120%, 100% 120%)',
+                    ? 'polygon(-20% -80%, 120% -20%, 120% 180%, -20% 120%)'
+                    : 'polygon(100% -20%, 100% -20%, 100% 180%, 100% 180%)',
               }}
             >
               <span
