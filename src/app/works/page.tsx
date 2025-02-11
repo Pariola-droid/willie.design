@@ -25,32 +25,24 @@ export default function WorksPage() {
   const displayWorks = [...WORKS, ...WORKS, ...WORKS];
 
   const handleLayoutChange = () => {
-    // Capture state of both container and spans
     const state = Flip.getState([
-      '.pageWorks__footer-layoutBtn', // capture container
-      '.layoutBtn-span', // capture spans
+      '.pageWorks__footer-layoutBtn',
+      '.layoutBtn-span',
     ]);
 
     // Toggle the layout
     setIsVertical(!isVertical);
 
-    // Create FLIP animation
     Flip.from(state, {
       absolute: true,
-      duration: 0.8,
+      duration: 0.4,
       ease: 'power2.inOut',
-      // nested: true, // Important! This helps with nested elements
-      // spin: false, // Prevent any accidental spinning
       stagger: {
-        each: 0.05,
+        each: 0.08,
         from: 'start',
       },
       onEnter: (elements) => {
-        gsap.fromTo(
-          elements,
-          { opacity: 0, scale: 0 },
-          { opacity: 1, scale: 1, duration: 0.8 }
-        );
+        gsap.fromTo(elements, { opacity: 0 }, { opacity: 1, duration: 0.4 });
       },
     });
   };
