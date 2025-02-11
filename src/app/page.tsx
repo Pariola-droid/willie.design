@@ -153,7 +153,6 @@ export default function HomePage() {
       }
     });
 
-    // Start new progress immediately
     progressTimeline.current = gsap
       .timeline()
       .set(progressRefs.current[index], {
@@ -164,7 +163,7 @@ export default function HomePage() {
         scaleX: 1,
         duration: SLIDE_DURATION,
         ease: 'none',
-        immediateRender: true, // Ensures immediate start
+        immediateRender: true,
       });
   };
 
@@ -186,23 +185,20 @@ export default function HomePage() {
 
     function handleVisibilityChange() {
       if (document.hidden) {
-        // Page is hidden, clear the timeout
         if (autoPlayRef.current) {
           clearTimeout(autoPlayRef.current);
           autoPlayRef.current = null;
         }
       } else {
-        // Page is visible again
         const currentTime = Date.now();
         const timePassed = currentTime - lastVisibleTime;
 
-        // Calculate how many slides we should have moved
+        // slides that should have moved
         const slidesToMove = Math.floor(timePassed / (SLIDE_DURATION * 1000));
         const targetSlide = (currentSlide + slidesToMove) % REELS_DATA.length;
 
-        // Instead of rapid transitions, just set to the correct slide
+        // just set to the correct slide
         if (slidesToMove > 0) {
-          // Immediately set the current slide without animation
           slideRefs.current.forEach((ref, index) => {
             if (ref) {
               gsap.set(ref, {
@@ -227,10 +223,8 @@ export default function HomePage() {
       lastVisibleTime = Date.now();
     }
 
-    // Add visibility change listener
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Initial setup
     timelineRef.current = gsap.timeline();
     progressTimeline.current = gsap.timeline();
 
