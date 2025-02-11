@@ -69,6 +69,8 @@ CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 export default function HomePage() {
   const router = useRouter();
 
+  // transform: translate(-480px, 0px) rotate(-7deg) scale(1.8, 1.8);
+
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -76,32 +78,6 @@ export default function HomePage() {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
   const progressTimeline = useRef<gsap.core.Timeline | null>(null);
-
-  useEffect(() => {
-    timelineRef.current = gsap.timeline();
-    progressTimeline.current = gsap.timeline();
-
-    // Set initial states for all slides
-    slideRefs.current.forEach((ref, index) => {
-      if (ref) {
-        gsap.set(ref, {
-          zIndex: index === 0 ? 2 : 1,
-          clipPath:
-            index === 0
-              ? 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)'
-              : 'polygon(100% -20%, 100% -20%, 100% 120%, 100% 120%)',
-        });
-      }
-    });
-
-    updateProgressIndicator(0);
-
-    return () => {
-      if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
-      if (timelineRef.current) timelineRef.current.kill();
-      if (progressTimeline.current) progressTimeline.current.kill();
-    };
-  }, []);
 
   const transitionSlide = (
     nextIndex: number,
@@ -111,7 +87,6 @@ export default function HomePage() {
 
     const currentElement = slideRefs.current[currentSlide];
     const nextElement = slideRefs.current[nextIndex];
-
     if (!currentElement || !nextElement) return;
 
     setIsTransitioning(true);
@@ -133,18 +108,18 @@ export default function HomePage() {
               zIndex: index === nextIndex ? 2 : 1,
               clipPath:
                 index === nextIndex
-                  ? 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)'
-                  : 'polygon(100% -20%, 100% -20%, 100% 120%, 100% 120%)',
+                  ? 'polygon(-20% -40%, 120% 0%, 120% 140%, -20% 100%)'
+                  : 'polygon(100% -40%, 100% 0%, 100% 140%, 100% 100%)',
             });
           }
         });
       },
     });
 
-    // Important: Keep current slide fully visible
+    // Keep current slide fully visible with slanted edges
     gsap.set(currentElement, {
       zIndex: 2,
-      clipPath: 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
+      clipPath: 'polygon(-20% -40%, 120% 0%, 120% 140%, -20% 100%)',
     });
 
     // Set next slide on top and hidden
@@ -152,15 +127,14 @@ export default function HomePage() {
       zIndex: 3,
       clipPath:
         direction === 'next'
-          ? 'polygon(100% -20%, 100% -20%, 100% 120%, 100% 120%)'
-          : 'polygon(-120% -20%, -120% -20%, -120% 120%, -120% 120%)',
+          ? 'polygon(100% -40%, 100% 0%, 100% 140%, 100% 100%)'
+          : 'polygon(-120% -40%, -120% 0%, -120% 140%, -120% 100%)',
     });
 
-    // Animate next slide to reveal
     tl.to(nextElement, {
-      clipPath: 'polygon(-20% -20%, 120% -20%, 120% 120%, -20% 120%)',
-      duration: 1.2,
-      ease: 'ease-in-out-circ',
+      clipPath: 'polygon(-20% -40%, 120% 0%, 120% 140%, -20% 100%)',
+      duration: 1.6,
+      ease: 'ease-in-out-cubic',
     });
 
     // Update state and start progress
@@ -215,6 +189,32 @@ export default function HomePage() {
       (currentSlide - 1 + REELS_DATA.length) % REELS_DATA.length;
     transitionSlide(prevSlide, 'prev');
   };
+
+  useEffect(() => {
+    timelineRef.current = gsap.timeline();
+    progressTimeline.current = gsap.timeline();
+
+    // Set initial states for all slides
+    slideRefs.current.forEach((ref, index) => {
+      if (ref) {
+        gsap.set(ref, {
+          zIndex: index === 0 ? 2 : 1,
+          clipPath:
+            index === 0
+              ? 'polygon(-20% -40%, 120% 0%, 120% 140%, -20% 100%)'
+              : 'polygon(100% -40%, 100% 0%, 100% 140%, 100% 100%)',
+        });
+      }
+    });
+
+    updateProgressIndicator(0);
+
+    return () => {
+      if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
+      if (timelineRef.current) timelineRef.current.kill();
+      if (progressTimeline.current) progressTimeline.current.kill();
+    };
+  }, []);
 
   useEffect(() => {
     if (slideRefs.current[0]) {
