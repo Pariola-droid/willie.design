@@ -37,7 +37,7 @@ export default function WorksPage() {
 
     Flip.from(state, {
       absolute: true,
-      duration: 0.5,
+      duration: 0.6,
       ease: 'power2.inOut',
       immediateRender: true,
       onEnter: (elements) => {
