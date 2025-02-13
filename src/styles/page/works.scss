@@ -1,21 +1,32 @@
 .pageWorks {
   width: 100%;
   min-height: 100vh;
-  // background-color: $white;
   padding-inline: 1rem;
   position: relative;
   padding-left: toRem(254);
   transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
-  flex-direction: column;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
+  align-items: flex-end;
 
-  &.horizontal {
-    flex-direction: row;
-    -webkit-box-orient: horizontal;
+  &__cardContainer {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    flex-wrap: wrap;
+    // background-color: red;
+    will-change: height, width;
+    transition: height 0.5s $ease-in-out-quad, width 0.5s $ease-in-out-quad;
+
+    &.horizontal {
+      flex-direction: row;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      flex-wrap: wrap;
+      width: toRem(715);
+      height: auto;
+    }
   }
 
   &__workCard {
@@ -26,20 +37,37 @@
     @include flexed(unset, flex-start, column);
     row-gap: toRem(16);
     z-index: 2;
+    will-change: transform;
+    transition: transform 0.5s $ease-in-out-quad, padding 0.5s $ease-in-out-quad;
 
     &:first-child {
-      margin-top: toRem(135);
+      padding-top: toRem(135);
+    }
+
+    &.horizontal {
+      max-width: toRem(238);
+      min-height: toRem(188.5);
+      margin-bottom: toRem(36);
+
+      &:first-child {
+        padding-top: 0;
+      }
     }
 
     &-wImg {
       width: 100%;
       height: toRem(300);
       background-color: $black;
+      transition: height 0.5s $ease-in-out-quad;
 
       & img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+      }
+
+      &.horizontal {
+        height: toRem(155);
       }
     }
 
@@ -129,7 +157,7 @@
         display: inline-block;
         position: relative;
         will-change: transform;
-        transition: transform 0.4s ease-in-out;
+        transition: all 0.5s $ease-in-out-quad;
 
         &:last-of-type {
           margin-bottom: 0;

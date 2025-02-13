@@ -14,37 +14,48 @@ export default function WorksPage() {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isVertical, setIsVertical] = useState<Boolean>(true);
 
-  const containerRef = useRef(null);
-  const itemsRef = useRef(null);
   const imageRefs = useRef<(HTMLDivElement | null)[]>(
     FEATURED_WORKS.map(() => null)
   );
   const imageWrapperRef = useRef<HTMLDivElement | null>(null);
   const isAnimating = useRef<boolean>(false);
+  const isFlipping = useRef<boolean>(false);
 
-  const displayWorks = [...WORKS, ...WORKS, ...WORKS];
+  const displayWorks = isVertical ? [...WORKS, ...WORKS, ...WORKS] : WORKS;
 
   const handleLayoutChange = () => {
+    if (isFlipping.current) return;
+    isFlipping.current = true;
+
     const state = Flip.getState([
+      '.pageWorks__cardContainer',
+      '.pageWorks__workCard',
       '.pageWorks__footer-layoutBtn',
       '.layoutBtn-span',
     ]);
-
-    // Toggle the layout
     setIsVertical(!isVertical);
 
     Flip.from(state, {
       absolute: true,
-      duration: 0.4,
+      duration: 0.5,
       ease: 'power2.inOut',
-      immediateRender: true, // Forces immediate start
-      simple: true,
+      immediateRender: true,
       onEnter: (elements) => {
         gsap.fromTo(
           elements,
           { opacity: 0 },
           { opacity: 1, duration: 0.4, immediateRender: true }
         );
+      },
+      onLeave: (elements) => {
+        gsap.to(elements, {
+          opacity: 0,
+          duration: 0.4,
+          immediateRender: true,
+        });
+      },
+      onComplete: () => {
+        isFlipping.current = false;
       },
     });
   };
@@ -104,28 +115,46 @@ export default function WorksPage() {
           infinite: Boolean(isVertical),
         }}
       >
-        {displayWorks.map((work, i) => (
-          <a
-            key={`${work.id}-${i}`}
-            href="/works/aria-amara"
-            className="pageWorks__workCard"
-            onMouseEnter={() => setBgColor(work.color)}
-            onMouseLeave={() => setBgColor('#ffffff')}
-          >
-            <div className="pageWorks__workCard-wImg">
-              <Image src={work.img} width={456} height={300} alt={work.title} />
-            </div>
-            <div className="pageWorks__workCard-wInfo">
-              <small>{work?.number}.</small>
-              <p>{work?.title}</p>
-            </div>
-          </a>
-        ))}
+        <div
+          className={`pageWorks__cardContainer ${
+            !isVertical ? 'horizontal' : ''
+          }`}
+        >
+          {WORKS.map((work, i) => (
+            <a
+              key={`${work.id}-${i}`}
+              href="/works/aria-amara"
+              className={`pageWorks__workCard ${
+                !isVertical ? 'horizontal' : ''
+              }`}
+              onMouseEnter={() => setBgColor(work.color)}
+              onMouseLeave={() => setBgColor('#ffffff')}
+            >
+              <div
+                className={`pageWorks__workCard-wImg ${
+                  !isVertical ? 'horizontal' : ''
+                }`}
+              >
+                <Image
+                  src={work.img}
+                  width={456}
+                  height={300}
+                  alt={work.title}
+                />
+              </div>
+              <div className="pageWorks__workCard-wInfo">
+                <small>{work?.number}.</small>
+                <p>{work?.title}</p>
+              </div>
+            </a>
+          ))}
+        </div>
       </PageWrapper>
 
       <div className="pageWorks__footer">
         <button
           onClick={handleLayoutChange}
+          onDoubleClick={() => (isFlipping.current = true)}
           className="pageWorks__footer-layoutControl"
         >
           <div
