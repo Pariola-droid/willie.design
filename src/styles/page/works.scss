@@ -6,7 +6,7 @@
   padding-left: toRem(254);
   transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 
   &__cardContainer {
     height: 100%;
@@ -38,7 +38,8 @@
     row-gap: toRem(16);
     z-index: 2;
     will-change: transform;
-    transition: transform 0.6s $ease-in-out-quad, padding 0.6s $ease-in-out-quad;
+    transition: transform 0.6s $ease-in-out-quad,
+      padding-top 0.6s $ease-in-out-quad;
 
     &:first-child {
       padding-top: toRem(135);
