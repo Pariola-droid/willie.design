@@ -30,6 +30,11 @@ export const workType = defineType({
       },
     }),
     defineField({
+      name: 'hoverColor',
+      type: 'string',
+      title: 'Hover color',
+    }),
+    defineField({
       name: 'title',
       type: 'string',
       placeholder: 'Project title',
