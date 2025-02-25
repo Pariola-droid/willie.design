@@ -1,18 +1,43 @@
 'use client';
 
 import PageWrapper from '@/components/common/PageWrapper';
+
+import { client } from '@/sanity/client';
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/dist/Flip';
+import { type SanityDocument } from 'next-sanity';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { FEATURED_WORKS, WORKS } from '../../utils/constant';
 
 gsap.registerPlugin(Flip);
+interface WorkDocument extends SanityDocument {
+  featured: boolean;
+  layout: 'layout_a' | 'layout_b';
+  hoverColor: string;
+  title: string;
+  slug: { current: string };
+  coverImage: {
+    asset: {
+      _ref: string;
+      url: string;
+    };
+    alt?: string;
+  };
+  captions?: string[];
+  description: string;
+  liveLink?: string;
+  publishedAt?: string;
+}
 
 export default function WorksPage() {
   const [bgColor, setBgColor] = useState('#ffffff');
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isVertical, setIsVertical] = useState<Boolean>(true);
+
+  const [works, setWorks] = useState<SanityDocument[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   const imageRefs = useRef<(HTMLDivElement | null)[]>(
     FEATURED_WORKS.map(() => null)
@@ -20,6 +45,38 @@ export default function WorksPage() {
   const imageWrapperRef = useRef<HTMLDivElement | null>(null);
   const isAnimating = useRef<boolean>(false);
   const isFlipping = useRef<boolean>(false);
+
+  useEffect(() => {
+    const fetchWorks = async () => {
+      try {
+        setIsLoading(true);
+        const WORKS_QUERY = `*[_type == "work" && defined(slug.current)] | order(publishedAt desc) {
+          _id,
+          featured,
+          layout,
+          hoverColor,
+          title,
+          slug,
+          "coverImageUrl": coverImage.asset->url,
+          "coverImageAlt": coverImage.alt,
+          captions,
+          description,
+          liveLink,
+          publishedAt
+        }`;
+
+        const sanityWorks = await client.fetch<WorkDocument[]>(WORKS_QUERY);
+        setWorks(sanityWorks);
+        setIsLoading(false);
+      } catch (err) {
+        console.error('Error fetching Sanity data:', err);
+        setError(err instanceof Error ? err : new Error('Unknown error'));
+        setIsLoading(false);
+      }
+    };
+
+    fetchWorks();
+  }, []);
 
   const handleLayoutChange = () => {
     if (isFlipping.current) return;
@@ -101,6 +158,24 @@ export default function WorksPage() {
     return () => clearInterval(interval);
   }, [activeIndex]);
 
+  if (isLoading) {
+    return (
+      <PageWrapper theme="light" className="pageWorks">
+        <div className="loading">Loading works...</div>
+      </PageWrapper>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageWrapper theme="light" className="pageWorks">
+        <div className="error">Error loading works: {error.message}</div>
+      </PageWrapper>
+    );
+  }
+
+  const displayWorks = works.length > 0 ? works : WORKS;
+
   return (
     <>
       <PageWrapper
@@ -112,28 +187,36 @@ export default function WorksPage() {
         }}
       >
         <div className={`pageWorks__cardContainer`}>
-          {[...WORKS, ...WORKS, ...WORKS].map((work, i) => (
-            <a
-              key={`${work.id}-${i}`}
-              href="/works/aria-amara"
-              className={`pageWorks__workCard`}
-              onMouseEnter={() => setBgColor(work.color)}
-              onMouseLeave={() => setBgColor('#ffffff')}
-            >
-              <div className={`pageWorks__workCard-wImg`}>
-                <Image
-                  src={work.img}
-                  width={456}
-                  height={300}
-                  alt={work.title}
-                />
-              </div>
-              <div className="pageWorks__workCard-wInfo">
-                <small>{work?.number}.</small>
-                <p>{work?.title}</p>
-              </div>
-            </a>
-          ))}
+          {[...displayWorks, ...displayWorks, ...displayWorks].map(
+            (work: Partial<WorkDocument>, i) => (
+              <a
+                key={`${work._id || work.id}-${i}`}
+                href={`/works/${work.slug?.current || 'aria-amara'}`}
+                className={`pageWorks__workCard`}
+                onMouseEnter={() =>
+                  setBgColor(`#${work.hoverColor}` || '#ffffff')
+                }
+                onMouseLeave={() => setBgColor('#ffffff')}
+              >
+                <div className={`pageWorks__workCard-wImg`}>
+                  <Image
+                    src={
+                      work.coverImageUrl ||
+                      work.img ||
+                      '/images/works/work-amara.png'
+                    }
+                    width={456}
+                    height={300}
+                    alt={work.coverImageAlt || work.title}
+                  />
+                </div>
+                <div className="pageWorks__workCard-wInfo">
+                  <small>{`${(i % displayWorks.length) + 1}.`}</small>
+                  <p>{work?.title}</p>
+                </div>
+              </a>
+            )
+          )}
         </div>
       </PageWrapper>
 
