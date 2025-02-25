@@ -21,15 +21,11 @@ export default function WorksPage() {
   const isAnimating = useRef<boolean>(false);
   const isFlipping = useRef<boolean>(false);
 
-  const displayWorks = isVertical ? [...WORKS, ...WORKS, ...WORKS] : WORKS;
-
   const handleLayoutChange = () => {
     if (isFlipping.current) return;
     isFlipping.current = true;
 
     const state = Flip.getState([
-      '.pageWorks__cardContainer',
-      '.pageWorks__workCard',
       '.pageWorks__footer-layoutBtn',
       '.layoutBtn-span',
     ]);
@@ -44,13 +40,13 @@ export default function WorksPage() {
         gsap.fromTo(
           elements,
           { opacity: 0 },
-          { opacity: 1, duration: 0.4, immediateRender: true }
+          { opacity: 1, duration: 0.6, immediateRender: true }
         );
       },
       onLeave: (elements) => {
         gsap.to(elements, {
           opacity: 0,
-          duration: 0.4,
+          duration: 0.6,
           immediateRender: true,
         });
       },
@@ -115,26 +111,16 @@ export default function WorksPage() {
           infinite: Boolean(isVertical),
         }}
       >
-        <div
-          className={`pageWorks__cardContainer ${
-            !isVertical ? 'horizontal' : ''
-          }`}
-        >
-          {WORKS.map((work, i) => (
+        <div className={`pageWorks__cardContainer`}>
+          {[...WORKS, ...WORKS, ...WORKS].map((work, i) => (
             <a
               key={`${work.id}-${i}`}
               href="/works/aria-amara"
-              className={`pageWorks__workCard ${
-                !isVertical ? 'horizontal' : ''
-              }`}
+              className={`pageWorks__workCard`}
               onMouseEnter={() => setBgColor(work.color)}
               onMouseLeave={() => setBgColor('#ffffff')}
             >
-              <div
-                className={`pageWorks__workCard-wImg ${
-                  !isVertical ? 'horizontal' : ''
-                }`}
-              >
+              <div className={`pageWorks__workCard-wImg`}>
                 <Image
                   src={work.img}
                   width={456}
