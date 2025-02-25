@@ -77,11 +77,12 @@
 
     &--imgOne {
       width: 100%;
+      overflow: hidden;
 
-      &.img {
+      &Img {
         width: toRem(575);
         height: toRem(427);
-        background-color: $black;
+        background-color: $white;
       }
     }
 
@@ -89,24 +90,27 @@
       width: 100%;
       padding-left: toRem(238);
       margin-top: toRem(96);
+      overflow: hidden;
 
-      &.img {
+      &Img {
         width: toRem(694);
         height: toRem(750);
-        background-color: $black;
+        background-color: $white;
+        object-fit: cover;
       }
     }
 
     &--imgThree {
       width: 100%;
-      padding-right: toRem(218);
-      margin-left: auto;
+      padding-right: toRem(234);
       margin-top: toRem(93);
+      overflow: hidden;
 
-      &.img {
+      &Img {
         width: toRem(238);
         height: toRem(175);
-        background-color: $black;
+        background-color: $white;
+        margin-left: auto;
       }
     }
 
@@ -114,11 +118,12 @@
       width: 100%;
       padding-left: toRem(238);
       margin-top: toRem(128);
+      overflow: hidden;
 
-      &.img {
+      &Img {
         width: toRem(456);
         height: toRem(350);
-        background-color: $black;
+        background-color: $white;
       }
     }
   }
@@ -195,7 +200,8 @@
     &--img {
       width: toRem(218);
       height: toRem(143);
-      background-color: $black;
+      background-color: $white;
+      overflow: hidden;
     }
 
     &--progress {
