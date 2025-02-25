@@ -1,11 +1,19 @@
 'use client';
 
 import PageWrapper from '@/components/common/PageWrapper';
+import { client } from '@/sanity/client';
 import { gsap } from 'gsap';
 import { Flip } from 'gsap/dist/Flip';
+import { type SanityDocument } from 'next-sanity';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { FEATURED_WORKS, WORKS } from '../../utils/constant';
+
+const WORKS_QUERY = `*[
+  _type == "post"
+  && defined(slug.current)
+]|order(publishedAt desc)[0...12]{_id, title, slug, publishedAt}`;
+const options = { next: { revalidate: 30 } };
 
 gsap.registerPlugin(Flip);
 
@@ -20,6 +28,8 @@ export default function WorksPage() {
   const imageWrapperRef = useRef<HTMLDivElement | null>(null);
   const isAnimating = useRef<boolean>(false);
   const isFlipping = useRef<boolean>(false);
+
+  const posts = await client.fetch<SanityDocument[]>(WORKS_QUERY, {}, options);
 
   const handleLayoutChange = () => {
     if (isFlipping.current) return;
