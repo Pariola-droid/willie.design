@@ -57,22 +57,13 @@ body {
 }
 
 /* Clean transitions */
-body.loading .animate-on-enter,
-body.transitioning .animate-on-enter {
+.page-loading .animate-on-enter {
   opacity: 0;
   visibility: hidden;
 }
 
+/* Transition overlay */
 .site-transition-overlay {
   pointer-events: none;
   will-change: opacity;
-}
-
-/* Preload images */
-.preload-image {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
 }
