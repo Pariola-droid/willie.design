@@ -7,6 +7,7 @@ import type { LenisOptions } from 'lenis';
 import { usePathname } from 'next/navigation';
 import { Fragment, PropsWithChildren, useEffect, useRef } from 'react';
 import { Lenis } from './Lenis';
+import { useTransition } from './TransitionProvider';
 
 const ROUTES = [
   {
@@ -33,8 +34,11 @@ interface PageWrapperProps extends PropsWithChildren {
 }
 
 export default function PageWrapper(props: PageWrapperProps) {
+  const { isTransitioning } = useTransition();
+
   const lenisRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const pageContainerRef = useRef<HTMLDivElement>(null);
 
   const {
     backButton,
@@ -60,6 +64,14 @@ export default function PageWrapper(props: PageWrapperProps) {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [pathname, theme]);
+
+  useEffect(() => {
+    if (!isTransitioning && pageContainerRef.current) {
+      setTimeout(() => {
+        pageContainerRef.current?.classList.add('page-ready');
+      }, 100);
+    }
+  }, [isTransitioning]);
 
   return (
     <div className="wp">
@@ -92,7 +104,10 @@ export default function PageWrapper(props: PageWrapperProps) {
           </a>
         </header>
       )}
-      <main className={className} {...rest}>
+      <main
+        className={`${className} ${isTransitioning ? 'is-transitioning' : ''}`}
+        {...rest}
+      >
         {children}
         <script>
           {`document.documentElement.setAttribute('data-theme', '${theme}');`}

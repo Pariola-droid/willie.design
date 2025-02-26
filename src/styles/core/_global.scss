@@ -31,8 +31,18 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif, -apple-system, BlinkMacSystemFont, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, Segoe UI,
+  font-family:
+    sans-serif,
+    -apple-system,
+    BlinkMacSystemFont,
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    Fira Sans,
+    Droid Sans,
+    Helvetica Neue,
+    Segoe UI,
     sans-serif;
   background-color: $grey-white;
 
@@ -44,4 +54,25 @@ body {
 ::selection {
   background-color: rgba(102, 102, 102, 0.2);
   color: $black;
+}
+
+/* Clean transitions */
+body.loading .animate-on-enter,
+body.transitioning .animate-on-enter {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.site-transition-overlay {
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* Preload images */
+.preload-image {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }

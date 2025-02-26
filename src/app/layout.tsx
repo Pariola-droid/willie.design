@@ -1,4 +1,5 @@
 import AbstractApp from '@/components/common/AbstractApp';
+import TransitionProvider from '@/components/common/TransitionProvider';
 import { GOOGLE_ANALYTICS } from '@/config/env';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
@@ -70,7 +71,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${bagoss.variable} ${cowboy.variable}`}>
       <body>
-        <AbstractApp>{children}</AbstractApp>
+        <TransitionProvider>
+          <AbstractApp>{children}</AbstractApp>
+        </TransitionProvider>
         <GoogleAnalytics gaId={`${GOOGLE_ANALYTICS}`} />
       </body>
     </html>

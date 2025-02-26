@@ -3,26 +3,26 @@ span.word_wrap {
   display: inline-block;
 }
 
-[data-animation*="skew"] .word-line-wrapper {
+[data-animation*='skew'] .word-line-wrapper {
   overflow: hidden !important;
 }
 
-[data-animation*="skew"] .word-line-wrapper .word-line,
-[data-animation*="skew"] .word-line {
+[data-animation*='skew'] .word-line-wrapper .word-line,
+[data-animation*='skew'] .word-line {
   display: inline-block;
 }
 
-[data-animation*="skew"] .word-line .word,
-[data-animation*="skew"] div.word {
+[data-animation*='skew'] .word-line .word,
+[data-animation*='skew'] div.word {
   line-height: inherit !important;
 }
 
-[data-animation="skew-rotate-heading"] .word-line-wrapper {
+[data-animation='skew-rotate-heading'] .word-line-wrapper {
   perspective: 1000px;
 }
 
-[data-animation="skew-split-paragraph"] .word-line,
-[data-animation="skew-fade-paragraph"] .word-line-wrapper {
+[data-animation='skew-split-paragraph'] .word-line,
+[data-animation='skew-fade-paragraph'] .word-line-wrapper {
   display: inline-block;
 }
 
@@ -32,4 +32,10 @@ span.word_wrap {
 
 .black {
   color: $black;
+}
+
+//
+.js-autoAlpha {
+  opacity: 0;
+  visibility: hidden;
 }

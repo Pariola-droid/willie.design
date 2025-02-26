@@ -1,6 +1,7 @@
 'use client';
 
 import PageWrapper from '@/components/common/PageWrapper';
+import { useTransition } from '@/components/common/TransitionProvider';
 import { useCurrentTime } from '@/hooks/useCurrentTime';
 import { useStore } from '@/lib/store';
 import { gsap } from 'gsap';
@@ -14,89 +15,93 @@ gsap.registerPlugin(ScrollTrigger, CustomEase, CSSRulePlugin);
 
 export default function InfoPage() {
   const { basicFormat } = useCurrentTime();
+  const { isTransitioning } = useTransition();
+
   const setIsAnimating = useStore((state) => state.setIsAnimating);
 
   CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
   CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
   useEffect(() => {
-    gsap.set('.middleFace', {
-      clipPath: 'inset(100% 0 0 0)',
-    });
+    if (!isTransitioning) {
+      gsap.set('.middleFace', {
+        clipPath: 'inset(100% 0 0 0)',
+      });
 
-    gsap.set('.middleFace img', {
-      filter: 'brightness(20%)',
-      scale: 1.4,
-    });
+      gsap.set('.middleFace img', {
+        filter: 'brightness(20%)',
+        scale: 1.4,
+      });
 
-    gsap.set(['.pageInfo__hero-faceCaption'], {
-      autoAlpha: 0,
-      y: -10,
-    });
+      gsap.set(['.pageInfo__hero-faceCaption'], {
+        autoAlpha: 0,
+        y: -10,
+      });
 
-    gsap.set('.pageInfo__hero-bottomBar small', {
-      autoAlpha: 0,
-      x: -10,
-    });
+      gsap.set('.pageInfo__hero-bottomBar small', {
+        autoAlpha: 0,
+        x: -10,
+      });
 
-    setIsAnimating(true);
-    document.documentElement.style.setProperty('--cursor', 'wait');
+      setIsAnimating(true);
+      document.documentElement.style.setProperty('--cursor', 'wait');
 
-    const heroTl = gsap.timeline({
-      defaults: {
-        ease: 'ease-in-out-cubic',
-      },
-      onComplete: () => {
+      const heroTl = gsap.timeline({
+        defaults: {
+          ease: 'ease-in-out-cubic',
+        },
+        onComplete: () => {
+          setIsAnimating(false);
+          document.documentElement.style.setProperty('--cursor', 'auto');
+        },
+      });
+
+      heroTl
+        .to('.middleFace', {
+          clipPath: 'inset(0% 0 0 0)',
+          duration: 1.2,
+        })
+        .to(
+          '.middleFace img',
+          {
+            scale: 1,
+            filter: 'brightness(100%)',
+            duration: 1.2,
+          },
+          '<'
+        )
+        .to(
+          [
+            '.pageInfo__hero-faceCaption.a',
+            '.pageInfo__hero-faceCaption.b',
+            '.pageInfo__hero-faceCaption.c',
+          ],
+          {
+            autoAlpha: 1,
+            y: 0,
+            stagger: 0.15,
+            duration: 0.8,
+          },
+          '-=0.5'
+        )
+        .to(
+          '.pageInfo__hero-bottomBar small',
+          {
+            autoAlpha: 1,
+            x: 0,
+            stagger: 0.1,
+            duration: 0.6,
+          },
+          '-=0.3'
+        );
+
+      return () => {
         setIsAnimating(false);
         document.documentElement.style.setProperty('--cursor', 'auto');
-      },
-    });
-
-    heroTl
-      .to('.middleFace', {
-        clipPath: 'inset(0% 0 0 0)',
-        duration: 1.2,
-      })
-      .to(
-        '.middleFace img',
-        {
-          scale: 1,
-          filter: 'brightness(100%)',
-          duration: 1.2,
-        },
-        '<'
-      )
-      .to(
-        [
-          '.pageInfo__hero-faceCaption.a',
-          '.pageInfo__hero-faceCaption.b',
-          '.pageInfo__hero-faceCaption.c',
-        ],
-        {
-          autoAlpha: 1,
-          y: 0,
-          stagger: 0.15,
-          duration: 0.8,
-        },
-        '-=0.5'
-      )
-      .to(
-        '.pageInfo__hero-bottomBar small',
-        {
-          autoAlpha: 1,
-          x: 0,
-          stagger: 0.1,
-          duration: 0.6,
-        },
-        '-=0.3'
-      );
-
-    return () => {
-      setIsAnimating(false);
-      document.documentElement.style.setProperty('--cursor', 'auto');
-      heroTl.kill();
-    };
-  }, [setIsAnimating]);
+        heroTl.kill();
+      };
+    }
+  }, [isTransitioning, setIsAnimating]);
 
   useEffect(() => {
     const serviceTl = gsap.timeline({
@@ -224,7 +229,7 @@ export default function InfoPage() {
 
   return (
     <PageWrapper theme="dark" className="pageInfo" lenis>
-      <section className="pageInfo__hero">
+      <section className="pageInfo__hero animate-on-enter">
         <div className="pageInfo__hero-middleFace">
           <div className="pageInfo__hero-middleFaceImg middleFace">
             <Image

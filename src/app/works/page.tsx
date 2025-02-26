@@ -2,15 +2,17 @@
 
 import PageWrapper from '@/components/common/PageWrapper';
 
+import { useTransition } from '@/components/common/TransitionProvider';
 import { client } from '@/sanity/client';
 import { gsap } from 'gsap';
+import { CustomEase } from 'gsap/dist/CustomEase';
 import { Flip } from 'gsap/dist/Flip';
 import { type SanityDocument } from 'next-sanity';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { FEATURED_WORKS, WORKS } from '../../utils/constant';
+import { FEATURED_WORKS } from '../../utils/constant';
 
-gsap.registerPlugin(Flip);
+gsap.registerPlugin([Flip, CustomEase]);
 interface WorkDocument extends SanityDocument {
   featured: boolean;
   layout: 'layout_a' | 'layout_b';
@@ -30,7 +32,12 @@ interface WorkDocument extends SanityDocument {
   publishedAt?: string;
 }
 
+CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
+CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
+
 export default function WorksPage() {
+  const { isTransitioning } = useTransition();
+
   const [bgColor, setBgColor] = useState('#ffffff');
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isVertical, setIsVertical] = useState<Boolean>(true);
@@ -42,7 +49,9 @@ export default function WorksPage() {
   const imageRefs = useRef<(HTMLDivElement | null)[]>(
     FEATURED_WORKS.map(() => null)
   );
+
   const imageWrapperRef = useRef<HTMLDivElement | null>(null);
+  const hasAnimated = useRef<boolean>(false);
   const isAnimating = useRef<boolean>(false);
   const isFlipping = useRef<boolean>(false);
 
@@ -149,6 +158,30 @@ export default function WorksPage() {
   };
 
   useEffect(() => {
+    if (works.length > 0 && !isTransitioning) {
+      requestAnimationFrame(() => {
+        const workCard = gsap.utils.toArray('.pageWorks__workCard');
+
+        gsap.set(workCard, {
+          autoAlpha: 0,
+        });
+
+        const tl = gsap.timeline({
+          defaults: {
+            ease: 'power2.inOut',
+          },
+        });
+
+        tl.to(workCard, {
+          autoAlpha: 1,
+          duration: 0.6,
+          stagger: 0.2,
+        });
+      });
+    }
+  }, [works, isTransitioning]);
+
+  useEffect(() => {
     updateZIndices(activeIndex);
 
     const interval = setInterval(() => {
@@ -174,8 +207,6 @@ export default function WorksPage() {
     );
   }
 
-  const displayWorks = works.length > 0 ? works : WORKS;
-
   return (
     <>
       <PageWrapper
@@ -187,36 +218,28 @@ export default function WorksPage() {
         }}
       >
         <div className={`pageWorks__cardContainer`}>
-          {[...displayWorks, ...displayWorks, ...displayWorks].map(
-            (work: Partial<WorkDocument>, i) => (
-              <a
-                key={`${work._id || work.id}-${i}`}
-                href={`/works/${work.slug?.current || 'aria-amara'}`}
-                className={`pageWorks__workCard`}
-                onMouseEnter={() =>
-                  setBgColor(`#${work.hoverColor}` || '#ffffff')
-                }
-                onMouseLeave={() => setBgColor('#ffffff')}
-              >
-                <div className={`pageWorks__workCard-wImg`}>
-                  <Image
-                    src={
-                      work.coverImageUrl ||
-                      work.img ||
-                      '/images/works/work-amara.png'
-                    }
-                    width={456}
-                    height={300}
-                    alt={work.coverImageAlt || work.title}
-                  />
-                </div>
-                <div className="pageWorks__workCard-wInfo">
-                  <small>{`${(i % displayWorks.length) + 1}.`}</small>
-                  <p>{work?.title}</p>
-                </div>
-              </a>
-            )
-          )}
+          {works.map((work: Partial<WorkDocument>, i) => (
+            <a
+              key={`${work._id}`}
+              href={`/works/${work.slug?.current || 'aria-amara'}`}
+              className={`pageWorks__workCard animate-on-enter`}
+              onMouseEnter={() => setBgColor(work.hoverColor || '#ffffff')}
+              onMouseLeave={() => setBgColor('#ffffff')}
+            >
+              <div className={`pageWorks__workCard-wImg`}>
+                <Image
+                  src={work.coverImageUrl || '/images/works/work-amara.png'}
+                  width={456}
+                  height={300}
+                  alt={work.coverImageAlt || work.title}
+                />
+              </div>
+              <div className="pageWorks__workCard-wInfo">
+                <small>{`${(i % works.length) + 1}.`}</small>
+                <p>{work?.title}</p>
+              </div>
+            </a>
+          ))}
         </div>
       </PageWrapper>
 
