@@ -158,25 +158,23 @@ export default function WorksPage() {
   };
 
   useEffect(() => {
+    gsap.set('.pageWorks__workCard', {
+      autoAlpha: 0,
+    });
+
     if (works.length > 0 && !isTransitioning) {
-      requestAnimationFrame(() => {
-        const workCard = gsap.utils.toArray('.pageWorks__workCard');
+      const workCard = gsap.utils.toArray('.pageWorks__workCard');
 
-        gsap.set(workCard, {
-          autoAlpha: 0,
-        });
+      const tl = gsap.timeline({
+        defaults: {
+          ease: 'power2.inOut',
+        },
+      });
 
-        const tl = gsap.timeline({
-          defaults: {
-            ease: 'power2.inOut',
-          },
-        });
-
-        tl.to(workCard, {
-          autoAlpha: 1,
-          duration: 0.6,
-          stagger: 0.2,
-        });
+      tl.to(workCard, {
+        autoAlpha: 1,
+        duration: 0.8,
+        stagger: 0.2,
       });
     }
   }, [works, isTransitioning]);
@@ -217,7 +215,7 @@ export default function WorksPage() {
           infinite: Boolean(isVertical),
         }}
       >
-        <div className={`pageWorks__cardContainer`}>
+        <div className={`pageWorks__cardContainer `}>
           {works.map((work: Partial<WorkDocument>, i) => (
             <a
               key={`${work._id}`}
