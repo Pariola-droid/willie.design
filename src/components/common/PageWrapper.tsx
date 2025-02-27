@@ -4,7 +4,6 @@ import Cursor from '@/lib/cursor';
 import { initSplit } from '@/lib/split';
 import { format } from 'date-fns';
 import type { LenisOptions } from 'lenis';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, PropsWithChildren, useEffect, useRef } from 'react';
 import { Lenis } from './Lenis';
@@ -93,7 +92,9 @@ export default function PageWrapper(props: PageWrapperProps) {
                     key={`${route.path}-${i}`}
                     className={pathname === route.path ? 'active' : ''}
                   >
-                    <Link href={route.path}>{route.label}</Link>
+                    <TransitionLink href={route.path}>
+                      {route.label}
+                    </TransitionLink>
                   </li>
                 ))}
               </Fragment>
