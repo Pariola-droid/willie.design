@@ -54,7 +54,6 @@ export default function TransitionProvider({
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle page transitions when pathname changes
   useEffect(() => {
     if (!completedInitialLoad) return;
 
@@ -138,7 +137,7 @@ export default function TransitionProvider({
           opacity: 1,
           position: 'fixed',
           inset: 0,
-          backgroundColor: '#ffffff',
+          backgroundColor: 'black',
           zIndex: 9999,
           pointerEvents: isTransitioning ? 'all' : 'none',
         }}

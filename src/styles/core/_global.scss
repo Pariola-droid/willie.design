@@ -87,7 +87,7 @@ html.transitioning .animate-on-enter {
 .site-transition-overlay {
   position: fixed;
   inset: 0;
-  background-color: #ffffff;
+  background-color: black;
   z-index: 9999;
   will-change: opacity;
   transition: opacity 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
