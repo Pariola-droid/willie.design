@@ -12,37 +12,35 @@ import Image from 'next/image';
 import { useEffect } from 'react';
 
 gsap.registerPlugin(ScrollTrigger, CustomEase, CSSRulePlugin);
+CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
+CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function InfoPage() {
   const { basicFormat } = useCurrentTime();
-  const { isTransitioning } = useTransition();
-
+  const { isTransitioning, completedInitialLoad } = useTransition();
   const setIsAnimating = useStore((state) => state.setIsAnimating);
 
-  CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
-  CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
-
   useEffect(() => {
-    if (!isTransitioning) {
-      gsap.set('.middleFace', {
-        clipPath: 'inset(100% 0 0 0)',
-      });
+    gsap.set('.middleFace', {
+      clipPath: 'inset(100% 0 0 0)',
+    });
 
-      gsap.set('.middleFace img', {
-        filter: 'brightness(20%)',
-        scale: 1.4,
-      });
+    gsap.set('.middleFace img', {
+      filter: 'brightness(20%)',
+      scale: 1.4,
+    });
 
-      gsap.set(['.pageInfo__hero-faceCaption'], {
-        autoAlpha: 0,
-        y: -10,
-      });
+    gsap.set(['.pageInfo__hero-faceCaption'], {
+      autoAlpha: 0,
+      y: -10,
+    });
 
-      gsap.set('.pageInfo__hero-bottomBar small', {
-        autoAlpha: 0,
-        x: -10,
-      });
+    gsap.set('.pageInfo__hero-bottomBar small', {
+      autoAlpha: 0,
+      x: -10,
+    });
 
+    if (!isTransitioning && completedInitialLoad) {
       setIsAnimating(true);
       document.documentElement.style.setProperty('--cursor', 'wait');
 
@@ -101,7 +99,7 @@ export default function InfoPage() {
         heroTl.kill();
       };
     }
-  }, [isTransitioning, setIsAnimating]);
+  }, [isTransitioning, setIsAnimating, completedInitialLoad]);
 
   useEffect(() => {
     const serviceTl = gsap.timeline({

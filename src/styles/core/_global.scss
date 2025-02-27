@@ -57,22 +57,38 @@ body {
 }
 
 /* Clean transitions */
-body.loading .animate-on-enter,
-body.transitioning .animate-on-enter {
+/* Transition states */
+html.loading,
+html.transitioning {
+  cursor: wait;
+}
+
+/* Properly hide elements during transitions */
+html.loading .animate-on-enter,
+html.transitioning .animate-on-enter {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Hide all animated content until JS is ready */
+.animate-on-enter {
   opacity: 0;
   visibility: hidden;
 }
 
-.site-transition-overlay {
-  pointer-events: none;
-  will-change: opacity;
+/* Only show animate-on-enter elements when site is loaded */
+.site-content.loaded .animate-on-enter {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease;
 }
 
-/* Preload images */
-.preload-image {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
+/* Smooth transition overlay */
+.site-transition-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #ffffff;
+  z-index: 9999;
+  will-change: opacity;
+  transition: opacity 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
 }

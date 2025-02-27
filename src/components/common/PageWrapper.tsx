@@ -7,6 +7,7 @@ import type { LenisOptions } from 'lenis';
 import { usePathname } from 'next/navigation';
 import { Fragment, PropsWithChildren, useEffect, useRef } from 'react';
 import { Lenis } from './Lenis';
+import TransitionLink from './TransitionLink';
 import { useTransition } from './TransitionProvider';
 
 const ROUTES = [
@@ -34,7 +35,7 @@ interface PageWrapperProps extends PropsWithChildren {
 }
 
 export default function PageWrapper(props: PageWrapperProps) {
-  const { isTransitioning } = useTransition();
+  const { isTransitioning, completedInitialLoad } = useTransition();
 
   const lenisRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -58,29 +59,31 @@ export default function PageWrapper(props: PageWrapperProps) {
   });
 
   useEffect(() => {
-    initSplit();
-  }, []);
+    if (!isTransitioning && completedInitialLoad) {
+      initSplit();
+    }
+  }, [isTransitioning, completedInitialLoad]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [pathname, theme]);
 
   useEffect(() => {
-    if (!isTransitioning && pageContainerRef.current) {
+    if (!isTransitioning && completedInitialLoad && pageContainerRef.current) {
       setTimeout(() => {
         pageContainerRef.current?.classList.add('page-ready');
       }, 100);
     }
-  }, [isTransitioning]);
+  }, [isTransitioning, completedInitialLoad]);
 
   return (
-    <div className="wp">
+    <div className="wp" ref={pageContainerRef}>
       {showHeader && (
         <header wp-theme={theme} className="wp__pageHeader">
           <ul className="wp__pageHeader-navLinks">
             {backButton ? (
               <li>
-                <a href="/works">back</a>
+                <TransitionLink href="/works">back</TransitionLink>
               </li>
             ) : (
               <Fragment>
@@ -89,19 +92,21 @@ export default function PageWrapper(props: PageWrapperProps) {
                     key={`${route.path}-${i}`}
                     className={pathname === route.path ? 'active' : ''}
                   >
-                    <a href={route.path}>{route.label}</a>
+                    <TransitionLink href={route.path}>
+                      {route.label}
+                    </TransitionLink>
                   </li>
                 ))}
               </Fragment>
             )}
           </ul>
 
-          <a href="/" className="wp__pageHeader-bigText">
+          <TransitionLink href="/" className="wp__pageHeader-bigText">
             <h1>Archive Of Selected</h1>
             <h1>
-              Works <sup>&apos;21—{format(new Date(), 'YYY')}</sup>
+              Works <sup>&apos;21—{format(new Date(), 'yyy')}</sup>
             </h1>
-          </a>
+          </TransitionLink>
         </header>
       )}
       <main

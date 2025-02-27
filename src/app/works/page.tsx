@@ -36,7 +36,7 @@ CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function WorksPage() {
-  const { isTransitioning } = useTransition();
+  const { isTransitioning, completedInitialLoad } = useTransition();
 
   const [bgColor, setBgColor] = useState('#ffffff');
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -158,14 +158,14 @@ export default function WorksPage() {
   };
 
   useEffect(() => {
-    if (works.length > 0 && !isTransitioning) {
+    const workCard = gsap.utils.toArray('.pageWorks__workCard');
+
+    gsap.set(workCard, {
+      autoAlpha: 0,
+    });
+
+    if (works.length > 0 && !isTransitioning && completedInitialLoad) {
       requestAnimationFrame(() => {
-        const workCard = gsap.utils.toArray('.pageWorks__workCard');
-
-        gsap.set(workCard, {
-          autoAlpha: 0,
-        });
-
         const tl = gsap.timeline({
           defaults: {
             ease: 'power2.inOut',
@@ -179,7 +179,7 @@ export default function WorksPage() {
         });
       });
     }
-  }, [works, isTransitioning]);
+  }, [works, isTransitioning, completedInitialLoad]);
 
   useEffect(() => {
     updateZIndices(activeIndex);

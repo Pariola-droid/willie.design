@@ -5,6 +5,12 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
 import { bagoss, cowboy } from './font';
 
+const preventFlashScript = `
+  (function() {
+    document.documentElement.classList.add('loading');
+  })();
+`;
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://willie.design'),
   title: 'Willie UI',
@@ -70,6 +76,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${bagoss.variable} ${cowboy.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: preventFlashScript }} />
+      </head>
       <body>
         <TransitionProvider>
           <AbstractApp>{children}</AbstractApp>

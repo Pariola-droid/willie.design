@@ -1,17 +1,19 @@
 'use client';
 
 import { gsap } from 'gsap';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 type TransitionContextType = {
   isTransitioning: boolean;
   completedInitialLoad: boolean;
+  startPageTransition: (href: string) => void;
 };
 
 const TransitionContext = createContext<TransitionContextType>({
-  isTransitioning: false,
+  isTransitioning: true,
   completedInitialLoad: false,
+  startPageTransition: () => {},
 });
 
 export const useTransition = () => useContext(TransitionContext);
@@ -21,44 +23,41 @@ export default function TransitionProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const pathname = usePathname();
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(true); // Start with true
   const [completedInitialLoad, setCompletedInitialLoad] = useState(false);
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const prevPathRef = useRef(pathname);
   const scrollPositions = useRef<{ [key: string]: number }>({});
 
-  // Handle initial load
   useEffect(() => {
-    if (!completedInitialLoad) {
-      // Hide page content initially
-      document.body.classList.add('loading');
+    document.documentElement.classList.add('loading');
 
-      // After DOM is ready
-      setTimeout(() => {
-        // Fade out overlay
-        if (overlayRef.current) {
-          gsap.to(overlayRef.current, {
-            opacity: 0,
-            duration: 0.8,
-            ease: 'cubic-bezier(0.645, 0.045, 0.355, 1)',
-            onComplete: () => {
-              document.body.classList.remove('loading');
-              setCompletedInitialLoad(true);
-            },
-          });
-        }
-      }, 300);
-    }
-  }, [completedInitialLoad]);
+    const timer = setTimeout(() => {
+      // Fade out overlay
+      if (overlayRef.current) {
+        gsap.to(overlayRef.current, {
+          opacity: 0,
+          duration: 0.8,
+          ease: 'cubic-bezier(0.645, 0.045, 0.355, 1)',
+          onComplete: () => {
+            document.documentElement.classList.remove('loading');
+            setIsTransitioning(false);
+            setCompletedInitialLoad(true);
+          },
+        });
+      }
+    }, 300);
 
-  // Handle page transitions
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Handle page transitions when pathname changes
   useEffect(() => {
-    // Skip the initial load
     if (!completedInitialLoad) return;
 
-    // Only run on route changes
     if (prevPathRef.current !== pathname) {
       handlePageTransition();
     }
@@ -69,36 +68,45 @@ export default function TransitionProvider({
   useEffect(() => {
     if (isTransitioning) {
       document.documentElement.style.setProperty('--cursor', 'wait');
+      document.documentElement.classList.add('transitioning');
     } else {
       document.documentElement.style.setProperty('--cursor', 'auto');
+      document.documentElement.classList.remove('transitioning');
     }
   }, [isTransitioning]);
 
-  const handlePageTransition = async () => {
+  const startPageTransition = (href: string) => {
+    if (pathname === href) return;
+    handlePageTransition(() => {
+      router.push(href);
+    });
+  };
+
+  const handlePageTransition = async (callback?: () => void) => {
     setIsTransitioning(true);
-    document.body.classList.add('transitioning');
 
     scrollPositions.current[prevPathRef.current] = window.scrollY;
 
-    //  Fade in overlay
     await gsap.to(overlayRef.current, {
       opacity: 1,
       duration: 0.5,
       ease: 'cubic-bezier(0.645, 0.045, 0.355, 1)',
     });
 
-    // 2. Small delay to ensure page content is ready
+    // (e.g., route navigation)
+    if (callback) {
+      callback();
+    }
+
     await new Promise((resolve) => setTimeout(resolve, 300));
 
-    // 3. Fade out overlay
     gsap.to(overlayRef.current, {
       opacity: 0,
-      duration: 0.8, // Longer fade out for smoothness
-      ease: 'cubic-bezier(0.645, 0.045, 0.355, 1)',
+      duration: 0.8,
+      ease: 'power2.inOut',
       delay: 0.1,
       onComplete: () => {
         setIsTransitioning(false);
-        document.body.classList.remove('transitioning');
 
         if (scrollPositions.current[pathname]) {
           setTimeout(() => {
@@ -112,7 +120,13 @@ export default function TransitionProvider({
   };
 
   return (
-    <>
+    <TransitionContext.Provider
+      value={{
+        isTransitioning,
+        completedInitialLoad,
+        startPageTransition,
+      }}
+    >
       <div className={`site-content ${completedInitialLoad ? 'loaded' : ''}`}>
         {children}
       </div>
@@ -121,7 +135,7 @@ export default function TransitionProvider({
         ref={overlayRef}
         className="site-transition-overlay"
         style={{
-          opacity: completedInitialLoad ? 0 : 1,
+          opacity: 1,
           position: 'fixed',
           inset: 0,
           backgroundColor: '#ffffff',
@@ -129,6 +143,6 @@ export default function TransitionProvider({
           pointerEvents: isTransitioning ? 'all' : 'none',
         }}
       />
-    </>
+    </TransitionContext.Provider>
   );
 }
