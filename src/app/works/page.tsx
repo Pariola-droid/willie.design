@@ -157,27 +157,27 @@ export default function WorksPage() {
     });
   };
 
-  // useEffect(() => {
-  //   if (works.length > 0 && !isTransitioning) {
-  //     gsap.set('.pageWorks__workCard', {
-  //       opacity: 0,
-  //     });
+  useEffect(() => {
+    gsap.set('.pageWorks__workCard', {
+      autoAlpha: 0,
+    });
 
-  //     const workCard = gsap.utils.toArray('.pageWorks__workCard');
+    if (works.length > 0 && !isTransitioning) {
+      const workCard = gsap.utils.toArray('.pageWorks__workCard');
 
-  //     const tl = gsap.timeline({
-  //       defaults: {
-  //         ease: 'power2.out',
-  //       },
-  //     });
+      const tl = gsap.timeline({
+        defaults: {
+          ease: 'power2.inOut',
+        },
+      });
 
-  //     tl.to(workCard, {
-  //       opacity: 1,
-  //       duration: 0.8,
-  //       stagger: 0.2,
-  //     });
-  //   }
-  // }, [works, isTransitioning]);
+      tl.to(workCard, {
+        autoAlpha: 1,
+        duration: 0.8,
+        stagger: 0.2,
+      });
+    }
+  }, [works, isTransitioning]);
 
   useEffect(() => {
     updateZIndices(activeIndex);
@@ -215,12 +215,12 @@ export default function WorksPage() {
           infinite: Boolean(isVertical),
         }}
       >
-        <div className={`pageWorks__cardContainer animate-on-enter`}>
+        <div className={`pageWorks__cardContainer `}>
           {works.map((work: Partial<WorkDocument>, i) => (
             <a
               key={`${work._id}`}
               href={`/works/${work.slug?.current || 'aria-amara'}`}
-              className={`pageWorks__workCard`}
+              className={`pageWorks__workCard animate-on-enter`}
               onMouseEnter={() => setBgColor(work.hoverColor || '#ffffff')}
               onMouseLeave={() => setBgColor('#ffffff')}
             >

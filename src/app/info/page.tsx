@@ -23,26 +23,26 @@ export default function InfoPage() {
   CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
   useEffect(() => {
+    gsap.set('.middleFace', {
+      clipPath: 'inset(100% 0 0 0)',
+    });
+
+    gsap.set('.middleFace img', {
+      filter: 'brightness(20%)',
+      scale: 1.4,
+    });
+
+    gsap.set(['.pageInfo__hero-faceCaption'], {
+      autoAlpha: 0,
+      y: -10,
+    });
+
+    gsap.set('.pageInfo__hero-bottomBar small', {
+      autoAlpha: 0,
+      x: -10,
+    });
+
     if (!isTransitioning) {
-      gsap.set('.middleFace', {
-        clipPath: 'inset(100% 0 0 0)',
-      });
-
-      gsap.set('.middleFace img', {
-        filter: 'brightness(20%)',
-        scale: 1.4,
-      });
-
-      gsap.set(['.pageInfo__hero-faceCaption'], {
-        autoAlpha: 0,
-        y: -10,
-      });
-
-      gsap.set('.pageInfo__hero-bottomBar small', {
-        autoAlpha: 0,
-        x: -10,
-      });
-
       setIsAnimating(true);
       document.documentElement.style.setProperty('--cursor', 'wait');
 

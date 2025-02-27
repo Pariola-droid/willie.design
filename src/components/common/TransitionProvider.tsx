@@ -49,7 +49,7 @@ export default function TransitionProvider({
 
     // Page exit animation
     await gsap.to(overlayRef.current, {
-      opacity: 1,
+      autoAlpha: 1,
       duration: 0.5,
       ease: 'cubic-bezier(0.645, 0.045, 0.355, 1)',
     });
@@ -58,7 +58,7 @@ export default function TransitionProvider({
     setTimeout(() => {
       // Page enter animation
       gsap.to(overlayRef.current, {
-        opacity: 0,
+        autoAlpha: 0,
         duration: 0.5,
         ease: 'cubic-bezier(0.645, 0.045, 0.355, 1)',
         onComplete: () => {
@@ -87,9 +87,10 @@ export default function TransitionProvider({
         className="site-transition-overlay"
         style={{
           opacity: 0,
+          visibility: 'visible',
           position: 'fixed',
           inset: 0,
-          backgroundColor: '#ffffff',
+          backgroundColor: 'transparent',
           zIndex: 9999,
           pointerEvents: isTransitioning ? 'all' : 'none',
         }}
