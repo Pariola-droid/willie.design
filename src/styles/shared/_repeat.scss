@@ -1,14 +1,14 @@
-[hidden-svg="false"] {
+[hidden-svg='false'] {
   opacity: 1;
   visibility: visible;
 }
 
-[hidden-svg="true"] {
+[hidden-svg='true'] {
   opacity: 0;
   visibility: hidden;
 }
 
-[link-interaction="underline"] {
+[link-interaction='underline'] {
   cursor: pointer;
   position: relative;
   overflow: hidden !important;
@@ -25,7 +25,7 @@
   }
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     background-color: $black;
@@ -33,7 +33,7 @@
   }
 
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     background-color: $black;
@@ -51,12 +51,12 @@
   }
 }
 
-[link-interaction="no-line"] {
+[link-interaction='no-line'] {
   position: relative;
   transition: 0.3s all ease-in;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     width: 100%;
     height: 1.5px;

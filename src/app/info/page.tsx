@@ -224,7 +224,7 @@ export default function InfoPage() {
 
   return (
     <PageWrapper theme="dark" className="pageInfo" lenis>
-      <section className="pageInfo__hero animate-on-enter">
+      <section className="pageInfo__hero">
         <div className="pageInfo__hero-middleFace">
           <div className="pageInfo__hero-middleFaceImg middleFace">
             <Image

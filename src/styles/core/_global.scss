@@ -64,14 +64,7 @@ body {
   color: $black;
 }
 
-/* Clean transitions */
-.page-loading .animate-on-enter {
+.animate-on-enter {
   opacity: 0;
   visibility: hidden;
-}
-
-/* Transition overlay */
-.site-transition-overlay {
-  pointer-events: none;
-  will-change: opacity;
 }

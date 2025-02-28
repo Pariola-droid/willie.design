@@ -1,7 +1,6 @@
 'use client';
 
 import PageWrapper from '@/components/common/PageWrapper';
-import { useCurrentTime } from '@/hooks/useCurrentTime';
 import { format } from 'date-fns';
 import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
@@ -46,8 +45,6 @@ const CONTACT_DETAILS = [
 ];
 
 export default function ContactPage() {
-  const { gmtFormat } = useCurrentTime();
-
   useEffect(() => {
     const titleItem = document.querySelectorAll('.cTitleItem');
     const listItems = document.querySelectorAll('.cListItem');
@@ -70,12 +67,6 @@ export default function ContactPage() {
     const image = imageWrapper?.querySelector('img');
     const revealWrappers = gsap.utils.toArray('.cText-wrapper');
 
-    const tl = gsap.timeline({
-      defaults: {
-        ease: 'ease-in-out-cubic',
-      },
-    });
-
     if (imageWrapper && image) {
       gsap.set(imageWrapper, {
         clipPath: 'inset(100% 0 0 0)',
@@ -85,22 +76,30 @@ export default function ContactPage() {
         filter: 'brightness(20%)',
         scale: 1.4,
       });
+    }
 
-      gsap.set(revealWrappers, {
-        autoAlpha: 1,
-      });
+    gsap.set(revealWrappers, {
+      autoAlpha: 1,
+    });
 
-      gsap.set('.pageContact__footer small', {
-        autoAlpha: 0,
-        x: -10,
-      });
+    gsap.set('.pageContact__footer small', {
+      autoAlpha: 0,
+      x: -10,
+    });
 
-      gsap.set(['.cTitleItem', '.cListItem'], {
-        y: 40,
-        autoAlpha: 0,
-        transformStyle: 'preserve-3d',
-      });
+    gsap.set(['.cTitleItem', '.cListItem'], {
+      y: 40,
+      autoAlpha: 0,
+      transformStyle: 'preserve-3d',
+    });
 
+    const tl = gsap.timeline({
+      defaults: {
+        ease: 'ease-in-out-cubic',
+      },
+    });
+
+    if (imageWrapper && image) {
       tl.to(imageWrapper, {
         clipPath: 'inset(0% 0 0 0)',
         duration: 1.2,
@@ -144,7 +143,7 @@ export default function ContactPage() {
 
   return (
     <PageWrapper className="pageContact" lenis>
-      <section className="pageContact__main animate-on-enter">
+      <section className="pageContact__main">
         <div className="pageContact__main-contactImg cImg-reveal">
           <Image
             width={377}
@@ -184,7 +183,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <div className="pageContact__footer animate-on-enter">
+      <div className="pageContact__footer">
         <small>
           build by:{' '}
           <a

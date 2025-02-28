@@ -164,14 +164,14 @@ export default function WorksPage() {
 
       const tl = gsap.timeline({
         defaults: {
-          ease: 'power2.inOut',
+          ease: 'power2.Out',
         },
       });
 
       tl.to(workCard, {
         autoAlpha: 1,
-        duration: 0.6,
-        stagger: 0.1,
+        duration: 0.4,
+        stagger: 0.05,
       });
     }
   }, [works]);
@@ -189,14 +189,7 @@ export default function WorksPage() {
   if (isLoading) {
     return (
       <PageWrapper theme="light" className="pageWorks">
-        <div
-          className="pageWorks__loading"
-          style={{
-            color: '#000',
-          }}
-        >
-          Loading works...
-        </div>
+        <div className="pageWorks__loading">Loading works...</div>
       </PageWrapper>
     );
   }
@@ -225,7 +218,7 @@ export default function WorksPage() {
               <Link
                 key={`${work._id}`}
                 href={`/works/${work.slug?.current || 'aria-amara'}`}
-                className={`pageWorks__workCard animate-on-enter`}
+                className={`pageWorks__workCard`}
                 onMouseEnter={() => setBgColor(work.hoverColor || '#ffffff')}
                 onMouseLeave={() => setBgColor('#ffffff')}
               >
