@@ -3,10 +3,13 @@
 import PageWrapper from '@/components/common/PageWrapper';
 import { client } from '@/sanity/client';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { SanityDocument } from 'next-sanity';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface WorkDocument extends SanityDocument {
   title: string;
@@ -104,14 +107,14 @@ export default function CaseStudyPage() {
   useEffect(() => {
     if (work && !isLoading) {
       gsap.set(heroImgRef.current, {
-        opacity: 0,
+        autoAlpha: 0,
         y: 30,
       });
 
       galleryImgsRef.current.forEach((ref) => {
         if (ref) {
           gsap.set(ref, {
-            opacity: 0,
+            autoAlpha: 0,
             y: 50,
           });
         }
@@ -124,13 +127,13 @@ export default function CaseStudyPage() {
       });
 
       tl.to(heroImgRef.current, {
-        opacity: 1,
+        autoAlpha: 1,
         y: 0,
         duration: 0.8,
       }).to(
         '.pageCaseStudy__hero h2, .pageCaseStudy__hero-descWrapper',
         {
-          opacity: 1,
+          autoAlpha: 1,
           y: 0,
           stagger: 0.2,
           duration: 0.6,
@@ -141,7 +144,7 @@ export default function CaseStudyPage() {
       galleryImgsRef.current.forEach((ref, index) => {
         if (ref) {
           gsap.to(ref, {
-            opacity: 1,
+            autoAlpha: 1,
             y: 0,
             duration: 0.8,
             scrollTrigger: {
@@ -199,11 +202,8 @@ export default function CaseStudyPage() {
             />
           </div>
           <div className="pageCaseStudy__hero-imgWrapper--imgCaption">
-            <p>{formattedDate}</p>
-            {work.captions && work.captions.length > 0 && (
-              <p>{work.captions.join(', ')}</p>
-            )}
-            <p>CONCEPT</p>
+            {work.captions &&
+              work.captions.map((caption, i) => <p key={i}>{caption}</p>)}
           </div>
         </div>
         <div
@@ -320,9 +320,10 @@ export default function CaseStudyPage() {
                 Accolades
               </div>
               <div className="pageCaseStudy__moreDetails--creditContent">
-                {work.accolades.split('\n').map((line, i) => (
+                {/* {work.accolades.split('\n').map((line, i) => (
                   <p key={i}>{line}</p>
-                ))}
+                ))} */}
+                {work.accolades}
               </div>
             </div>
           )}

@@ -44,6 +44,8 @@
         width: 100%;
         height: toRem(700);
         background-color: $black;
+        opacity: 0;
+        visibility: hidden;
 
         &Caption {
           width: 100%;
@@ -109,6 +111,8 @@
         height: toRem(750);
         background-color: $white;
         object-fit: cover;
+        opacity: 0;
+        visibility: hidden;
       }
     }
 
@@ -178,6 +182,7 @@
         @extend %BodyText;
         @include flexed(unset, flex-start, column);
         row-gap: toRem(4);
+        max-width: toRem(192);
 
         & p {
           white-space: nowrap;
