@@ -248,50 +248,6 @@ export default function CaseStudyPage() {
           }
         }
       });
-
-      if (moreDetailsRef.current) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'cText-wrapper';
-        moreDetailsRef.current.parentNode?.insertBefore(
-          wrapper,
-          moreDetailsRef.current
-        );
-        wrapper.appendChild(moreDetailsRef.current);
-
-        gsap.set(moreDetailsRef.current, {
-          y: 40,
-          autoAlpha: 0,
-          transformStyle: 'preserve-3d',
-        });
-
-        gsap.to(moreDetailsRef.current, {
-          y: 0,
-          autoAlpha: 1,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: '.pageCaseStudy__moreDetails',
-            start: 'top -50%',
-            markers: true,
-          },
-        });
-      }
-
-      if (nextProjectImgRef.current) {
-        gsap.set(nextProjectImgRef.current, {
-          clipPath: 'inset(0 100% 0 0)',
-        });
-
-        gsap.to(nextProjectImgRef.current, {
-          clipPath: 'inset(0 0% 0 0)',
-          duration: 1.2,
-          ease: 'ease-in-out-cubic',
-          scrollTrigger: {
-            trigger: '.pageCaseStudy__moreDetails',
-            start: 'top 60%',
-          },
-        });
-      }
     }
   }, [work, isLoading, nextWork]);
 
@@ -312,7 +268,7 @@ export default function CaseStudyPage() {
         ) {
           if (e.deltaY > 0) {
             // reduced speed
-            progress = Math.min(progress + 0.02, 1);
+            progress = Math.min(progress + 0.005, 1);
           } else if (e.deltaY < 0) {
             progress = Math.max(progress - 0.04, 0);
           }
