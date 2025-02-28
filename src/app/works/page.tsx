@@ -172,8 +172,8 @@ export default function WorksPage() {
 
       tl.to(workCard, {
         autoAlpha: 1,
-        duration: 0.8,
-        stagger: 0.2,
+        duration: 0.6,
+        stagger: 0.1,
       });
     }
   }, [works, isTransitioning]);
@@ -191,7 +191,14 @@ export default function WorksPage() {
   if (isLoading) {
     return (
       <PageWrapper theme="light" className="pageWorks">
-        <div className="loading">Loading works...</div>
+        <div
+          className="pageWorks__loading"
+          style={{
+            color: '#000',
+          }}
+        >
+          Loading works...
+        </div>
       </PageWrapper>
     );
   }
