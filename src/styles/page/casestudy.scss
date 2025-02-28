@@ -1,3 +1,14 @@
+.parallax-image {
+  overflow: hidden;
+
+  img {
+    will-change: transform;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+}
+
 .pageCaseStudy {
   width: 100%;
   min-height: 100vh;
@@ -31,6 +42,8 @@
       line-height: toRem(40.36);
       letter-spacing: -0.02em;
       text-align: left;
+      opacity: 0;
+      visibility: hidden;
     }
 
     &-imgWrapper {
@@ -39,13 +52,15 @@
       @include flexed(unset, flex-start, column);
       row-gap: toRem(16);
       margin-top: toRem(36);
+      position: relative;
+      overflow: hidden;
+      clip-path: inset(0 0 100% 0);
 
       &--img {
         width: 100%;
         height: toRem(700);
         background-color: $black;
-        opacity: 0;
-        visibility: hidden;
+        will-change: transform;
 
         &Caption {
           width: 100%;
@@ -111,8 +126,6 @@
         height: toRem(750);
         background-color: $white;
         object-fit: cover;
-        opacity: 0;
-        visibility: hidden;
       }
     }
 
@@ -159,6 +172,8 @@
       line-height: toRem(26.9);
       letter-spacing: -0.02em;
       text-align: left;
+      // opacity: 0;
+      // visibility: hidden;
     }
 
     &--credit {
@@ -219,6 +234,7 @@
       height: toRem(143);
       background-color: $white;
       overflow: hidden;
+      clip-path: inset(0 100% 0 0);
     }
 
     &--progress {
@@ -230,10 +246,12 @@
 
       &Bar {
         left: 0;
-        width: 50%;
+        width: 0%;
         height: 1px;
         background-color: $black;
         position: absolute;
+        will-change: width;
+        transition: width 0.3s $ease-in-out-cubic;
       }
     }
 
