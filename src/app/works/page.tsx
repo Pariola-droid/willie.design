@@ -214,29 +214,30 @@ export default function WorksPage() {
           infinite: Boolean(isVertical),
         }}
       >
-        <div className={`pageWorks__cardContainer `}>
-          {works.map((work: Partial<WorkDocument>, i) => (
-            <a
-              key={`${work._id}`}
-              href={`/works/${work.slug?.current || 'aria-amara'}`}
-              className={`pageWorks__workCard animate-on-enter`}
-              onMouseEnter={() => setBgColor(work.hoverColor || '#ffffff')}
-              onMouseLeave={() => setBgColor('#ffffff')}
-            >
-              <div className={`pageWorks__workCard-wImg`}>
-                <Image
-                  src={work.coverImageUrl || '/images/works/work-amara.png'}
-                  width={456}
-                  height={300}
-                  alt={work.coverImageAlt || work.title}
-                />
-              </div>
-              <div className="pageWorks__workCard-wInfo">
-                <small>{`${(i % works.length) + 1}.`}</small>
-                <p>{work?.title}</p>
-              </div>
-            </a>
-          ))}
+        <div className={`pageWorks__cardContainer`}>
+          {works.length > 0 &&
+            works.map((work, i) => (
+              <a
+                key={`${work._id}`}
+                href={`/works/${work.slug?.current || 'aria-amara'}`}
+                className={`pageWorks__workCard animate-on-enter`}
+                onMouseEnter={() => setBgColor(work.hoverColor || '#ffffff')}
+                onMouseLeave={() => setBgColor('#ffffff')}
+              >
+                <div className={`pageWorks__workCard-wImg`}>
+                  <Image
+                    src={work.coverImageUrl || '/images/works/work-amara.png'}
+                    width={456}
+                    height={300}
+                    alt={work.coverImageAlt || work.title}
+                  />
+                </div>
+                <div className="pageWorks__workCard-wInfo">
+                  <small>{`${(i % works.length) + 1}.`}</small>
+                  <p>{work?.title}</p>
+                </div>
+              </a>
+            ))}
         </div>
       </PageWrapper>
 
