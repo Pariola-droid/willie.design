@@ -268,7 +268,7 @@ export default function CaseStudyPage() {
         ) {
           if (e.deltaY > 0) {
             // reduced speed
-            progress = Math.min(progress + 0.01, 1);
+            progress = Math.min(progress + 0.005, 1);
           } else if (e.deltaY < 0) {
             progress = Math.max(progress - 0.04, 0);
           }
