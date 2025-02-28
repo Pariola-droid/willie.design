@@ -308,7 +308,7 @@ export default function CaseStudyPage() {
       }) => {
         if (
           window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 5
+          document.body.offsetHeight - 100
         ) {
           if (e.deltaY > 0) {
             // reduced speed
