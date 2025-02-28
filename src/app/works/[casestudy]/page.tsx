@@ -1,15 +1,19 @@
 'use client';
 
 import PageWrapper from '@/components/common/PageWrapper';
+import { useStore } from '@/lib/store';
 import { client } from '@/sanity/client';
 import { gsap } from 'gsap';
+import { CustomEase } from 'gsap/dist/CustomEase';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { SanityDocument } from 'next-sanity';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, CustomEase);
+CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
+CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 interface WorkDocument extends SanityDocument {
   title: string;
@@ -38,14 +42,21 @@ interface WorkDocument extends SanityDocument {
 export default function CaseStudyPage() {
   const params = useParams();
   const router = useRouter();
+  const setIsAnimating = useStore((state) => state.setIsAnimating);
 
   const [work, setWork] = useState<WorkDocument | null>(null);
   const [nextWork, setNextWork] = useState<WorkDocument | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const heroImgWrapperRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLDivElement>(null);
+  const descRef = useRef<HTMLDivElement>(null);
   const galleryImgsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const moreDetailsRef = useRef<HTMLHeadingElement>(null);
+  const nextProjectImgRef = useRef<HTMLDivElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchCaseStudy = async () => {
@@ -105,59 +116,228 @@ export default function CaseStudyPage() {
   }, [params?.casestudy]);
 
   useEffect(() => {
-    if (work && !isLoading) {
-      gsap.set(heroImgRef.current, {
+    if (
+      work &&
+      !isLoading &&
+      titleRef.current &&
+      heroImgWrapperRef.current &&
+      heroImgRef.current
+    ) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'cText-wrapper';
+      titleRef.current.parentNode?.insertBefore(wrapper, titleRef.current);
+      wrapper.appendChild(titleRef.current);
+
+      gsap.set(titleRef.current, {
+        y: 40,
         autoAlpha: 0,
+        transformStyle: 'preserve-3d',
+      });
+
+      gsap.set(heroImgWrapperRef.current, {
+        clipPath: 'inset(0 0 100% 0)',
+      });
+
+      gsap.set(heroImgRef.current.querySelector('img'), {
+        scale: 1.2,
+        filter: 'brightness(95%)',
+      });
+
+      gsap.set(descRef.current, {
+        opacity: 0,
         y: 30,
       });
 
-      galleryImgsRef.current.forEach((ref) => {
-        if (ref) {
-          gsap.set(ref, {
-            autoAlpha: 0,
-            y: 50,
-          });
-        }
-      });
+      setIsAnimating(true);
+      document.documentElement.style.setProperty('--cursor', 'wait');
 
       const tl = gsap.timeline({
         defaults: {
-          ease: 'power3.out',
+          ease: 'ease-in-out-cubic',
+        },
+        onComplete: () => {
+          setIsAnimating(false);
+          document.documentElement.style.setProperty('--cursor', 'auto');
         },
       });
 
-      tl.to(heroImgRef.current, {
-        autoAlpha: 1,
+      tl.to(titleRef.current, {
         y: 0,
+        autoAlpha: 1,
         duration: 0.8,
-      }).to(
-        '.pageCaseStudy__hero h2, .pageCaseStudy__hero-descWrapper',
-        {
-          autoAlpha: 1,
-          y: 0,
-          stagger: 0.2,
-          duration: 0.6,
-        },
-        '-=0.4'
-      );
+        ease: 'power2.out',
+      })
+        .to(
+          heroImgWrapperRef.current,
+          {
+            clipPath: 'inset(0 0 0% 0)',
+            duration: 1.2,
+          },
+          '-=0.4'
+        )
+        .to(
+          heroImgRef.current.querySelector('img'),
+          {
+            scale: 1,
+            filter: 'brightness(100%)',
+            duration: 1.2,
+          },
+          '<'
+        )
+        .to(
+          descRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+          },
+          '-=0.6'
+        );
 
-      galleryImgsRef.current.forEach((ref, index) => {
-        if (ref) {
-          gsap.to(ref, {
+      gsap.to(heroImgRef.current.querySelector('img'), {
+        y: -70,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: heroImgWrapperRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+        },
+      });
+
+      return () => {
+        setIsAnimating(false);
+        document.documentElement.style.setProperty('--cursor', 'auto');
+      };
+    }
+  }, [work, isLoading, setIsAnimating]);
+
+  useEffect(() => {
+    if (work && !isLoading) {
+      galleryImgsRef.current.forEach((imgRef, index) => {
+        if (imgRef) {
+          gsap.set(imgRef, {
+            autoAlpha: 0,
+            y: 20,
+          });
+
+          gsap.to(imgRef, {
             autoAlpha: 1,
             y: 0,
             duration: 0.8,
             scrollTrigger: {
-              trigger: ref,
+              trigger: imgRef,
               start: 'top 80%',
               end: 'top 50%',
               toggleActions: 'play none none none',
             },
           });
+
+          const img = imgRef.querySelector('img');
+          if (img) {
+            gsap.to(img, {
+              y: index % 2 === 0 ? -100 : -70,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: imgRef,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+              },
+            });
+          }
         }
       });
+
+      if (moreDetailsRef.current) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'cText-wrapper';
+        moreDetailsRef.current.parentNode?.insertBefore(
+          wrapper,
+          moreDetailsRef.current
+        );
+        wrapper.appendChild(moreDetailsRef.current);
+
+        gsap.set(moreDetailsRef.current, {
+          y: 40,
+          autoAlpha: 0,
+          transformStyle: 'preserve-3d',
+        });
+
+        gsap.to(moreDetailsRef.current, {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.pageCaseStudy__moreDetails',
+            start: 'top -50%',
+            markers: true,
+          },
+        });
+      }
+
+      if (nextProjectImgRef.current) {
+        gsap.set(nextProjectImgRef.current, {
+          clipPath: 'inset(0 100% 0 0)',
+        });
+
+        gsap.to(nextProjectImgRef.current, {
+          clipPath: 'inset(0 0% 0 0)',
+          duration: 1.2,
+          ease: 'ease-in-out-cubic',
+          scrollTrigger: {
+            trigger: '.pageCaseStudy__moreDetails',
+            start: 'top 60%',
+          },
+        });
+      }
     }
-  }, [work, isLoading]);
+  }, [work, isLoading, nextWork]);
+
+  useEffect(() => {
+    if (progressBarRef.current && nextWork) {
+      let progress = 0;
+      let isNavigating = false;
+
+      const progressBar = progressBarRef.current;
+
+      const handleScroll = (e: {
+        deltaY: number;
+        preventDefault: () => void;
+      }) => {
+        if (
+          window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 5
+        ) {
+          if (e.deltaY > 0) {
+            // reduced speed
+            progress = Math.min(progress + 0.02, 1);
+          } else if (e.deltaY < 0) {
+            progress = Math.max(progress - 0.04, 0);
+          }
+
+          progressBar.style.width = `${progress * 100}%`;
+
+          if (progress >= 1 && !isNavigating) {
+            isNavigating = true;
+
+            setTimeout(() => {
+              router.push(`/works/${nextWork.slug?.current}`);
+            }, 300);
+          }
+
+          e.preventDefault();
+        }
+      };
+
+      window.addEventListener('wheel', handleScroll, { passive: false });
+
+      return () => {
+        window.removeEventListener('wheel', handleScroll);
+      };
+    }
+  }, [nextWork, router]);
 
   if (isLoading) {
     return (
@@ -182,17 +362,14 @@ export default function CaseStudyPage() {
     return image;
   };
 
-  const formattedDate = work.publishedAt
-    ? new Date(work.publishedAt).getFullYear()
-    : '2024';
-
   return (
     <PageWrapper theme="light" backButton className={`pageCaseStudy`} lenis>
       <section className="pageCaseStudy__hero">
-        <h2 style={{ opacity: 0, transform: 'translateY(20px)' }}>
+        <h2 ref={titleRef} className="case-title">
           {work.title}
         </h2>
-        <div className="pageCaseStudy__hero-imgWrapper">
+
+        <div className="pageCaseStudy__hero-imgWrapper" ref={heroImgWrapperRef}>
           <div className="pageCaseStudy__hero-imgWrapper--img" ref={heroImgRef}>
             <Image
               src={work.coverImageUrl || '/images/casestudy/cover-img-w.png'}
@@ -206,10 +383,8 @@ export default function CaseStudyPage() {
               work.captions.map((caption, i) => <p key={i}>{caption}</p>)}
           </div>
         </div>
-        <div
-          className="pageCaseStudy__hero-descWrapper"
-          style={{ opacity: 0, transform: 'translateY(20px)' }}
-        >
+
+        <div className="pageCaseStudy__hero-descWrapper" ref={descRef}>
           <p>{work.description}</p>
           {work.liveLink && (
             <p>
@@ -225,7 +400,7 @@ export default function CaseStudyPage() {
       <section className="pageCaseStudy__gallery">
         <div className="pageCaseStudy__gallery--imgOne">
           <div
-            className="pageCaseStudy__gallery--imgOneImg"
+            className="pageCaseStudy__gallery--imgOneImg parallax-image"
             ref={(el) => {
               galleryImgsRef.current[0] = el;
             }}
@@ -244,7 +419,7 @@ export default function CaseStudyPage() {
 
         <div className="pageCaseStudy__gallery--imgTwo">
           <div
-            className="pageCaseStudy__gallery--imgTwoImg"
+            className="pageCaseStudy__gallery--imgTwoImg parallax-image"
             ref={(el) => {
               galleryImgsRef.current[1] = el;
             }}
@@ -263,7 +438,7 @@ export default function CaseStudyPage() {
 
         <div className="pageCaseStudy__gallery--imgThree">
           <div
-            className="pageCaseStudy__gallery--imgThreeImg"
+            className="pageCaseStudy__gallery--imgThreeImg parallax-image"
             ref={(el) => {
               galleryImgsRef.current[2] = el;
             }}
@@ -282,7 +457,7 @@ export default function CaseStudyPage() {
 
         <div className="pageCaseStudy__gallery--imgFour">
           <div
-            className="pageCaseStudy__gallery--imgFourImg"
+            className="pageCaseStudy__gallery--imgFourImg parallax-image"
             ref={(el) => {
               galleryImgsRef.current[3] = el;
             }}
@@ -320,9 +495,6 @@ export default function CaseStudyPage() {
                 Accolades
               </div>
               <div className="pageCaseStudy__moreDetails--creditContent">
-                {/* {work.accolades.split('\n').map((line, i) => (
-                  <p key={i}>{line}</p>
-                ))} */}
                 {work.accolades}
               </div>
             </div>
@@ -334,7 +506,10 @@ export default function CaseStudyPage() {
         <section className="pageCaseStudy__nextProject">
           <div className="pageCaseStudy__nextProject--CTA">
             <div className="pageCaseStudy__nextProject--leftSlot">
-              <div className="pageCaseStudy__nextProject--img">
+              <div
+                className="pageCaseStudy__nextProject--img"
+                ref={nextProjectImgRef}
+              >
                 <Image
                   src={nextWork.coverImageUrl}
                   alt={nextWork.title}
@@ -343,7 +518,10 @@ export default function CaseStudyPage() {
                 />
               </div>
               <div className="pageCaseStudy__nextProject--progress">
-                <div className="pageCaseStudy__nextProject--progressBar" />
+                <div
+                  ref={progressBarRef}
+                  className="pageCaseStudy__nextProject--progressBar"
+                />
               </div>
             </div>
             <div
