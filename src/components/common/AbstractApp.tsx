@@ -3,7 +3,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { Fragment, useEffect, useState } from 'react';
 
-import 'blaze-slider/dist/blaze.css';
 import 'splitting/dist/splitting-cells.css';
 import 'splitting/dist/splitting.css';
 import '../../styles/index.scss';

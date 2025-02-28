@@ -2,13 +2,13 @@
 
 import PageWrapper from '@/components/common/PageWrapper';
 
-import { useTransition } from '@/components/common/TransitionProvider';
 import { client } from '@/sanity/client';
 import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
 import { Flip } from 'gsap/dist/Flip';
 import { type SanityDocument } from 'next-sanity';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { FEATURED_WORKS } from '../../utils/constant';
 
@@ -36,8 +36,6 @@ CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function WorksPage() {
-  const { isTransitioning } = useTransition();
-
   const [bgColor, setBgColor] = useState('#ffffff');
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isVertical, setIsVertical] = useState<Boolean>(true);
@@ -161,22 +159,22 @@ export default function WorksPage() {
       autoAlpha: 0,
     });
 
-    if (works.length > 0 && !isTransitioning) {
+    if (works.length > 0) {
       const workCard = gsap.utils.toArray('.pageWorks__workCard');
 
       const tl = gsap.timeline({
         defaults: {
-          ease: 'power2.inOut',
+          ease: 'power2.Out',
         },
       });
 
       tl.to(workCard, {
         autoAlpha: 1,
-        duration: 0.6,
-        stagger: 0.1,
+        duration: 0.4,
+        stagger: 0.05,
       });
     }
-  }, [works, isTransitioning]);
+  }, [works]);
 
   useEffect(() => {
     updateZIndices(activeIndex);
@@ -191,14 +189,7 @@ export default function WorksPage() {
   if (isLoading) {
     return (
       <PageWrapper theme="light" className="pageWorks">
-        <div
-          className="pageWorks__loading"
-          style={{
-            color: '#000',
-          }}
-        >
-          Loading works...
-        </div>
+        <div className="pageWorks__loading">Loading works...</div>
       </PageWrapper>
     );
   }
@@ -224,10 +215,10 @@ export default function WorksPage() {
         <div className={`pageWorks__cardContainer`}>
           {works.length > 0 &&
             works.map((work, i) => (
-              <a
+              <Link
                 key={`${work._id}`}
                 href={`/works/${work.slug?.current || 'aria-amara'}`}
-                className={`pageWorks__workCard animate-on-enter`}
+                className={`pageWorks__workCard`}
                 onMouseEnter={() => setBgColor(work.hoverColor || '#ffffff')}
                 onMouseLeave={() => setBgColor('#ffffff')}
               >
@@ -243,7 +234,7 @@ export default function WorksPage() {
                   <small>{`${(i % works.length) + 1}.`}</small>
                   <p>{work?.title}</p>
                 </div>
-              </a>
+              </Link>
             ))}
         </div>
       </PageWrapper>

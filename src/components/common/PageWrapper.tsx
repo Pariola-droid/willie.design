@@ -4,6 +4,7 @@ import Cursor from '@/lib/cursor';
 import { initSplit } from '@/lib/split';
 import { format } from 'date-fns';
 import type { LenisOptions } from 'lenis';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, PropsWithChildren, useEffect, useRef } from 'react';
 import { Lenis } from './Lenis';
@@ -80,7 +81,7 @@ export default function PageWrapper(props: PageWrapperProps) {
           <ul className="wp__pageHeader-navLinks">
             {backButton ? (
               <li>
-                <a href="/works">back</a>
+                <Link href="/works">back</Link>
               </li>
             ) : (
               <Fragment>
@@ -89,19 +90,19 @@ export default function PageWrapper(props: PageWrapperProps) {
                     key={`${route.path}-${i}`}
                     className={pathname === route.path ? 'active' : ''}
                   >
-                    <a href={route.path}>{route.label}</a>
+                    <Link href={route.path}>{route.label}</Link>
                   </li>
                 ))}
               </Fragment>
             )}
           </ul>
 
-          <a href="/" className="wp__pageHeader-bigText">
+          <Link href="/" className="wp__pageHeader-bigText">
             <h1>Archive Of Selected</h1>
             <h1>
-              Works <sup>&apos;21—{format(new Date(), 'YYY')}</sup>
+              Works <sup>&apos;21—{format(new Date(), 'yyy')}</sup>
             </h1>
-          </a>
+          </Link>
         </header>
       )}
       <main

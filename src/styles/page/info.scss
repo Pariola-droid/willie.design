@@ -61,6 +61,8 @@
       line-height: toRem(48);
       letter-spacing: -0.02em;
       text-transform: capitalize;
+      opacity: 0;
+      visibility: hidden;
 
       &.a {
         top: 0;
@@ -104,6 +106,8 @@
 
       & small {
         @extend %BodyText;
+        opacity: 0;
+        visibility: hidden;
 
         &:nth-of-type(1) {
           grid-column: 1/4;
