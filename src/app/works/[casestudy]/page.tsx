@@ -268,12 +268,12 @@ export default function CaseStudyPage() {
         ) {
           if (e.deltaY > 0) {
             // reduced speed
-            progress = Math.min(progress + 0.005, 1);
+            progress = Math.min(progress + 0.01, 1);
           } else if (e.deltaY < 0) {
             progress = Math.max(progress - 0.04, 0);
           }
 
-          progressBar.style.width = `${progress * 100}%`;
+          progressBar.style.transform = `scaleX(${progress})`;
 
           if (progress >= 1 && !isNavigating) {
             isNavigating = true;
@@ -331,7 +331,7 @@ export default function CaseStudyPage() {
               src={work.coverImageUrl || '/images/casestudy/cover-img-w.png'}
               alt={work.coverImageAlt || work.title}
               width={1166}
-              height={700}
+              height={800}
             />
           </div>
           <div className="pageCaseStudy__hero-imgWrapper--imgCaption">
@@ -368,7 +368,7 @@ export default function CaseStudyPage() {
               }
               alt={getImageForPosition('position_1')?.alt || 'case study image'}
               width={575}
-              height={427}
+              height={500}
             />
           </div>
         </div>
@@ -387,7 +387,7 @@ export default function CaseStudyPage() {
               }
               alt={getImageForPosition('position_2')?.alt || 'case study image'}
               width={694}
-              height={750}
+              height={800}
             />
           </div>
         </div>
@@ -406,7 +406,7 @@ export default function CaseStudyPage() {
               }
               alt={getImageForPosition('position_3')?.alt || 'case study image'}
               width={238}
-              height={175}
+              height={250}
             />
           </div>
         </div>
@@ -425,7 +425,7 @@ export default function CaseStudyPage() {
               }
               alt={getImageForPosition('position_4')?.alt || 'case study image'}
               width={456}
-              height={350}
+              height={420}
             />
           </div>
         </div>

@@ -107,6 +107,7 @@
     &--imgOne {
       width: 100%;
       overflow: hidden;
+      background-color: red;
 
       &Img {
         width: toRem(575);
@@ -120,6 +121,7 @@
       padding-left: toRem(238);
       margin-top: toRem(96);
       overflow: hidden;
+      background-color: red;
 
       &Img {
         width: toRem(694);
@@ -134,6 +136,7 @@
       padding-right: toRem(234);
       margin-top: toRem(93);
       overflow: hidden;
+      background-color: red;
 
       &Img {
         width: toRem(238);
@@ -148,6 +151,7 @@
       padding-left: toRem(238);
       margin-top: toRem(128);
       overflow: hidden;
+      background-color: red;
 
       &Img {
         width: toRem(456);
@@ -245,12 +249,14 @@
 
       &Bar {
         left: 0;
-        width: 0%;
+        width: 100%;
         height: 1px;
         background-color: $black;
         position: absolute;
-        will-change: width;
-        transition: width 0.3s $ease-in-out-cubic;
+        will-change: transform;
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: $ease-in-out-cubic;
       }
     }
 
