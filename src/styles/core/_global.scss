@@ -15,6 +15,14 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 
+  &[data-theme='light'] {
+    background-color: $white;
+  }
+
+  &[data-theme='dark'] {
+    background-color: $black;
+  }
+
   @include media('<=tablet') {
     font-size: calc(100vw / 768 * 16);
   }
@@ -44,7 +52,7 @@ body {
     Helvetica Neue,
     Segoe UI,
     sans-serif;
-  background-color: $grey-white;
+  background-color: inherit;
 
   &::-webkit-scrollbar {
     width: 0rem;

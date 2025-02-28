@@ -1,17 +1,29 @@
 .pageCaseStudy {
   width: 100%;
+  min-height: 100vh;
   background-color: $white;
   padding-inline: 1rem;
   position: relative;
   padding-block: toRem(370) toRem(56);
 
+  & * {
+    color: $black;
+  }
+
+  &__loading {
+    inset: 0;
+    position: absolute;
+    @include flex(center, center);
+    font-size: toRem(14);
+    font-weight: 400;
+    line-height: toRem(16.59);
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+
   &__hero {
     width: 100%;
     @include flexed(unset, flex-start, column);
-
-    & * {
-      color: $black;
-    }
 
     & h2 {
       font-size: toRem(36);
