@@ -12,7 +12,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { FEATURED_WORKS } from '../../utils/constant';
 
-gsap.registerPlugin([Flip, CustomEase]);
+gsap.registerPlugin(Flip, CustomEase);
 interface WorkDocument extends SanityDocument {
   featured: boolean;
   layout: 'layout_a' | 'layout_b';
@@ -51,7 +51,6 @@ export default function WorksPage() {
   );
 
   const imageWrapperRef = useRef<HTMLDivElement | null>(null);
-  const hasAnimated = useRef<boolean>(false);
   const isAnimating = useRef<boolean>(false);
   const isFlipping = useRef<boolean>(false);
 
