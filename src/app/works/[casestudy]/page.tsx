@@ -52,9 +52,7 @@ export default function CaseStudyPage() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const heroImgWrapperRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLDivElement>(null);
-  const descRef = useRef<HTMLDivElement>(null);
   const galleryImgsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const moreDetailsRef = useRef<HTMLHeadingElement>(null);
   const nextProjectImgRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
 
@@ -143,11 +141,6 @@ export default function CaseStudyPage() {
         filter: 'brightness(95%)',
       });
 
-      gsap.set(descRef.current, {
-        opacity: 0,
-        y: 30,
-      });
-
       setIsAnimating(true);
       document.documentElement.style.setProperty('--cursor', 'wait');
 
@@ -183,15 +176,6 @@ export default function CaseStudyPage() {
             duration: 1.2,
           },
           '<'
-        )
-        .to(
-          descRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-          },
-          '-=0.6'
         );
 
       gsap.to(heroImgRef.current.querySelector('img'), {
@@ -280,7 +264,7 @@ export default function CaseStudyPage() {
 
             setTimeout(() => {
               router.push(`/works/${nextWork.slug?.current}`);
-            }, 300);
+            }, 200);
           }
 
           e.preventDefault();
@@ -340,12 +324,17 @@ export default function CaseStudyPage() {
           </div>
         </div>
 
-        <div className="pageCaseStudy__hero-descWrapper" ref={descRef}>
-          <p>{work.description}</p>
+        <div className="pageCaseStudy__hero-descWrapper">
+          <div data-animation="skew-split-paragraph">{work.description}</div>
           {work.liveLink && (
             <p>
               <span>↳</span>
-              <a href={work.liveLink} target="_blank" rel="noopener noreferrer">
+              <a
+                href={work.liveLink}
+                target="_blank"
+                rel="noopener"
+                link-interaction="underline"
+              >
                 view live
               </a>
             </p>
@@ -425,7 +414,7 @@ export default function CaseStudyPage() {
               }
               alt={getImageForPosition('position_4')?.alt || 'case study image'}
               width={456}
-              height={420}
+              height={480}
             />
           </div>
         </div>
