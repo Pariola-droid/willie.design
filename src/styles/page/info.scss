@@ -55,7 +55,7 @@
     }
 
     &-faceCaption {
-      position: absolute;
+      // position: absolute;
       font-size: toRem(48);
       font-weight: 400;
       line-height: toRem(48);
@@ -64,19 +64,18 @@
       opacity: 0;
       visibility: hidden;
 
-      &.a {
-        top: 0;
-        left: toRem(92);
-      }
+      // &.a {
+      //   top: 0;
+      //   left: toRem(92);
+      // }
 
-      &.b {
-        top: toRem(48);
-        left: 0;
-      }
+      // &.b {
+      //   top: toRem(60);
+      //   left: toRem(-35);
+      // }
 
       &.c {
-        bottom: toRem(28);
-        right: 0;
+        padding-bottom: 2px;
       }
     }
 

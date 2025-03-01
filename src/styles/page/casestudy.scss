@@ -3,7 +3,6 @@
 
   img {
     will-change: transform;
-    height: 100%;
     width: 100%;
     object-fit: cover;
   }
@@ -86,15 +85,19 @@
       @include flexed(unset, flex-start, column);
       row-gap: toRem(24);
 
-      & p {
+      & div {
         @extend %BodyText;
         line-height: toRem(21);
       }
 
       & a {
         @extend %BodyText;
-        text-decoration: underline;
-        text-underline-offset: 2px;
+        padding-bottom: 2px;
+        &::before,
+        &::after {
+          height: 1.5px !important;
+          bottom: -3% !important;
+        }
       }
     }
   }
@@ -106,8 +109,6 @@
 
     &--imgOne {
       width: 100%;
-      overflow: hidden;
-      background-color: red;
 
       &Img {
         width: toRem(575);
@@ -120,8 +121,6 @@
       width: 100%;
       padding-left: toRem(238);
       margin-top: toRem(96);
-      overflow: hidden;
-      background-color: red;
 
       &Img {
         width: toRem(694);
@@ -135,8 +134,6 @@
       width: 100%;
       padding-right: toRem(234);
       margin-top: toRem(93);
-      overflow: hidden;
-      background-color: red;
 
       &Img {
         width: toRem(238);
@@ -150,12 +147,10 @@
       width: 100%;
       padding-left: toRem(238);
       margin-top: toRem(128);
-      overflow: hidden;
-      background-color: red;
 
       &Img {
         width: toRem(456);
-        height: toRem(350);
+        height: toRem(420);
         background-color: $white;
       }
     }

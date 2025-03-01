@@ -20,6 +20,27 @@ export default function InfoPage() {
   const setIsAnimating = useStore((state) => state.setIsAnimating);
 
   useEffect(() => {
+    const faceCaptions = document.querySelectorAll(
+      '.pageInfo__hero-faceCaption'
+    );
+
+    faceCaptions.forEach((caption) => {
+      if (caption.parentElement?.classList.contains('cText-wrapper')) {
+        return;
+      }
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'cText-wrapper';
+      const originalClass = caption.classList;
+
+      if (originalClass.contains('a')) wrapper.classList.add('pos-a');
+      if (originalClass.contains('b')) wrapper.classList.add('pos-b');
+      if (originalClass.contains('c')) wrapper.classList.add('pos-c');
+
+      caption.parentNode?.insertBefore(wrapper, caption);
+      wrapper.appendChild(caption);
+    });
+
     gsap.set('.middleFace', {
       clipPath: 'inset(100% 0 0 0)',
     });
@@ -29,9 +50,10 @@ export default function InfoPage() {
       scale: 1.4,
     });
 
-    gsap.set(['.pageInfo__hero-faceCaption'], {
+    gsap.set(faceCaptions, {
+      y: 100,
       autoAlpha: 0,
-      y: -10,
+      transformStyle: 'preserve-3d',
     });
 
     gsap.set('.pageInfo__hero-bottomBar small', {
@@ -67,18 +89,15 @@ export default function InfoPage() {
         '<'
       )
       .to(
-        [
-          '.pageInfo__hero-faceCaption.a',
-          '.pageInfo__hero-faceCaption.b',
-          '.pageInfo__hero-faceCaption.c',
-        ],
+        faceCaptions,
         {
-          autoAlpha: 1,
           y: 0,
+          autoAlpha: 1,
           stagger: 0.15,
           duration: 0.8,
+          ease: 'power2.out',
         },
-        '-=0.5'
+        '-=0.4'
       )
       .to(
         '.pageInfo__hero-bottomBar small',
@@ -88,7 +107,7 @@ export default function InfoPage() {
           stagger: 0.1,
           duration: 0.6,
         },
-        '-=0.3'
+        '-=0.6'
       );
 
     return () => {
@@ -235,9 +254,9 @@ export default function InfoPage() {
             />
           </div>
 
-          <span className="pageInfo__hero-faceCaption a">meet</span>
-          <span className="pageInfo__hero-faceCaption b">williams</span>
-          <span className="pageInfo__hero-faceCaption c">Dsgnr</span>
+          <div className="pageInfo__hero-faceCaption a">meet</div>
+          <div className="pageInfo__hero-faceCaption b">williams</div>
+          <div className="pageInfo__hero-faceCaption c">Dsgnr</div>
         </div>
         <div className="pageInfo__hero-largeTxt">Folio</div>
 

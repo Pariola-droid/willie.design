@@ -28,6 +28,9 @@
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    filter: grayscale(100%);
   }
 
   &__workCard {
@@ -38,8 +41,6 @@
     @include flexed(unset, flex-start, column);
     row-gap: toRem(16);
     z-index: 2;
-    opacity: 0;
-    visibility: hidden;
 
     &:first-child {
       padding-top: toRem(135);

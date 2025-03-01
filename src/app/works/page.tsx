@@ -155,23 +155,26 @@ export default function WorksPage() {
   };
 
   useEffect(() => {
-    gsap.set('.pageWorks__workCard', {
+    const workCardContainer = document.querySelector(
+      '.pageWorks__cardContainer'
+    );
+
+    gsap.set(workCardContainer, {
       autoAlpha: 0,
+      filter: 'grayscale(1)',
     });
 
     if (works.length > 0) {
-      const workCard = gsap.utils.toArray('.pageWorks__workCard');
-
       const tl = gsap.timeline({
         defaults: {
-          ease: 'power2.Out',
+          ease: 'power2.inOut',
         },
       });
 
-      tl.to(workCard, {
+      tl.to(workCardContainer, {
         autoAlpha: 1,
-        duration: 0.4,
-        stagger: 0.05,
+        filter: 'none',
+        duration: 0.8,
       });
     }
   }, [works]);
@@ -214,7 +217,7 @@ export default function WorksPage() {
       >
         <div className={`pageWorks__cardContainer`}>
           {works.length > 0 &&
-            works.map((work, i) => (
+            [...works, ...works, ...works].map((work, i) => (
               <Link
                 key={`${work._id}`}
                 href={`/works/${work.slug?.current || 'aria-amara'}`}
