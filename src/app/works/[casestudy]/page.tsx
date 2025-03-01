@@ -2,52 +2,24 @@
 
 import PageWrapper from '@/components/common/PageWrapper';
 import { useStore } from '@/lib/store';
-import { client } from '@/sanity/client';
+import { useWorks } from '@/store/works.context';
 import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import { SanityDocument } from 'next-sanity';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
-interface WorkDocument extends SanityDocument {
-  title: string;
-  description: string;
-  publishedAt: string;
-  captions?: string[];
-  coverImage: {
-    asset: {
-      url: string;
-    };
-    alt?: string;
-  };
-  caseStudyImages: Array<{
-    asset: {
-      url: string;
-    };
-    alt?: string;
-    position: string;
-  }>;
-  liveLink?: string;
-  collab?: string;
-  accolades?: string;
-  hoverColor?: string;
-}
-
 export default function CaseStudyPage() {
   const params = useParams();
   const router = useRouter();
-  const setIsAnimating = useStore((state) => state.setIsAnimating);
 
-  const [work, setWork] = useState<WorkDocument | null>(null);
-  const [nextWork, setNextWork] = useState<WorkDocument | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const { currentWork, nextWork, fetchWorkBySlug } = useWorks();
+  const setIsAnimating = useStore((state) => state.setIsAnimating);
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   const heroImgWrapperRef = useRef<HTMLDivElement>(null);
@@ -57,66 +29,15 @@ export default function CaseStudyPage() {
   const progressBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchCaseStudy = async () => {
-      try {
-        setIsLoading(true);
-
-        const slug = params?.casestudy as string;
-        const WORK_QUERY = `*[_type == "work" && slug.current == $slug][0]{
-          _id,
-          title,
-          description,
-          "coverImageUrl": coverImage.asset->url,
-          "coverImageAlt": coverImage.alt,
-          "caseStudyImages": caseStudyImages[]{
-            "url": asset->url,
-            "alt": alt,
-            "position": position
-          },
-          liveLink,
-          collab,
-          accolades,
-          hoverColor,
-          publishedAt,
-          captions
-        }`;
-
-        const workData = await client.fetch<WorkDocument>(WORK_QUERY, { slug });
-
-        if (!workData) {
-          throw new Error('Case study not found');
-        }
-
-        setWork(workData);
-
-        const NEXT_WORK_QUERY = `*[_type == "work" && _id != $id][0]{
-          _id,
-          title,
-          slug,
-          "coverImageUrl": coverImage.asset->url
-        }`;
-
-        const nextWorkData = await client.fetch<WorkDocument>(NEXT_WORK_QUERY, {
-          id: workData._id,
-        });
-
-        setNextWork(nextWorkData);
-
-        setIsLoading(false);
-      } catch (err) {
-        console.error('Error fetching case study:', err);
-        setError(err instanceof Error ? err : new Error('Unknown error'));
-        setIsLoading(false);
-      }
-    };
-
-    fetchCaseStudy();
-  }, [params?.casestudy]);
+    const slug = params?.casestudy as string;
+    if (slug) {
+      fetchWorkBySlug(slug);
+    }
+  }, [params?.casestudy, fetchWorkBySlug]);
 
   useEffect(() => {
     if (
-      work &&
-      !isLoading &&
+      currentWork &&
       titleRef.current &&
       heroImgWrapperRef.current &&
       heroImgRef.current
@@ -194,10 +115,10 @@ export default function CaseStudyPage() {
         document.documentElement.style.setProperty('--cursor', 'auto');
       };
     }
-  }, [work, isLoading, setIsAnimating]);
+  }, [currentWork, setIsAnimating]);
 
   useEffect(() => {
-    if (work && !isLoading) {
+    if (currentWork) {
       galleryImgsRef.current.forEach((imgRef, index) => {
         if (imgRef) {
           gsap.set(imgRef, {
@@ -235,7 +156,7 @@ export default function CaseStudyPage() {
         }
       });
     }
-  }, [work, isLoading, nextWork]);
+  }, [currentWork, nextWork]);
 
   useEffect(() => {
     if (progressBarRef.current && nextWork) {
@@ -281,24 +202,9 @@ export default function CaseStudyPage() {
     }
   }, [nextWork, router]);
 
-  if (isLoading) {
-    return (
-      <PageWrapper theme="light" backButton className="pageCaseStudy" lenis>
-        <div className="pageCaseStudy__loading">Loading case study...</div>
-      </PageWrapper>
-    );
-  }
-
-  if (error || !work) {
-    return (
-      <PageWrapper theme="light" backButton className="pageCaseStudy" lenis>
-        <div className="error">{error?.message || 'Case study not found'}</div>
-      </PageWrapper>
-    );
-  }
-
   const getImageForPosition = (position: string) => {
-    const image = work.caseStudyImages?.find(
+    if (!currentWork || !currentWork.caseStudyImages) return null;
+    const image = currentWork.caseStudyImages?.find(
       (img) => img.position === position
     );
     return image;
@@ -308,31 +214,40 @@ export default function CaseStudyPage() {
     <PageWrapper theme="light" backButton className={`pageCaseStudy`} lenis>
       <section className="pageCaseStudy__hero">
         <h2 ref={titleRef} className="case-title">
-          {work.title}
+          {currentWork?.title}
         </h2>
 
         <div className="pageCaseStudy__hero-imgWrapper" ref={heroImgWrapperRef}>
           <div className="pageCaseStudy__hero-imgWrapper--img" ref={heroImgRef}>
             <Image
-              src={work.coverImageUrl || '/images/casestudy/cover-img-w.png'}
-              alt={work.coverImageAlt || work.title}
+              src={
+                currentWork?.coverImageUrl ||
+                '/images/casestudy/cover-img-w.png'
+              }
+              alt={
+                currentWork?.coverImageAlt || currentWork?.title || 'case study'
+              }
               width={1166}
               height={800}
             />
           </div>
           <div className="pageCaseStudy__hero-imgWrapper--imgCaption">
-            {work.captions &&
-              work.captions.map((caption, i) => <p key={i}>{caption}</p>)}
+            {currentWork?.captions &&
+              currentWork?.captions.map((caption, i) => (
+                <p key={i}>{caption}</p>
+              ))}
           </div>
         </div>
 
         <div className="pageCaseStudy__hero-descWrapper">
-          <div data-animation="skew-split-paragraph">{work.description}</div>
-          {work.liveLink && (
+          <div data-animation="skew-split-paragraph">
+            {currentWork?.description}
+          </div>
+          {currentWork?.liveLink && (
             <p>
               <span>↳</span>
               <a
-                href={work.liveLink}
+                href={currentWork?.liveLink}
                 target="_blank"
                 rel="noopener"
                 link-interaction="underline"
@@ -354,7 +269,7 @@ export default function CaseStudyPage() {
           >
             <Image
               src={
-                getImageForPosition('position_1')?.asset?.url ||
+                getImageForPosition('position_1')?.url ||
                 '/images/casestudy/w-img-a.png'
               }
               alt={getImageForPosition('position_1')?.alt || 'case study image'}
@@ -373,7 +288,7 @@ export default function CaseStudyPage() {
           >
             <Image
               src={
-                getImageForPosition('position_2')?.asset?.url ||
+                getImageForPosition('position_2')?.url ||
                 '/images/casestudy/w-img-b.png'
               }
               alt={getImageForPosition('position_2')?.alt || 'case study image'}
@@ -392,7 +307,7 @@ export default function CaseStudyPage() {
           >
             <Image
               src={
-                getImageForPosition('position_3')?.asset?.url ||
+                getImageForPosition('position_3')?.url ||
                 '/images/casestudy/w-img-c.png'
               }
               alt={getImageForPosition('position_3')?.alt || 'case study image'}
@@ -411,7 +326,7 @@ export default function CaseStudyPage() {
           >
             <Image
               src={
-                getImageForPosition('position_4')?.asset?.url ||
+                getImageForPosition('position_4')?.url ||
                 '/images/casestudy/w-img-d.png'
               }
               alt={getImageForPosition('position_4')?.alt || 'case study image'}
@@ -425,24 +340,24 @@ export default function CaseStudyPage() {
       <section className="pageCaseStudy__moreDetails">
         <h3>More Details</h3>
         <div className="pageCaseStudy__moreDetails--credit">
-          {work.collab && (
+          {currentWork?.collab && (
             <div className="pageCaseStudy__moreDetails--creditCol">
               <div className="pageCaseStudy__moreDetails--creditLabel">
                 Collab
               </div>
               <div className="pageCaseStudy__moreDetails--creditContent">
-                {work.collab}
+                {currentWork?.collab}
               </div>
             </div>
           )}
 
-          {work.accolades && (
+          {currentWork?.accolades && (
             <div className="pageCaseStudy__moreDetails--creditCol">
               <div className="pageCaseStudy__moreDetails--creditLabel">
                 Accolades
               </div>
               <div className="pageCaseStudy__moreDetails--creditContent">
-                {work.accolades}
+                {currentWork?.accolades}
               </div>
             </div>
           )}
@@ -458,7 +373,9 @@ export default function CaseStudyPage() {
                 ref={nextProjectImgRef}
               >
                 <Image
-                  src={nextWork.coverImageUrl}
+                  src={
+                    nextWork?.coverImageUrl || '/images/works/work-amara.png'
+                  }
                   alt={nextWork.title}
                   width={218}
                   height={143}
