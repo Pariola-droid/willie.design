@@ -30,6 +30,7 @@
     overflow: hidden;
     opacity: 0;
     visibility: hidden;
+    filter: grayscale(100%);
   }
 
   &__workCard {

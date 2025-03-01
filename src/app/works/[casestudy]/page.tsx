@@ -202,12 +202,14 @@ export default function CaseStudyPage() {
         if (imgRef) {
           gsap.set(imgRef, {
             autoAlpha: 0,
-            y: 20,
+            y: 50,
+            filter: 'brightness(80%)',
           });
 
           gsap.to(imgRef, {
             autoAlpha: 1,
             y: 0,
+            filter: 'brightness(100%)',
             duration: 0.8,
             scrollTrigger: {
               trigger: imgRef,

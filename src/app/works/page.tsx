@@ -161,11 +161,10 @@ export default function WorksPage() {
 
     gsap.set(workCardContainer, {
       autoAlpha: 0,
+      filter: 'grayscale(1)',
     });
 
     if (works.length > 0) {
-      // const workCard = gsap.utils.toArray('.pageWorks__workCard');
-
       const tl = gsap.timeline({
         defaults: {
           ease: 'power2.inOut',
@@ -174,7 +173,8 @@ export default function WorksPage() {
 
       tl.to(workCardContainer, {
         autoAlpha: 1,
-        duration: 0.6,
+        filter: 'none',
+        duration: 0.8,
       });
     }
   }, [works]);
