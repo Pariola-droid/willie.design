@@ -2,47 +2,26 @@
 
 import PageWrapper from '@/components/common/PageWrapper';
 
-import { client } from '@/sanity/client';
+import { useWorks } from '@/store/works.context';
 import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
 import { Flip } from 'gsap/dist/Flip';
-import { type SanityDocument } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { FEATURED_WORKS } from '../../utils/constant';
 
 gsap.registerPlugin(Flip, CustomEase);
-interface WorkDocument extends SanityDocument {
-  featured: boolean;
-  layout: 'layout_a' | 'layout_b';
-  hoverColor: string;
-  title: string;
-  slug: { current: string };
-  coverImage: {
-    asset: {
-      _ref: string;
-      url: string;
-    };
-    alt?: string;
-  };
-  captions?: string[];
-  description: string;
-  liveLink?: string;
-  publishedAt?: string;
-}
 
 CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function WorksPage() {
+  const { works, resetCurrentWork } = useWorks();
+
   const [bgColor, setBgColor] = useState('#ffffff');
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isVertical, setIsVertical] = useState<Boolean>(true);
-
-  const [works, setWorks] = useState<SanityDocument[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
 
   const imageRefs = useRef<(HTMLDivElement | null)[]>(
     FEATURED_WORKS.map(() => null)
@@ -53,35 +32,7 @@ export default function WorksPage() {
   const isFlipping = useRef<boolean>(false);
 
   useEffect(() => {
-    const fetchWorks = async () => {
-      try {
-        setIsLoading(true);
-        const WORKS_QUERY = `*[_type == "work" && defined(slug.current)] | order(publishedAt desc) {
-          _id,
-          featured,
-          layout,
-          hoverColor,
-          title,
-          slug,
-          "coverImageUrl": coverImage.asset->url,
-          "coverImageAlt": coverImage.alt,
-          captions,
-          description,
-          liveLink,
-          publishedAt
-        }`;
-
-        const sanityWorks = await client.fetch<WorkDocument[]>(WORKS_QUERY);
-        setWorks(sanityWorks);
-        setIsLoading(false);
-      } catch (err) {
-        console.error('Error fetching Sanity data:', err);
-        setError(err instanceof Error ? err : new Error('Unknown error'));
-        setIsLoading(false);
-      }
-    };
-
-    fetchWorks();
+    resetCurrentWork();
   }, []);
 
   const handleLayoutChange = () => {
@@ -188,22 +139,6 @@ export default function WorksPage() {
 
     return () => clearInterval(interval);
   }, [activeIndex]);
-
-  if (isLoading) {
-    return (
-      <PageWrapper theme="light" className="pageWorks">
-        <div className="pageWorks__loading">Loading works...</div>
-      </PageWrapper>
-    );
-  }
-
-  if (error) {
-    return (
-      <PageWrapper theme="light" className="pageWorks">
-        <div className="error">Error loading works: {error.message}</div>
-      </PageWrapper>
-    );
-  }
 
   return (
     <>

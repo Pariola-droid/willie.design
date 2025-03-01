@@ -2,13 +2,15 @@
 
 import Cursor from '@/lib/cursor';
 import { initSplit } from '@/lib/split';
+import { useWorks } from '@/store/works.context';
 import { format } from 'date-fns';
 import type { LenisOptions } from 'lenis';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, PropsWithChildren, useEffect, useRef } from 'react';
+import GlobalError from './GlobalError';
+import GlobalLoader from './GlobalLoader';
 import { Lenis } from './Lenis';
-import { useTransition } from './TransitionProvider';
 
 const ROUTES = [
   {
@@ -35,11 +37,10 @@ interface PageWrapperProps extends PropsWithChildren {
 }
 
 export default function PageWrapper(props: PageWrapperProps) {
-  const { isTransitioning } = useTransition();
+  const pathname = usePathname();
+  const { works, isLoading, error, fetchWorks } = useWorks();
 
   const lenisRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
-  const pageContainerRef = useRef<HTMLDivElement>(null);
 
   const {
     backButton,
@@ -51,12 +52,22 @@ export default function PageWrapper(props: PageWrapperProps) {
     ...rest
   } = props;
 
-  const cursor = new Cursor({
-    container: 'body',
-    speed: 0.7,
-    ease: 'expo.out',
-    visibleTimeout: 300,
-  });
+  useEffect(() => {
+    const cursor = new Cursor({
+      container: 'body',
+      speed: 0.7,
+      ease: 'expo.out',
+      visibleTimeout: 300,
+    });
+
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    if (works.length === 0) {
+      fetchWorks();
+    }
+  }, [works.length, fetchWorks]);
 
   useEffect(() => {
     initSplit();
@@ -66,16 +77,11 @@ export default function PageWrapper(props: PageWrapperProps) {
     document.documentElement.setAttribute('data-theme', theme);
   }, [pathname, theme]);
 
-  useEffect(() => {
-    if (!isTransitioning && pageContainerRef.current) {
-      setTimeout(() => {
-        pageContainerRef.current?.classList.add('page-ready');
-      }, 100);
-    }
-  }, [isTransitioning]);
-
   return (
     <div className="wp">
+      {isLoading && <GlobalLoader isLoading={isLoading} message="Loading..." />}
+      {error && <GlobalError error={error} resetError={fetchWorks} />}
+
       {showHeader && (
         <header wp-theme={theme} className="wp__pageHeader">
           <ul className="wp__pageHeader-navLinks">
@@ -105,11 +111,9 @@ export default function PageWrapper(props: PageWrapperProps) {
           </Link>
         </header>
       )}
-      <main
-        className={`${className} ${isTransitioning ? 'is-transitioning' : ''}`}
-        {...rest}
-      >
+      <main className={`${className}`} {...rest}>
         {children}
+
         <script>
           {`document.documentElement.setAttribute('data-theme', '${theme}');`}
         </script>

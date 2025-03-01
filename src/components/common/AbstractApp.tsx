@@ -3,6 +3,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { Fragment, useEffect, useState } from 'react';
 
+import { WorksProvider } from '@/store/works.context';
 import 'splitting/dist/splitting-cells.css';
 import 'splitting/dist/splitting.css';
 import '../../styles/index.scss';
@@ -11,7 +12,6 @@ function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // staleTime: 3 * 60 * 1000,
         staleTime: 60 * 1000,
       },
     },
@@ -47,7 +47,7 @@ const AbstractApp = (pageProps: AbstractAppProps) => {
     <Fragment>
       {isClientReady && (
         <QueryClientProvider client={queryClient}>
-          {pageProps?.children}
+          <WorksProvider>{pageProps?.children}</WorksProvider>
         </QueryClientProvider>
       )}
     </Fragment>

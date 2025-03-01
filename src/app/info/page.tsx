@@ -262,7 +262,7 @@ export default function InfoPage() {
 
         <div className="pageInfo__hero-bottomBar">
           <small>creative designer</small>
-          <small>CR7 fanboy</small>
+          <small>young jury awwwards 24 - ‘25</small>
           <small>scroll</small>
         </div>
       </section>
