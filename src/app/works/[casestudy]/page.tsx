@@ -18,7 +18,7 @@ export default function CaseStudyPage() {
   const params = useParams();
   const router = useRouter();
 
-  const { currentWork, nextWork, fetchWorkBySlug } = useWorks();
+  const { currentWork, nextWork } = useWorks();
   const setIsAnimating = useStore((state) => state.setIsAnimating);
 
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -27,13 +27,6 @@ export default function CaseStudyPage() {
   const galleryImgsRef = useRef<(HTMLDivElement | null)[]>([]);
   const nextProjectImgRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const slug = params?.casestudy as string;
-    if (slug) {
-      fetchWorkBySlug(slug);
-    }
-  }, [params?.casestudy, fetchWorkBySlug]);
 
   useEffect(() => {
     if (

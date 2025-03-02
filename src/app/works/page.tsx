@@ -17,7 +17,7 @@ CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function WorksPage() {
-  const { works, resetCurrentWork } = useWorks();
+  const { works } = useWorks();
 
   const [bgColor, setBgColor] = useState('#ffffff');
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -30,10 +30,6 @@ export default function WorksPage() {
   const imageWrapperRef = useRef<HTMLDivElement | null>(null);
   const isAnimating = useRef<boolean>(false);
   const isFlipping = useRef<boolean>(false);
-
-  useEffect(() => {
-    resetCurrentWork();
-  }, []);
 
   const handleLayoutChange = () => {
     if (isFlipping.current) return;
@@ -107,7 +103,7 @@ export default function WorksPage() {
 
   useEffect(() => {
     const workCardContainer = document.querySelector(
-      '.pageWorks__cardContainer'
+      '.pageWorks__verticalContainer'
     );
 
     gsap.set(workCardContainer, {
@@ -150,11 +146,11 @@ export default function WorksPage() {
           infinite: Boolean(isVertical),
         }}
       >
-        <div className={`pageWorks__cardContainer`}>
+        <div className={`pageWorks__verticalContainer`}>
           {works.length > 0 &&
             [...works, ...works, ...works].map((work, i) => (
               <Link
-                key={`${work._id}`}
+                key={`${work._id}-${i}`}
                 href={`/works/${work.slug?.current || 'aria-amara'}`}
                 className={`pageWorks__workCard`}
                 onMouseEnter={() => setBgColor(work.hoverColor || '#ffffff')}
@@ -174,6 +170,62 @@ export default function WorksPage() {
                 </div>
               </Link>
             ))}
+        </div>
+
+        <div className={`pageWorks__horizontalContainer`}>
+          <div className="pageWorks__accordionRoot">
+            <div
+              role="button"
+              className="pageWorks__accordionRoot-accordionItem"
+            >
+              <div className="pageWorks__accordionRoot-accordionItemTitle">
+                <span>01</span>
+                <p>The Maker Studio</p>
+                <div role="button" link-interaction="no-line">
+                  See case
+                </div>
+              </div>
+            </div>
+
+            <div
+              role="button"
+              className="pageWorks__accordionRoot-accordionItem"
+            >
+              <div className="pageWorks__accordionRoot-accordionItemTitle">
+                <span>02</span>
+                <p>The Maker Studio</p>
+                <div role="button" link-interaction="no-line">
+                  See case
+                </div>
+              </div>
+            </div>
+
+            <div
+              role="button"
+              className="pageWorks__accordionRoot-accordionItem"
+            >
+              <div className="pageWorks__accordionRoot-accordionItemTitle">
+                <span>03</span>
+                <p>The Maker Studio</p>
+                <div role="button" link-interaction="no-line">
+                  See case
+                </div>
+              </div>
+            </div>
+
+            <div
+              role="button"
+              className="pageWorks__accordionRoot-accordionItem"
+            >
+              <div className="pageWorks__accordionRoot-accordionItemTitle">
+                <span>04</span>
+                <p>The Maker Studio</p>
+                <div role="button" link-interaction="no-line">
+                  See case
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </PageWrapper>
 
