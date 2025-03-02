@@ -46,7 +46,6 @@ interface WorksContextType {
   currentWork: IWorkDocument | null;
   nextWork: IWorkDocument | null;
   isLoading: boolean;
-  isCaseStudyLoading: boolean;
   error: Error | null;
   fetchWorks: () => Promise<void>;
   fetchWorkBySlug: (slug: string) => Promise<void>;
@@ -57,7 +56,6 @@ const WorksContext = createContext<WorksContextType>({
   currentWork: null,
   nextWork: null,
   isLoading: false,
-  isCaseStudyLoading: false,
   error: null,
   fetchWorks: async () => {},
   fetchWorkBySlug: async () => {},
@@ -72,9 +70,7 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
   const [currentWork, setCurrentWork] = useState<IWorkDocument | null>(null);
   const [nextWork, setNextWork] = useState<IWorkDocument | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isCaseStudyLoading, setIsCaseStudyLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [initialFetchDone, setInitialFetchDone] = useState(false);
 
   useEffect(() => {
     if (!pathname.startsWith('/works/')) {
@@ -203,7 +199,6 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
       currentWork,
       nextWork,
       isLoading,
-      isCaseStudyLoading,
       error,
       fetchWorks,
       fetchWorkBySlug,
@@ -213,7 +208,6 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
     currentWork,
     nextWork,
     isLoading,
-    isCaseStudyLoading,
     error,
     fetchWorks,
     fetchWorkBySlug,
