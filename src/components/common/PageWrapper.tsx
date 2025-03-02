@@ -6,7 +6,7 @@ import { useWorks } from '@/store/works.context';
 import { format } from 'date-fns';
 import type { LenisOptions } from 'lenis';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { Fragment, PropsWithChildren, useEffect, useRef } from 'react';
 import GlobalError from './GlobalError';
 import GlobalLoader from './GlobalLoader';
@@ -38,7 +38,8 @@ interface PageWrapperProps extends PropsWithChildren {
 
 export default function PageWrapper(props: PageWrapperProps) {
   const pathname = usePathname();
-  const { works, isLoading, error, fetchWorks } = useWorks();
+  const params = useParams();
+  const { works, isLoading, error, fetchWorks, fetchWorkBySlug } = useWorks();
 
   const lenisRef = useRef<HTMLDivElement>(null);
 
@@ -53,33 +54,47 @@ export default function PageWrapper(props: PageWrapperProps) {
   } = props;
 
   useEffect(() => {
+    initSplit();
+
     const cursor = new Cursor({
       container: 'body',
       speed: 0.7,
       ease: 'expo.out',
       visibleTimeout: 300,
     });
-
-    return () => {};
   }, []);
 
   useEffect(() => {
-    if (works.length === 0) {
+    if (works.length < 1) {
       fetchWorks();
     }
   }, [works.length, fetchWorks]);
 
   useEffect(() => {
-    initSplit();
-  }, []);
+    if (
+      pathname.startsWith('/works/') &&
+      pathname !== '/works' &&
+      params?.casestudy
+    ) {
+      const slug = params.casestudy as string;
+      fetchWorkBySlug(slug);
+    }
+  }, [pathname, params, fetchWorkBySlug]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [pathname, theme]);
 
+  const shouldShowLoader =
+    isLoading &&
+    (pathname === '/works' ||
+      (pathname.startsWith('/works/') && pathname !== '/works'));
+
   return (
     <div className="wp">
-      {isLoading && <GlobalLoader isLoading={isLoading} message="Loading..." />}
+      {shouldShowLoader && (
+        <GlobalLoader isLoading={shouldShowLoader} message="Loading..." />
+      )}
       {error && <GlobalError error={error} resetError={fetchWorks} />}
 
       {showHeader && (

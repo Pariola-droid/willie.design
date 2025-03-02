@@ -2,11 +2,13 @@
 
 import { client } from '@/sanity/client';
 import { SanityDocument } from 'next-sanity';
+import { usePathname } from 'next/navigation';
 import {
   createContext,
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -47,7 +49,6 @@ interface WorksContextType {
   error: Error | null;
   fetchWorks: () => Promise<void>;
   fetchWorkBySlug: (slug: string) => Promise<void>;
-  resetCurrentWork: () => void;
 }
 
 const WorksContext = createContext<WorksContextType>({
@@ -58,17 +59,25 @@ const WorksContext = createContext<WorksContextType>({
   error: null,
   fetchWorks: async () => {},
   fetchWorkBySlug: async () => {},
-  resetCurrentWork: () => {},
 });
 
 export const useWorks = () => useContext(WorksContext);
 
 export const WorksProvider = ({ children }: { children: ReactNode }) => {
+  const pathname = usePathname();
+
   const [works, setWorks] = useState<IWorkDocument[]>([]);
   const [currentWork, setCurrentWork] = useState<IWorkDocument | null>(null);
   const [nextWork, setNextWork] = useState<IWorkDocument | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (!pathname.startsWith('/works/')) {
+      setCurrentWork(null);
+      setNextWork(null);
+    }
+  }, [pathname]);
 
   const fetchWorks = useCallback(async () => {
     try {
@@ -87,7 +96,14 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
         captions,
         description,
         liveLink,
-        publishedAt
+        publishedAt,
+        collab,
+        accolades,
+        "caseStudyImages": caseStudyImages[]{
+          "url": asset->url,
+          "alt": alt,
+          "position": position
+        }
       }`;
 
       const sanityWorks = await client.fetch<IWorkDocument[]>(WORKS_QUERY);
@@ -106,48 +122,44 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(true);
         setError(null);
 
-        const WORK_QUERY = `*[_type == "work" && slug.current == $slug][0]{
-            _id,
-            title,
-            description,
-            "coverImageUrl": coverImage.asset->url,
-            "coverImageAlt": coverImage.alt,
-            "caseStudyImages": caseStudyImages[]{
-              "url": asset->url,
-              "alt": alt,
-              "position": position
-            },
-            liveLink,
-            collab,
-            accolades,
-            hoverColor,
-            publishedAt,
-            captions,
-            slug
-          }`;
-
         if (works.length > 0) {
-          const workData = works.find((work) => work.slug.current === slug);
+          const currentWorkData = works.find(
+            (work) => work.slug.current === slug
+          );
 
-          if (workData) {
-            const fullWorkData = await client.fetch<IWorkDocument>(WORK_QUERY, {
-              slug,
-            });
+          if (currentWorkData) {
+            setCurrentWork(currentWorkData);
 
-            if (fullWorkData) {
-              setCurrentWork(fullWorkData);
+            const currentIndex = works.findIndex(
+              (work) => work.slug.current === slug
+            );
+            const nextIndex = (currentIndex + 1) % works.length;
+            setNextWork(works[nextIndex]);
 
-              const currentIndex = works.findIndex(
-                (work) => work.slug.current === slug
-              );
-              const nextIndex = (currentIndex + 1) % works.length;
-              setNextWork(works[nextIndex]);
-
-              setIsLoading(false);
-              return;
-            }
+            setIsLoading(false);
+            return;
           }
         }
+
+        const WORK_QUERY = `*[_type == "work" && slug.current == $slug][0]{
+          _id,
+          title,
+          description,
+          "coverImageUrl": coverImage.asset->url,
+          "coverImageAlt": coverImage.alt,
+          "caseStudyImages": caseStudyImages[]{
+            "url": asset->url,
+            "alt": alt,
+            "position": position
+          },
+          liveLink,
+          collab,
+          accolades,
+          hoverColor,
+          publishedAt,
+          captions,
+          slug
+        }`;
 
         const workData = await client.fetch<IWorkDocument>(WORK_QUERY, {
           slug,
@@ -165,6 +177,7 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
           const currentIndex = works.findIndex(
             (work) => work.slug.current === slug
           );
+
           if (currentIndex !== -1) {
             const nextIndex = (currentIndex + 1) % works.length;
             setNextWork(works[nextIndex]);
@@ -180,11 +193,6 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
     [works, fetchWorks]
   );
 
-  const resetCurrentWork = useCallback(() => {
-    setCurrentWork(null);
-    setNextWork(null);
-  }, []);
-
   const value = useMemo(() => {
     return {
       works,
@@ -194,7 +202,6 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
       error,
       fetchWorks,
       fetchWorkBySlug,
-      resetCurrentWork,
     };
   }, [
     works,
@@ -204,7 +211,6 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
     error,
     fetchWorks,
     fetchWorkBySlug,
-    resetCurrentWork,
   ]);
 
   return (
