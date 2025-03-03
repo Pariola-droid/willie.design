@@ -32,7 +32,6 @@
     opacity: 0;
     visibility: hidden;
     filter: grayscale(100%);
-    // background-color: blueviolet;
   }
 
   &__horizontalContainer {
@@ -48,23 +47,19 @@
     visibility: hidden;
     filter: grayscale(100%);
     padding-bottom: toRem(32);
-    // background-color: red;
   }
 
   &__workCard {
     width: 100%;
     max-width: toRem(456);
-    min-height: toRem(322);
+    height: toRem(332);
     margin-bottom: toRem(56);
     @include flexed(unset, flex-start, column);
     row-gap: toRem(16);
     z-index: 2;
 
     &:first-child {
-      padding-top: toRem(135);
-      margin-bottom: toRem(
-        175
-      ); //temporarily - would be controlled in the jsx when not !isVertical
+      margin-top: toRem(135);
     }
 
     &-wImg {
@@ -170,13 +165,12 @@
       height: 72px;
       @include flexed(space-between, flex-start, column);
       margin-bottom: toRem(20);
-      // background-color: blue;
 
-      &:hover {
-        & span {
-          border: toRem(1.5) solid $black;
-        }
-      }
+      // &:hover {
+      //   & span {
+      //     border: toRem(1.5) solid $black;
+      //   }
+      // }
     }
 
     &-layoutBtn {
