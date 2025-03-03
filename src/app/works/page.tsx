@@ -239,57 +239,22 @@ export default function WorksPage() {
           }}
         >
           <div className="pageWorks__accordionRoot">
-            <div
-              role="button"
-              className="pageWorks__accordionRoot-accordionItem"
-            >
-              <div className="pageWorks__accordionRoot-accordionItemTitle">
-                <span>01</span>
-                <p>The Maker Studio</p>
-                <div role="button" link-interaction="no-line">
-                  See case
+            {works.length > 0 &&
+              works.map((work, i) => (
+                <div
+                  role="button"
+                  key={`${work._id}-${i}`}
+                  className="pageWorks__accordionRoot-accordionItem"
+                >
+                  <div className="pageWorks__accordionRoot-accordionItemTitle">
+                    <span>0{`${(i % works.length) + 1}`}</span>
+                    <p>{work?.title}</p>
+                    <div role="button" link-interaction="no-line">
+                      See case
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-
-            <div
-              role="button"
-              className="pageWorks__accordionRoot-accordionItem"
-            >
-              <div className="pageWorks__accordionRoot-accordionItemTitle">
-                <span>02</span>
-                <p>The Maker Studio</p>
-                <div role="button" link-interaction="no-line">
-                  See case
-                </div>
-              </div>
-            </div>
-
-            <div
-              role="button"
-              className="pageWorks__accordionRoot-accordionItem"
-            >
-              <div className="pageWorks__accordionRoot-accordionItemTitle">
-                <span>03</span>
-                <p>The Maker Studio</p>
-                <div role="button" link-interaction="no-line">
-                  See case
-                </div>
-              </div>
-            </div>
-
-            <div
-              role="button"
-              className="pageWorks__accordionRoot-accordionItem"
-            >
-              <div className="pageWorks__accordionRoot-accordionItemTitle">
-                <span>04</span>
-                <p>The Maker Studio</p>
-                <div role="button" link-interaction="no-line">
-                  See case
-                </div>
-              </div>
-            </div>
+              ))}
           </div>
         </div>
       </PageWrapper>
