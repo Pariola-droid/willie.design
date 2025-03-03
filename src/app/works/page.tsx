@@ -60,6 +60,7 @@ export default function WorksPage() {
         position: 'absolute',
         left: 254,
         top: 0,
+        height: '100dvh',
       });
     }
 
@@ -88,6 +89,7 @@ export default function WorksPage() {
           gsap.set(verticalContainerRef.current, {
             position: 'relative',
             left: 0,
+            height: '100%',
           });
         }
       });
@@ -191,6 +193,7 @@ export default function WorksPage() {
       gsap.set(verticalContainerRef.current, {
         display: 'flex',
         autoAlpha: 0,
+        height: '100dvh',
         filter: 'grayscale(1)',
       });
 
@@ -198,6 +201,7 @@ export default function WorksPage() {
         gsap.to(verticalContainerRef.current, {
           filter: 'none',
           autoAlpha: 1,
+          height: '100%',
           duration: 0.8,
           ease: 'ease-in-out-cubic',
         });
