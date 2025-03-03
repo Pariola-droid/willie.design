@@ -202,8 +202,6 @@ export default function WorksPage() {
           ref={verticalContainerRef}
           className={`pageWorks__verticalContainer`}
           style={{
-            visibility: 'hidden',
-            opacity: 0,
             display: isVertical ? 'flex' : 'none',
           }}
         >
@@ -236,8 +234,6 @@ export default function WorksPage() {
           ref={horizontalContainerRef}
           className={`pageWorks__horizontalContainer`}
           style={{
-            visibility: 'hidden',
-            opacity: 0,
             display: !isVertical ? 'flex' : 'none',
           }}
         >
