@@ -51,14 +51,14 @@ export default function WorksPage() {
       gsap.set(horizontalContainerRef.current, {
         display: 'flex',
         position: 'absolute',
-        left: 254,
+        left: '15.875rem',
         top: 0,
       });
     } else {
       gsap.set(verticalContainerRef.current, {
         display: 'flex',
         position: 'absolute',
-        left: 254,
+        left: '15.875rem',
         top: 0,
         height: '100dvh',
       });
