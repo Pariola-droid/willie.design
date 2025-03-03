@@ -32,6 +32,9 @@ export default function WorksPage() {
   const isAnimating = useRef(false);
   const isFlipping = useRef(false);
 
+  const verticalTl = useRef<gsap.core.Timeline | null>(null);
+  const horizontalTl = useRef<gsap.core.Timeline | null>(null);
+
   const handleLayoutChange = () => {
     if (isFlipping.current) return;
     isFlipping.current = true;
@@ -41,19 +44,28 @@ export default function WorksPage() {
       '.layoutBtn-span',
     ]);
 
+    const currentTl = isVertical ? verticalTl.current : horizontalTl.current;
+    const nextTl = isVertical ? horizontalTl.current : verticalTl.current;
+
     if (isVertical) {
       gsap.set(horizontalContainerRef.current, {
         display: 'flex',
-        autoAlpha: 0,
-        clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
       });
     } else {
       gsap.set(verticalContainerRef.current, {
         display: 'flex',
-        autoAlpha: 0,
-        clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
       });
     }
+
+    currentTl?.reverse().eventCallback('onReverseComplete', () => {
+      if (isVertical) {
+        gsap.set(verticalContainerRef.current, { display: 'none' });
+      } else {
+        gsap.set(horizontalContainerRef.current, { display: 'none' });
+      }
+
+      nextTl?.play();
+    });
 
     setIsVertical(!isVertical);
 
@@ -103,77 +115,66 @@ export default function WorksPage() {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      const verticalContainer = verticalContainerRef.current;
-      const horizontalContainer = horizontalContainerRef.current;
+    verticalTl.current = gsap.timeline({
+      paused: true,
+      defaults: { ease: 'cubic-bezier(0.87, 0, 0.13, 1)' },
+    });
 
-      if (isVertical) {
-        gsap.set(verticalContainer, {
-          autoAlpha: 0,
-          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
-        });
-
-        const tl = gsap.timeline({
-          defaults: { ease: 'ease-in-out-cubic' },
-        });
-
-        tl.to(horizontalContainer, {
-          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
-          autoAlpha: 0,
-          duration: 0.6,
-        });
-
-        tl.to(
-          verticalContainer,
-          {
-            clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
-            autoAlpha: 1,
-            duration: 1,
-          },
-          '>-0.2'
-        );
-      } else {
-        gsap.set(horizontalContainer, {
-          autoAlpha: 0,
-          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
-        });
-
-        const tl = gsap.timeline({
-          defaults: { ease: 'ease-in-out-cubic' },
-        });
-
-        tl.to(verticalContainer, {
-          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
-          autoAlpha: 0,
-          duration: 0.6,
-        });
-
-        tl.to(
-          horizontalContainer,
-          {
-            clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
-            autoAlpha: 1,
-            duration: 1,
-          },
-          '>-0.2'
-        );
-      }
-    }, 50);
-  }, [isVertical]);
-
-  useEffect(() => {
-    if (verticalContainerRef.current && works.length > 0) {
-      gsap.set(verticalContainerRef.current, {
+    verticalTl.current.fromTo(
+      verticalContainerRef.current,
+      {
         autoAlpha: 0,
         filter: 'grayscale(1)',
-        display: 'flex',
-      });
-
-      gsap.to(verticalContainerRef.current, {
+        clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+      },
+      {
         autoAlpha: 1,
         filter: 'none',
-        duration: 1,
-        ease: 'ease-in-out-cubic',
+        clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
+        duration: 0.8,
+      }
+    );
+
+    horizontalTl.current = gsap.timeline({
+      paused: true,
+      defaults: { ease: 'cubic-bezier(0.87, 0, 0.13, 1)' },
+    });
+
+    horizontalTl.current.fromTo(
+      horizontalContainerRef.current,
+      {
+        autoAlpha: 0,
+        filter: 'grayscale(1)',
+        clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+      },
+      {
+        autoAlpha: 1,
+        filter: 'none',
+        clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
+        duration: 0.8,
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    if (
+      verticalContainerRef.current &&
+      works.length > 0 &&
+      verticalTl.current
+    ) {
+      gsap.set(verticalContainerRef.current, {
+        display: 'flex',
+        autoAlpha: 0,
+        filter: 'grayscale(1)',
+      });
+
+      verticalTl.current.play().eventCallback('onComplete', () => {
+        gsap.to(verticalContainerRef.current, {
+          filter: 'none',
+          autoAlpha: 1,
+          duration: 0.5,
+          ease: 'ease-in-out-cubic',
+        });
       });
     }
   }, [works]);
@@ -202,7 +203,7 @@ export default function WorksPage() {
           ref={verticalContainerRef}
           className={`pageWorks__verticalContainer`}
           style={{
-            display: isVertical ? 'flex' : 'none',
+            display: 'none',
           }}
         >
           {works.length > 0 &&
@@ -234,7 +235,7 @@ export default function WorksPage() {
           ref={horizontalContainerRef}
           className={`pageWorks__horizontalContainer`}
           style={{
-            display: !isVertical ? 'flex' : 'none',
+            display: 'none',
           }}
         >
           <div className="pageWorks__accordionRoot">

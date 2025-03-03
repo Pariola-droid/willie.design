@@ -7,6 +7,7 @@
   transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
+  justify-content: flex-start;
 
   &__loading {
     inset: 0;
@@ -31,6 +32,8 @@
     opacity: 0;
     visibility: hidden;
     filter: grayscale(100%);
+    background-color: blueviolet;
+    margin-right: auto;
   }
 
   &__horizontalContainer {
@@ -46,6 +49,8 @@
     visibility: hidden;
     filter: grayscale(100%);
     padding-bottom: toRem(32);
+    background-color: red;
+    margin-right: auto;
   }
 
   &__workCard {
