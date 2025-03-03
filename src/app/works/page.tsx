@@ -20,16 +20,17 @@ export default function WorksPage() {
   const { works } = useWorks();
 
   const [bgColor, setBgColor] = useState('#ffffff');
-  const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [isVertical, setIsVertical] = useState<Boolean>(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isVertical, setIsVertical] = useState(true);
 
+  const verticalContainerRef = useRef(null);
+  const horizontalContainerRef = useRef(null);
   const imageRefs = useRef<(HTMLDivElement | null)[]>(
     FEATURED_WORKS.map(() => null)
   );
-
-  const imageWrapperRef = useRef<HTMLDivElement | null>(null);
-  const isAnimating = useRef<boolean>(false);
-  const isFlipping = useRef<boolean>(false);
+  const imageWrapperRef = useRef(null);
+  const isAnimating = useRef(false);
+  const isFlipping = useRef(false);
 
   const handleLayoutChange = () => {
     if (isFlipping.current) return;
@@ -39,6 +40,21 @@ export default function WorksPage() {
       '.pageWorks__footer-layoutBtn',
       '.layoutBtn-span',
     ]);
+
+    if (isVertical) {
+      gsap.set(horizontalContainerRef.current, {
+        display: 'flex',
+        autoAlpha: 0,
+        clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+      });
+    } else {
+      gsap.set(verticalContainerRef.current, {
+        display: 'flex',
+        autoAlpha: 0,
+        clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+      });
+    }
+
     setIsVertical(!isVertical);
 
     Flip.from(state, {
@@ -46,20 +62,6 @@ export default function WorksPage() {
       duration: 0.6,
       ease: 'power2.inOut',
       immediateRender: true,
-      onEnter: (elements) => {
-        gsap.fromTo(
-          elements,
-          { opacity: 0 },
-          { opacity: 1, duration: 0.6, immediateRender: true }
-        );
-      },
-      onLeave: (elements) => {
-        gsap.to(elements, {
-          opacity: 0,
-          duration: 0.6,
-          immediateRender: true,
-        });
-      },
       onComplete: () => {
         isFlipping.current = false;
       },
@@ -72,8 +74,7 @@ export default function WorksPage() {
         const relativePos =
           (index - currentIndex + FEATURED_WORKS.length) %
           FEATURED_WORKS.length;
-        //   @ts-ignore
-        ref.style.zIndex = FEATURED_WORKS.length - relativePos;
+        ref.style.zIndex = String(FEATURED_WORKS.length - relativePos);
       }
     });
   };
@@ -102,26 +103,77 @@ export default function WorksPage() {
   };
 
   useEffect(() => {
-    const workCardContainer = document.querySelector(
-      '.pageWorks__verticalContainer'
-    );
+    setTimeout(() => {
+      const verticalContainer = verticalContainerRef.current;
+      const horizontalContainer = horizontalContainerRef.current;
 
-    gsap.set(workCardContainer, {
-      autoAlpha: 0,
-      filter: 'grayscale(1)',
-    });
+      if (isVertical) {
+        gsap.set(verticalContainer, {
+          autoAlpha: 0,
+          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+        });
 
-    if (works.length > 0) {
-      const tl = gsap.timeline({
-        defaults: {
-          ease: 'power2.inOut',
-        },
+        const tl = gsap.timeline({
+          defaults: { ease: 'ease-in-out-cubic' },
+        });
+
+        tl.to(horizontalContainer, {
+          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+          autoAlpha: 0,
+          duration: 0.6,
+        });
+
+        tl.to(
+          verticalContainer,
+          {
+            clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
+            autoAlpha: 1,
+            duration: 1,
+          },
+          '>-0.2'
+        );
+      } else {
+        gsap.set(horizontalContainer, {
+          autoAlpha: 0,
+          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+        });
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'ease-in-out-cubic' },
+        });
+
+        tl.to(verticalContainer, {
+          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+          autoAlpha: 0,
+          duration: 0.6,
+        });
+
+        tl.to(
+          horizontalContainer,
+          {
+            clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
+            autoAlpha: 1,
+            duration: 1,
+          },
+          '>-0.2'
+        );
+      }
+    }, 50);
+  }, [isVertical]);
+
+  useEffect(() => {
+    if (verticalContainerRef.current && works.length > 0) {
+      gsap.set(verticalContainerRef.current, {
+        autoAlpha: 0,
+        filter: 'grayscale(1)',
+        display: 'flex',
       });
 
-      tl.to(workCardContainer, {
+      gsap.to(verticalContainerRef.current, {
         autoAlpha: 1,
         filter: 'none',
-        duration: 0.8,
+        duration: 1,
+        ease: 'ease-in-out-cubic',
       });
     }
   }, [works]);
@@ -146,7 +198,13 @@ export default function WorksPage() {
           infinite: Boolean(isVertical),
         }}
       >
-        <div className={`pageWorks__verticalContainer`}>
+        <div
+          ref={verticalContainerRef}
+          className={`pageWorks__verticalContainer`}
+          style={{
+            display: isVertical ? 'flex' : 'none',
+          }}
+        >
           {works.length > 0 &&
             [...works, ...works, ...works].map((work, i) => (
               <Link
@@ -172,7 +230,13 @@ export default function WorksPage() {
             ))}
         </div>
 
-        <div className={`pageWorks__horizontalContainer`}>
+        <div
+          ref={horizontalContainerRef}
+          className={`pageWorks__horizontalContainer`}
+          style={{
+            display: !isVertical ? 'flex' : 'none',
+          }}
+        >
           <div className="pageWorks__accordionRoot">
             <div
               role="button"
@@ -259,8 +323,9 @@ export default function WorksPage() {
                 {FEATURED_WORKS.map((work, index) => (
                   <div
                     key={work.id}
-                    // @ts-ignore
-                    ref={(el) => (imageRefs.current[index] = el)}
+                    ref={(el) => {
+                      imageRefs.current[index] = el;
+                    }}
                     className="pageWorks__footer-scImg"
                     style={{
                       backgroundImage: `url(${work.img})`,
