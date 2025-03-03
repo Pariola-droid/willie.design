@@ -50,21 +50,47 @@ export default function WorksPage() {
     if (isVertical) {
       gsap.set(horizontalContainerRef.current, {
         display: 'flex',
+        position: 'absolute',
+        left: 254,
+        top: 0,
       });
     } else {
       gsap.set(verticalContainerRef.current, {
         display: 'flex',
+        position: 'absolute',
+        left: 254,
+        top: 0,
       });
     }
 
     currentTl?.reverse().eventCallback('onReverseComplete', () => {
       if (isVertical) {
-        gsap.set(verticalContainerRef.current, { display: 'none' });
+        gsap.set(verticalContainerRef.current, {
+          display: 'none',
+          left: 0,
+          position: 'relative',
+        });
       } else {
-        gsap.set(horizontalContainerRef.current, { display: 'none' });
+        gsap.set(horizontalContainerRef.current, {
+          display: 'none',
+          left: 0,
+          position: 'relative',
+        });
       }
 
-      nextTl?.play();
+      nextTl?.play().eventCallback('onComplete', () => {
+        if (isVertical) {
+          gsap.set(horizontalContainerRef.current, {
+            position: 'relative',
+            left: 0,
+          });
+        } else {
+          gsap.set(verticalContainerRef.current, {
+            position: 'relative',
+            left: 0,
+          });
+        }
+      });
     });
 
     setIsVertical(!isVertical);
@@ -117,7 +143,7 @@ export default function WorksPage() {
   useEffect(() => {
     verticalTl.current = gsap.timeline({
       paused: true,
-      defaults: { ease: 'cubic-bezier(0.87, 0, 0.13, 1)' },
+      defaults: { ease: 'ease-in-out-cubic' },
     });
 
     verticalTl.current.fromTo(
@@ -125,19 +151,19 @@ export default function WorksPage() {
       {
         autoAlpha: 0,
         filter: 'grayscale(1)',
-        clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+        // clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
       },
       {
         autoAlpha: 1,
         filter: 'none',
-        clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
-        duration: 0.8,
+        // clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
+        duration: 0.6,
       }
     );
 
     horizontalTl.current = gsap.timeline({
       paused: true,
-      defaults: { ease: 'cubic-bezier(0.87, 0, 0.13, 1)' },
+      defaults: { ease: 'ease-in-out-cubic' },
     });
 
     horizontalTl.current.fromTo(
@@ -145,13 +171,13 @@ export default function WorksPage() {
       {
         autoAlpha: 0,
         filter: 'grayscale(1)',
-        clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+        // clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
       },
       {
         autoAlpha: 1,
         filter: 'none',
-        clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
-        duration: 0.8,
+        // clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
+        duration: 0.6,
       }
     );
   }, []);
@@ -172,7 +198,7 @@ export default function WorksPage() {
         gsap.to(verticalContainerRef.current, {
           filter: 'none',
           autoAlpha: 1,
-          duration: 0.5,
+          duration: 0.8,
           ease: 'ease-in-out-cubic',
         });
       });
@@ -239,57 +265,22 @@ export default function WorksPage() {
           }}
         >
           <div className="pageWorks__accordionRoot">
-            <div
-              role="button"
-              className="pageWorks__accordionRoot-accordionItem"
-            >
-              <div className="pageWorks__accordionRoot-accordionItemTitle">
-                <span>01</span>
-                <p>The Maker Studio</p>
-                <div role="button" link-interaction="no-line">
-                  See case
+            {works.length > 0 &&
+              works.map((work, i) => (
+                <div
+                  role="button"
+                  key={`${work._id}-${i}`}
+                  className="pageWorks__accordionRoot-accordionItem"
+                >
+                  <div className="pageWorks__accordionRoot-accordionItemTitle">
+                    <span>0{`${(i % works.length) + 1}`}</span>
+                    <p>{work?.title}</p>
+                    <div role="button" link-interaction="no-line">
+                      See case
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-
-            <div
-              role="button"
-              className="pageWorks__accordionRoot-accordionItem"
-            >
-              <div className="pageWorks__accordionRoot-accordionItemTitle">
-                <span>02</span>
-                <p>The Maker Studio</p>
-                <div role="button" link-interaction="no-line">
-                  See case
-                </div>
-              </div>
-            </div>
-
-            <div
-              role="button"
-              className="pageWorks__accordionRoot-accordionItem"
-            >
-              <div className="pageWorks__accordionRoot-accordionItemTitle">
-                <span>03</span>
-                <p>The Maker Studio</p>
-                <div role="button" link-interaction="no-line">
-                  See case
-                </div>
-              </div>
-            </div>
-
-            <div
-              role="button"
-              className="pageWorks__accordionRoot-accordionItem"
-            >
-              <div className="pageWorks__accordionRoot-accordionItemTitle">
-                <span>04</span>
-                <p>The Maker Studio</p>
-                <div role="button" link-interaction="no-line">
-                  See case
-                </div>
-              </div>
-            </div>
+              ))}
           </div>
         </div>
       </PageWrapper>
