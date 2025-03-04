@@ -1,5 +1,8 @@
 .parallax-image {
   overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  filter: brightness(80%);
 
   img {
     will-change: transform;
@@ -115,6 +118,11 @@
         width: toRem(575);
         height: toRem(427);
         background-color: $white;
+
+        &.layout_s {
+          width: toRem(337);
+          height: toRem(250);
+        }
       }
     }
 
@@ -123,11 +131,19 @@
       padding-left: toRem(238);
       margin-top: toRem(96);
 
+      &.layout_s {
+        padding-left: 0;
+      }
+
       &Img {
         width: toRem(694);
         height: toRem(750);
         background-color: $white;
-        object-fit: cover;
+
+        &.layout_s {
+          height: toRem(500);
+          margin-left: auto;
+        }
       }
     }
 
@@ -135,6 +151,10 @@
       width: 100%;
       padding-right: toRem(234);
       margin-top: toRem(93);
+
+      &.layout_s {
+        margin-top: toRem(72);
+      }
 
       &Img {
         width: toRem(238);
@@ -149,10 +169,21 @@
       padding-left: toRem(238);
       margin-top: toRem(128);
 
+      &.layout_s {
+        padding-left: 0;
+        margin-top: toRem(96);
+      }
+
       &Img {
         width: toRem(456);
         height: toRem(420);
         background-color: $white;
+
+        &.layout_s {
+          height: toRem(476);
+          height: toRem(375);
+          margin: 0 auto;
+        }
       }
     }
   }

@@ -14,6 +14,9 @@ gsap.registerPlugin(ScrollTrigger, CustomEase);
 CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
+const LAYOUT_PRIMARY = 'layout_p';
+const LAYOUT_SECONDARY = 'layout_s';
+
 export default function CaseStudyPage() {
   const params = useParams();
   const router = useRouter();
@@ -149,7 +152,7 @@ export default function CaseStudyPage() {
         }
       });
     }
-  }, [currentWork, nextWork]);
+  }, [currentWork]);
 
   useEffect(() => {
     if (progressBarRef.current && nextWork) {
@@ -253,9 +256,15 @@ export default function CaseStudyPage() {
       </section>
 
       <section className="pageCaseStudy__gallery">
-        <div className="pageCaseStudy__gallery--imgOne">
+        <div
+          className={`pageCaseStudy__gallery--imgOne
+          ${currentWork?.layout === LAYOUT_SECONDARY ? 'layout_s' : ''}
+          `}
+        >
           <div
-            className="pageCaseStudy__gallery--imgOneImg parallax-image"
+            className={`pageCaseStudy__gallery--imgOneImg parallax-image
+            ${currentWork?.layout === LAYOUT_SECONDARY ? 'layout_s' : ''}
+              `}
             ref={(el) => {
               galleryImgsRef.current[0] = el;
             }}
@@ -272,9 +281,15 @@ export default function CaseStudyPage() {
           </div>
         </div>
 
-        <div className="pageCaseStudy__gallery--imgTwo">
+        <div
+          className={`pageCaseStudy__gallery--imgTwo 
+          ${currentWork?.layout === LAYOUT_SECONDARY ? 'layout_s' : ''}
+          `}
+        >
           <div
-            className="pageCaseStudy__gallery--imgTwoImg parallax-image"
+            className={`pageCaseStudy__gallery--imgTwoImg parallax-image
+              ${currentWork?.layout === LAYOUT_SECONDARY ? 'layout_s' : ''}
+              `}
             ref={(el) => {
               galleryImgsRef.current[1] = el;
             }}
@@ -291,9 +306,15 @@ export default function CaseStudyPage() {
           </div>
         </div>
 
-        <div className="pageCaseStudy__gallery--imgThree">
+        <div
+          className={`pageCaseStudy__gallery--imgThree
+            ${currentWork?.layout === LAYOUT_SECONDARY ? 'layout_s' : ''}
+            `}
+        >
           <div
-            className="pageCaseStudy__gallery--imgThreeImg parallax-image"
+            className={`pageCaseStudy__gallery--imgThreeImg parallax-image
+              ${currentWork?.layout === LAYOUT_SECONDARY ? 'layout_s' : ''}
+              `}
             ref={(el) => {
               galleryImgsRef.current[2] = el;
             }}
@@ -310,9 +331,15 @@ export default function CaseStudyPage() {
           </div>
         </div>
 
-        <div className="pageCaseStudy__gallery--imgFour">
+        <div
+          className={`pageCaseStudy__gallery--imgFour
+                ${currentWork?.layout === LAYOUT_SECONDARY ? 'layout_s' : ''}
+                `}
+        >
           <div
-            className="pageCaseStudy__gallery--imgFourImg parallax-image"
+            className={`pageCaseStudy__gallery--imgFourImg parallax-image
+              ${currentWork?.layout === LAYOUT_SECONDARY ? 'layout_s' : ''}
+              `}
             ref={(el) => {
               galleryImgsRef.current[3] = el;
             }}
