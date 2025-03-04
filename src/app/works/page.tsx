@@ -382,17 +382,17 @@ export default function WorksPage() {
                   <div className="pageWorks__accordionRoot-accordionItemTitle">
                     <span>0{`${(i % works.length) + 1}`}</span>
                     <p>{work?.title}</p>
-                    <p
+                    <div
                       role="button"
                       onClick={() => {
                         router.push(`/works/${work.slug?.current}`);
                       }}
                     >
-                      <span>
-                        {activeAccordion === i && <span>↳&nbsp;</span>}
+                      <p>
+                        <span>↳&nbsp;</span>
                         <span link-interaction="no-line">See case</span>
-                      </span>
-                    </p>
+                      </p>
+                    </div>
                   </div>
                   <div
                     ref={(el) => {
