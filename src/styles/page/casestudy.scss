@@ -60,6 +60,7 @@
         height: toRem(700);
         background-color: $black;
         will-change: transform;
+        overflow: hidden;
 
         &Caption {
           width: 100%;
