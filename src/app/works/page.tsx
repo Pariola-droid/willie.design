@@ -268,6 +268,7 @@ export default function WorksPage() {
             height: 'auto',
             opacity: 1,
           });
+          setActiveAccordion(0);
         } else {
           gsap.set(content, {
             display: 'none',
@@ -348,9 +349,12 @@ export default function WorksPage() {
                   <div className="pageWorks__accordionRoot-accordionItemTitle">
                     <span>0{`${(i % works.length) + 1}`}</span>
                     <p>{work?.title}</p>
-                    <div role="button" link-interaction="no-line">
-                      See case
-                    </div>
+                    <p role="button">
+                      <span>
+                        ↳&nbsp;
+                        <span link-interaction="underline">See case</span>
+                      </span>
+                    </p>
                   </div>
                   <div
                     ref={(el) => {

@@ -137,9 +137,19 @@
           font-weight: 300;
         }
 
-        & div[role='button'] {
+        & p[role='button'] {
           cursor: pointer;
           @include flex(flex-end, center);
+
+          & span * {
+            padding-bottom: 1px;
+
+            &::before,
+            &::after {
+              height: 1.5px !important;
+              bottom: -3% !important;
+            }
+          }
         }
       }
 
