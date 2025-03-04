@@ -333,13 +333,15 @@ export default function CaseStudyPage() {
       <section className="pageCaseStudy__moreDetails">
         <h3>More Details</h3>
         <div className="pageCaseStudy__moreDetails--credit">
-          {currentWork?.collab && (
+          {currentWork?.collabs && (
             <div className="pageCaseStudy__moreDetails--creditCol">
               <div className="pageCaseStudy__moreDetails--creditLabel">
                 Collab
               </div>
               <div className="pageCaseStudy__moreDetails--creditContent">
-                {currentWork?.collab}
+                {currentWork?.collabs.map((collab, i) => (
+                  <p key={i}>{collab}</p>
+                ))}
               </div>
             </div>
           )}
@@ -350,7 +352,9 @@ export default function CaseStudyPage() {
                 Accolades
               </div>
               <div className="pageCaseStudy__moreDetails--creditContent">
-                {currentWork?.accolades}
+                {currentWork?.accolades.map((accolade, i) => (
+                  <p key={i}>{accolade}</p>
+                ))}
               </div>
             </div>
           )}

@@ -350,6 +350,7 @@ export default function WorksPage() {
                     src={work.coverImageUrl || '/images/works/work-amara.png'}
                     width={456}
                     height={300}
+                    priority
                     alt={work.coverImageAlt || work.title}
                   />
                 </div>
@@ -410,6 +411,7 @@ export default function WorksPage() {
                             width={220}
                             height={150}
                             alt={img.alt || work.title}
+                            priority
                           />
                         </div>
                       ))}
