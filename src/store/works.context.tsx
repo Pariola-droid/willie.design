@@ -15,7 +15,7 @@ import {
 
 export interface IWorkDocument extends SanityDocument {
   featured?: boolean;
-  layout?: 'layout_a' | 'layout_b';
+  layout?: 'layout_p' | 'layout_s';
   hoverColor?: string;
   title: string;
   slug: { current: string };
@@ -37,8 +37,8 @@ export interface IWorkDocument extends SanityDocument {
     alt?: string;
     position: string;
   }>;
-  collab?: string;
-  accolades?: string;
+  collabs?: string[];
+  accolades?: string[];
 }
 
 interface WorksContextType {
@@ -97,7 +97,7 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
         description,
         liveLink,
         publishedAt,
-        collab,
+        collabs,
         accolades,
         "caseStudyImages": caseStudyImages[]{
           "url": asset->url,
@@ -107,6 +107,7 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
       }`;
 
       const sanityWorks = await client.fetch<IWorkDocument[]>(WORKS_QUERY);
+      console.log('sanityWorks', sanityWorks);
       setWorks(sanityWorks);
     } catch (err) {
       console.error('Error fetching works:', err);
@@ -153,7 +154,7 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
             "position": position
           },
           liveLink,
-          collab,
+          collabs,
           accolades,
           hoverColor,
           publishedAt,

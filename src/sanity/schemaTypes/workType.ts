@@ -24,8 +24,8 @@ export const workType = defineType({
       validation: (Rule) => Rule.required(),
       options: {
         list: [
-          { title: 'Primary', value: 'layout_a' },
-          { title: 'Secondary', value: 'layout_b' },
+          { title: 'Primary', value: 'layout_p' },
+          { title: 'Secondary', value: 'layout_s' },
         ],
       },
     }),
@@ -117,17 +117,35 @@ export const workType = defineType({
       options: {
         layout: 'grid',
       },
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().max(4),
     }),
     defineField({
-      name: 'collab',
-      type: 'string',
-      placeholder: 'Collaborators',
+      name: 'collabs',
+      type: 'array',
+      of: [
+        {
+          type: 'string',
+          title: 'Collaborator',
+          placeholder: 'Collaborator name',
+        },
+      ],
+      options: {
+        layout: 'list',
+      },
     }),
     defineField({
       name: 'accolades',
-      type: 'string',
-      placeholder: 'Awards & accolades',
+      type: 'array',
+      of: [
+        {
+          type: 'string',
+          title: 'Awards & accolades',
+          placeholder: 'Award or accolade',
+        },
+      ],
+      options: {
+        layout: 'list',
+      },
     }),
     defineField({
       name: 'publishedAt',
