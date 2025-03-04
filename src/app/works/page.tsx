@@ -22,6 +22,7 @@ export default function WorksPage() {
   const [bgColor, setBgColor] = useState('#ffffff');
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVertical, setIsVertical] = useState(true);
+  const [activeAccordion, setActiveAccordion] = useState(0);
 
   const verticalContainerRef = useRef(null);
   const horizontalContainerRef = useRef(null);
@@ -31,6 +32,8 @@ export default function WorksPage() {
   const imageWrapperRef = useRef(null);
   const isAnimating = useRef(false);
   const isFlipping = useRef(false);
+  const accordionItemsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const accordionContentsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   const verticalTl = useRef<gsap.core.Timeline | null>(null);
   const horizontalTl = useRef<gsap.core.Timeline | null>(null);
@@ -142,6 +145,51 @@ export default function WorksPage() {
     });
   };
 
+  const handleAccordionHover = (index: number) => {
+    if (index === activeAccordion) return;
+
+    if (accordionContentsRef.current[activeAccordion]) {
+      gsap.to(accordionContentsRef.current[activeAccordion], {
+        height: 0,
+        opacity: 0,
+        duration: 0.4,
+        ease: 'ease-in-out-cubic',
+        onComplete: () => {
+          if (accordionContentsRef.current[activeAccordion]) {
+            accordionContentsRef.current[activeAccordion]!.style.display =
+              'none';
+          }
+        },
+      });
+    }
+
+    if (accordionContentsRef.current[index]) {
+      const content = accordionContentsRef.current[index]!;
+
+      gsap.set(content, {
+        display: 'block',
+        height: 'auto',
+        opacity: 0,
+      });
+
+      const height = content.offsetHeight;
+
+      gsap.set(content, {
+        height: 0,
+        opacity: 0,
+      });
+
+      gsap.to(content, {
+        height: height,
+        opacity: 1,
+        duration: 0.5,
+        ease: 'ease-in-out-cubic',
+      });
+    }
+
+    setActiveAccordion(index);
+  };
+
   useEffect(() => {
     verticalTl.current = gsap.timeline({
       paused: true,
@@ -210,6 +258,28 @@ export default function WorksPage() {
   }, [works]);
 
   useEffect(() => {
+    if (works.length > 0 && !isVertical) {
+      accordionContentsRef.current.forEach((content, index) => {
+        if (!content) return;
+
+        if (index === 0) {
+          gsap.set(content, {
+            display: 'block',
+            height: 'auto',
+            opacity: 1,
+          });
+        } else {
+          gsap.set(content, {
+            display: 'none',
+            height: 0,
+            opacity: 0,
+          });
+        }
+      });
+    }
+  }, [works.length, isVertical]);
+
+  useEffect(() => {
     updateZIndices(activeIndex);
 
     const interval = setInterval(() => {
@@ -232,9 +302,6 @@ export default function WorksPage() {
         <div
           ref={verticalContainerRef}
           className={`pageWorks__verticalContainer`}
-          style={{
-            display: 'none',
-          }}
         >
           {works.length > 0 &&
             [...works, ...works, ...works].map((work, i) => (
@@ -264,9 +331,6 @@ export default function WorksPage() {
         <div
           ref={horizontalContainerRef}
           className={`pageWorks__horizontalContainer`}
-          style={{
-            display: 'none',
-          }}
         >
           <div className="pageWorks__accordionRoot">
             {works.length > 0 &&
@@ -274,13 +338,40 @@ export default function WorksPage() {
                 <div
                   role="button"
                   key={`${work._id}-${i}`}
+                  ref={(el) => {
+                    accordionItemsRef.current[i] = el;
+                  }}
                   className="pageWorks__accordionRoot-accordionItem"
+                  onMouseEnter={() => handleAccordionHover(i)}
+                  onMouseLeave={() => handleAccordionHover(-1)}
                 >
                   <div className="pageWorks__accordionRoot-accordionItemTitle">
                     <span>0{`${(i % works.length) + 1}`}</span>
                     <p>{work?.title}</p>
                     <div role="button" link-interaction="no-line">
                       See case
+                    </div>
+                  </div>
+                  <div
+                    ref={(el) => {
+                      accordionContentsRef.current[i] = el;
+                    }}
+                    className="pageWorks__accordionRoot-accordionItemContent"
+                  >
+                    <div className="pageWorks__accordionRoot-accordionItemGallery">
+                      {work?.caseStudyImages?.slice(0, 3).map((img, i) => (
+                        <div
+                          key={`${work._id}-${i}`}
+                          className="pageWorks__accordionRoot-accordionItemGalleryImg"
+                        >
+                          <Image
+                            src={img.url}
+                            width={220}
+                            height={150}
+                            alt={img.alt || work.title}
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
