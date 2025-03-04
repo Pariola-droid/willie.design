@@ -130,7 +130,7 @@
           @extend %BodyText;
           font-weight: 400;
           color: $black;
-          @include flex(flex-start, center);
+          @include flex(flex-start, flex-end);
         }
 
         & span {
@@ -139,7 +139,7 @@
 
         & p[role='button'] {
           cursor: pointer;
-          @include flex(flex-end, center);
+          @include flex(flex-end, flex-end);
           overflow: hidden;
 
           & span:nth-child(2) {
@@ -175,7 +175,7 @@
       }
 
       &Gallery {
-        margin-top: toRem(15);
+        margin-top: toRem(16);
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         column-gap: toRem(20);

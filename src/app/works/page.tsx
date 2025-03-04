@@ -8,6 +8,7 @@ import { CustomEase } from 'gsap/dist/CustomEase';
 import { Flip } from 'gsap/dist/Flip';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { FEATURED_WORKS } from '../../utils/constant';
 
@@ -18,6 +19,7 @@ CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function WorksPage() {
   const { works } = useWorks();
+  const router = useRouter();
 
   const [bgColor, setBgColor] = useState('#ffffff');
   const [activeIndex, setActiveIndex] = useState(0);
@@ -380,16 +382,15 @@ export default function WorksPage() {
                   <div className="pageWorks__accordionRoot-accordionItemTitle">
                     <span>0{`${(i % works.length) + 1}`}</span>
                     <p>{work?.title}</p>
-                    <p role="button">
+                    <p
+                      role="button"
+                      onClick={() => {
+                        router.push(`/works/${work.slug?.current}`);
+                      }}
+                    >
                       <span>
                         {activeAccordion === i && <span>↳&nbsp;</span>}
-                        <span
-                          link-interaction={
-                            activeAccordion === i ? 'underline' : 'no-line'
-                          }
-                        >
-                          See case
-                        </span>
+                        <span link-interaction="no-line">See case</span>
                       </span>
                     </p>
                   </div>
