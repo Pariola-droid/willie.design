@@ -34,7 +34,7 @@ export default function WorksPage() {
   const imageWrapperRef = useRef(null);
   const isAnimating = useRef(false);
   const isFlipping = useRef(false);
-  const isMouseOverAccordion = useRef(false);
+  const accordionAnimations = useRef<{ [key: number]: gsap.core.Tween }>({});
   const accordionItemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const accordionContentsRef = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -148,36 +148,35 @@ export default function WorksPage() {
     });
   };
 
-  const handleAccordionRootMouseEnter = () => {
-    isMouseOverAccordion.current = true;
-  };
-
-  const handleAccordionRootMouseLeave = () => {
-    isMouseOverAccordion.current = false;
-
-    if (activeAccordion !== -1) {
-      closeAccordion(activeAccordion);
-      setActiveAccordion(-1);
-    }
-  };
-
   const closeAccordion = (index: number) => {
+    if (index in accordionAnimations.current) {
+      accordionAnimations.current[index].kill();
+    }
+
     if (accordionContentsRef.current[index]) {
-      gsap.to(accordionContentsRef.current[index], {
-        height: 0,
-        opacity: 0,
-        duration: 0.4,
-        ease: 'ease-in-out-cubic',
-        onComplete: () => {
-          if (accordionContentsRef.current[index]) {
-            accordionContentsRef.current[index]!.style.display = 'none';
-          }
-        },
-      });
+      accordionAnimations.current[index] = gsap.to(
+        accordionContentsRef.current[index],
+        {
+          height: 0,
+          opacity: 0,
+          duration: 0.4,
+          ease: 'ease-in-out-cubic',
+          onComplete: () => {
+            if (accordionContentsRef.current[index]) {
+              accordionContentsRef.current[index]!.style.display = 'none';
+            }
+            delete accordionAnimations.current[index];
+          },
+        }
+      );
     }
   };
 
   const openAccordion = (index: number) => {
+    if (index in accordionAnimations.current) {
+      accordionAnimations.current[index].kill();
+    }
+
     if (accordionContentsRef.current[index]) {
       const content = accordionContentsRef.current[index]!;
 
@@ -194,11 +193,14 @@ export default function WorksPage() {
         opacity: 0,
       });
 
-      gsap.to(content, {
+      accordionAnimations.current[index] = gsap.to(content, {
         height,
         opacity: 1,
         duration: 0.5,
         ease: 'ease-in-out-cubic',
+        onComplete: () => {
+          delete accordionAnimations.current[index];
+        },
       });
     }
   };
@@ -363,11 +365,7 @@ export default function WorksPage() {
           ref={horizontalContainerRef}
           className={`pageWorks__horizontalContainer`}
         >
-          <div
-            className="pageWorks__accordionRoot"
-            onMouseEnter={handleAccordionRootMouseEnter}
-            onMouseLeave={handleAccordionRootMouseLeave}
-          >
+          <div className="pageWorks__accordionRoot">
             {works.length > 0 &&
               works.map((work, i) => (
                 <div
@@ -384,7 +382,8 @@ export default function WorksPage() {
                     <p>{work?.title}</p>
                     <div
                       role="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         router.push(`/works/${work.slug?.current}`);
                       }}
                     >
