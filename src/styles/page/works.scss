@@ -140,6 +140,7 @@
         & p[role='button'] {
           cursor: pointer;
           @include flex(flex-end, center);
+          overflow: hidden;
 
           & span:nth-child(2) {
             padding-bottom: 1px;
