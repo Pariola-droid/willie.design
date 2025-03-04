@@ -24,8 +24,8 @@ export const workType = defineType({
       validation: (Rule) => Rule.required(),
       options: {
         list: [
-          { title: 'Primary', value: 'layout_a' },
-          { title: 'Secondary', value: 'layout_b' },
+          { title: 'Primary', value: 'layout_p' },
+          { title: 'Secondary', value: 'layout_s' },
         ],
       },
     }),

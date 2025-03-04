@@ -15,7 +15,7 @@ import {
 
 export interface IWorkDocument extends SanityDocument {
   featured?: boolean;
-  layout?: 'layout_a' | 'layout_b';
+  layout?: 'layout_p' | 'layout_s';
   hoverColor?: string;
   title: string;
   slug: { current: string };
