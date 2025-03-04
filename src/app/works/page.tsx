@@ -32,6 +32,7 @@ export default function WorksPage() {
   const imageWrapperRef = useRef(null);
   const isAnimating = useRef(false);
   const isFlipping = useRef(false);
+  const isMouseOverAccordion = useRef(false);
   const accordionItemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const accordionContentsRef = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -145,24 +146,36 @@ export default function WorksPage() {
     });
   };
 
-  const handleAccordionHover = (index: number) => {
-    if (index === activeAccordion) return;
+  const handleAccordionRootMouseEnter = () => {
+    isMouseOverAccordion.current = true;
+  };
 
-    if (accordionContentsRef.current[activeAccordion]) {
-      gsap.to(accordionContentsRef.current[activeAccordion], {
+  const handleAccordionRootMouseLeave = () => {
+    isMouseOverAccordion.current = false;
+
+    if (activeAccordion !== -1) {
+      closeAccordion(activeAccordion);
+      setActiveAccordion(-1);
+    }
+  };
+
+  const closeAccordion = (index: number) => {
+    if (accordionContentsRef.current[index]) {
+      gsap.to(accordionContentsRef.current[index], {
         height: 0,
         opacity: 0,
         duration: 0.4,
         ease: 'ease-in-out-cubic',
         onComplete: () => {
-          if (accordionContentsRef.current[activeAccordion]) {
-            accordionContentsRef.current[activeAccordion]!.style.display =
-              'none';
+          if (accordionContentsRef.current[index]) {
+            accordionContentsRef.current[index]!.style.display = 'none';
           }
         },
       });
     }
+  };
 
+  const openAccordion = (index: number) => {
     if (accordionContentsRef.current[index]) {
       const content = accordionContentsRef.current[index]!;
 
@@ -180,11 +193,26 @@ export default function WorksPage() {
       });
 
       gsap.to(content, {
-        height: height,
+        height,
         opacity: 1,
         duration: 0.5,
         ease: 'ease-in-out-cubic',
       });
+    }
+  };
+
+  const handleAccordionHover = (index: number) => {
+    if (index === activeAccordion) return;
+
+    if (
+      activeAccordion !== -1 &&
+      accordionContentsRef.current[activeAccordion]
+    ) {
+      closeAccordion(activeAccordion);
+    }
+
+    if (index >= 0 && accordionContentsRef.current[index]) {
+      openAccordion(index);
     }
 
     setActiveAccordion(index);
@@ -333,7 +361,11 @@ export default function WorksPage() {
           ref={horizontalContainerRef}
           className={`pageWorks__horizontalContainer`}
         >
-          <div className="pageWorks__accordionRoot">
+          <div
+            className="pageWorks__accordionRoot"
+            onMouseEnter={handleAccordionRootMouseEnter}
+            onMouseLeave={handleAccordionRootMouseLeave}
+          >
             {works.length > 0 &&
               works.map((work, i) => (
                 <div
@@ -344,15 +376,20 @@ export default function WorksPage() {
                   }}
                   className="pageWorks__accordionRoot-accordionItem"
                   onMouseEnter={() => handleAccordionHover(i)}
-                  onMouseLeave={() => handleAccordionHover(-1)}
                 >
                   <div className="pageWorks__accordionRoot-accordionItemTitle">
                     <span>0{`${(i % works.length) + 1}`}</span>
                     <p>{work?.title}</p>
                     <p role="button">
                       <span>
-                        ↳&nbsp;
-                        <span link-interaction="underline">See case</span>
+                        {activeAccordion === i && <span>↳&nbsp;</span>}
+                        <span
+                          link-interaction={
+                            activeAccordion === i ? 'underline' : 'no-line'
+                          }
+                        >
+                          See case
+                        </span>
                       </span>
                     </p>
                   </div>
