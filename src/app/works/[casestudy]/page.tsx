@@ -183,7 +183,7 @@ export default function CaseStudyPage() {
 
             setTimeout(() => {
               router.push(`/works/${nextWork.slug?.current}`);
-            }, 200);
+            }, 50);
           }
 
           e.preventDefault();
