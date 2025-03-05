@@ -405,6 +405,9 @@ export default function WorksPage() {
                         <div
                           key={`${work._id}-${i}`}
                           className="pageWorks__accordionRoot-accordionItemGalleryImg"
+                          onClick={() =>
+                            router.push(`/works/${work.slug?.current}`)
+                          }
                         >
                           <Image
                             src={img.url}
