@@ -92,9 +92,7 @@ export default function PageWrapper(props: PageWrapperProps) {
 
   return (
     <div className="wp">
-      {shouldShowLoader && (
-        <GlobalLoader isLoading={shouldShowLoader} message="Loading..." />
-      )}
+      {isLoading && <GlobalLoader isLoading={isLoading} message="Loading..." />}
       {error && <GlobalError error={error} resetError={fetchWorks} />}
 
       {showHeader && (
