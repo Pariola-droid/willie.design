@@ -61,9 +61,15 @@
       &--img {
         width: 100%;
         height: toRem(700);
-        background-color: $black;
+        background-color: $white;
         will-change: transform;
         overflow: hidden;
+
+        img {
+          will-change: transform;
+          width: 100%;
+          object-fit: cover;
+        }
 
         &Caption {
           width: 100%;

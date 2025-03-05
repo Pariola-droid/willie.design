@@ -139,7 +139,7 @@ export default function CaseStudyPage() {
           const img = imgRef.querySelector('img');
           if (img) {
             gsap.to(img, {
-              y: index % 2 === 0 ? -100 : -70,
+              y: index % 2 === 0 ? -35 : -70,
               ease: 'none',
               scrollTrigger: {
                 trigger: imgRef,
@@ -326,7 +326,7 @@ export default function CaseStudyPage() {
               }
               alt={getImageForPosition('position_3')?.alt || 'case study image'}
               width={238}
-              height={250}
+              height={210}
             />
           </div>
         </div>
