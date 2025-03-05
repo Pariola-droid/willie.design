@@ -1,3 +1,4 @@
+import { isUniqueAcrossAllDocuments } from '@/lib/sanity';
 import { DocumentTextIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 
@@ -45,6 +46,7 @@ export const workType = defineType({
       type: 'slug',
       options: {
         source: 'title',
+        isUnique: isUniqueAcrossAllDocuments,
       },
       validation: (Rule) => Rule.required(),
     }),
