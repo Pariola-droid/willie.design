@@ -183,7 +183,7 @@ export default function CaseStudyPage() {
 
             setTimeout(() => {
               router.push(`/works/${nextWork.slug?.current}`);
-            }, 200);
+            }, 50);
           }
 
           e.preventDefault();
@@ -206,6 +206,11 @@ export default function CaseStudyPage() {
     return image;
   };
 
+  const position_1_sz = currentWork?.layout === LAYOUT_SECONDARY ? 250 : 430;
+  const position_2_sz = currentWork?.layout === LAYOUT_SECONDARY ? 500 : 750;
+  const position_3_sz = currentWork?.layout === LAYOUT_SECONDARY ? 179 : 175;
+  const position_4_sz = currentWork?.layout === LAYOUT_SECONDARY ? 375 : 350;
+
   return (
     <PageWrapper theme="light" backButton className={`pageCaseStudy`} lenis>
       <section className="pageCaseStudy__hero">
@@ -224,7 +229,7 @@ export default function CaseStudyPage() {
                 currentWork?.coverImageAlt || currentWork?.title || 'case study'
               }
               width={1166}
-              height={800}
+              height={700}
             />
           </div>
           <div className="pageCaseStudy__hero-imgWrapper--imgCaption">
@@ -276,7 +281,7 @@ export default function CaseStudyPage() {
               }
               alt={getImageForPosition('position_1')?.alt || 'case study image'}
               width={575}
-              height={500}
+              height={position_1_sz}
             />
           </div>
         </div>
@@ -301,7 +306,7 @@ export default function CaseStudyPage() {
               }
               alt={getImageForPosition('position_2')?.alt || 'case study image'}
               width={694}
-              height={800}
+              height={position_2_sz}
             />
           </div>
         </div>
@@ -326,7 +331,7 @@ export default function CaseStudyPage() {
               }
               alt={getImageForPosition('position_3')?.alt || 'case study image'}
               width={238}
-              height={210}
+              height={position_3_sz}
             />
           </div>
         </div>
@@ -351,7 +356,7 @@ export default function CaseStudyPage() {
               }
               alt={getImageForPosition('position_4')?.alt || 'case study image'}
               width={456}
-              height={480}
+              height={position_4_sz}
             />
           </div>
         </div>
