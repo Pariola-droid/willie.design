@@ -133,12 +133,14 @@ export default function WorksPage() {
     const nextIndex = (activeIndex + 1) % FEATURED_WORKS.length;
 
     gsap.to(currentImage, {
-      yPercent: 100,
+      // yPercent: 100,
+      autoAlpha: 0,
       duration: 0.8,
       ease: 'cubic-bezier(0.645, 0.045, 0.355, 1)',
       onComplete: () => {
         gsap.set(currentImage, {
-          yPercent: 0,
+          // yPercent: 0,
+          autoAlpha: 1,
           immediateRender: true,
         });
         setActiveIndex(nextIndex);
