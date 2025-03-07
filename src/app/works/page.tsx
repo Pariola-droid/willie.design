@@ -133,12 +133,14 @@ export default function WorksPage() {
     const nextIndex = (activeIndex + 1) % FEATURED_WORKS.length;
 
     gsap.to(currentImage, {
-      yPercent: 100,
+      // yPercent: 100,
+      autoAlpha: 0,
       duration: 0.8,
       ease: 'cubic-bezier(0.645, 0.045, 0.355, 1)',
       onComplete: () => {
         gsap.set(currentImage, {
-          yPercent: 0,
+          // yPercent: 0,
+          autoAlpha: 1,
           immediateRender: true,
         });
         setActiveIndex(nextIndex);
@@ -368,60 +370,110 @@ export default function WorksPage() {
         >
           <div className="pageWorks__accordionRoot">
             {works.length > 0 &&
-              works.map((work, i) => (
-                <div
-                  role="button"
-                  key={`${work._id}-${i}`}
-                  ref={(el) => {
-                    accordionItemsRef.current[i] = el;
-                  }}
-                  className="pageWorks__accordionRoot-accordionItem"
-                  onMouseEnter={() => handleAccordionHover(i)}
-                >
-                  <div className="pageWorks__accordionRoot-accordionItemTitle">
-                    <span>0{`${(i % works.length) + 1}`}</span>
-                    <p>{work?.title}</p>
-                    <div
-                      role="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        router.push(`/works/${work.slug?.current}`);
-                      }}
-                    >
-                      <p>
-                        <span>↳&nbsp;</span>
-                        <span link-interaction="no-line">See case</span>
-                      </p>
-                    </div>
-                  </div>
+              works.map((work, i) => {
+                const getImageForPosition = (position: string) => {
+                  if (!work || !work.caseStudyImages) return null;
+                  const image = work.caseStudyImages?.find(
+                    (img) => img.position === position
+                  );
+                  return image;
+                };
+
+                return (
                   <div
+                    role="button"
+                    key={`${work._id}-${i}`}
                     ref={(el) => {
-                      accordionContentsRef.current[i] = el;
+                      accordionItemsRef.current[i] = el;
                     }}
-                    className="pageWorks__accordionRoot-accordionItemContent"
+                    className="pageWorks__accordionRoot-accordionItem"
+                    onMouseEnter={() => handleAccordionHover(i)}
                   >
-                    <div className="pageWorks__accordionRoot-accordionItemGallery">
-                      {work?.caseStudyImages?.slice(0, 3).map((img, i) => (
+                    <div className="pageWorks__accordionRoot-accordionItemTitle">
+                      <span>0{`${(i % works.length) + 1}`}</span>
+                      <p>{work?.title}</p>
+                      <div
+                        role="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/works/${work.slug?.current}`);
+                        }}
+                      >
+                        <p>
+                          <span>↳&nbsp;</span>
+                          <span link-interaction="no-line">See case</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      ref={(el) => {
+                        accordionContentsRef.current[i] = el;
+                      }}
+                      className="pageWorks__accordionRoot-accordionItemContent"
+                    >
+                      <div className="pageWorks__accordionRoot-accordionItemGallery">
                         <div
-                          key={`${work._id}-${i}`}
                           className="pageWorks__accordionRoot-accordionItemGalleryImg"
                           onClick={() =>
                             router.push(`/works/${work.slug?.current}`)
                           }
                         >
                           <Image
-                            src={img.url}
+                            src={
+                              work.coverImageUrl ||
+                              '/images/works/work-amara.png'
+                            }
                             width={220}
                             height={150}
-                            alt={img.alt || work.title}
+                            alt={work.coverImageAlt || work.title}
                             priority
                           />
                         </div>
-                      ))}
+                        <div
+                          className="pageWorks__accordionRoot-accordionItemGalleryImg"
+                          onClick={() =>
+                            router.push(`/works/${work.slug?.current}`)
+                          }
+                        >
+                          <Image
+                            src={
+                              getImageForPosition('position_1')?.url ||
+                              '/images/casestudy/w-img-a.png'
+                            }
+                            width={220}
+                            height={150}
+                            alt={
+                              getImageForPosition('position_1')?.alt ||
+                              'case study image'
+                            }
+                            priority
+                          />
+                        </div>
+                        <div
+                          className="pageWorks__accordionRoot-accordionItemGalleryImg"
+                          onClick={() =>
+                            router.push(`/works/${work.slug?.current}`)
+                          }
+                        >
+                          <Image
+                            src={
+                              getImageForPosition('position_4')?.url ||
+                              '/images/casestudy/w-img-d.png'
+                            }
+                            width={220}
+                            height={150}
+                            alt={
+                              getImageForPosition('position_4')?.alt ||
+                              'case study image'
+                            }
+                            priority
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
       </PageWrapper>
