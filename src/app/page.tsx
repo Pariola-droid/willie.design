@@ -1,30 +1,24 @@
-"use client";
+'use client';
 
-import PageWrapper from "@/components/common/PageWrapper";
-import HomeScreen from "@/components/HomeScreen";
-import LoaderHome from "@/components/LoaderHome";
-import { format } from "date-fns";
-import gsap from "gsap";
-import { CustomEase } from "gsap/dist/CustomEase";
-import { useRouter } from "next/navigation";
+import PageWrapper from '@/components/common/PageWrapper';
+import LoaderHome from '@/components/LoaderHome';
+import gsap from 'gsap';
+import { CustomEase } from 'gsap/dist/CustomEase';
+import { useRouter } from 'next/navigation';
 
-const SLIDE_DURATION = 5;
 gsap.registerPlugin(CustomEase);
 
-CustomEase.create("ease-in-out-circ", "0.785,0.135,0.15,0.86");
-CustomEase.create("ease-in-out-cubic", "0.645,0.045,0.355,1");
+CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
+CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function HomePage() {
   const router = useRouter();
 
   return (
-    <>
-      {" "}
-      <PageWrapper showHeader={true} className="pageHome" lenis isHome={true}>
-        <LoaderHome />
-        {/* <HomeScreen /> */}
-      </PageWrapper>
-    </>
+    <PageWrapper showHeader={true} className="pageHome" lenis isHome={true}>
+      <LoaderHome />
+      {/* <HomeScreen /> */}
+    </PageWrapper>
   );
 }
 

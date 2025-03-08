@@ -254,9 +254,7 @@ export default function MainCaseStudyPage({
         </div>
 
         <div className="pageCaseStudy__hero-descWrapper">
-          <div data-animation="skew-split-paragraph">
-            {currentWork?.description}
-          </div>
+          <div data-animation="skew-heading">{currentWork?.description}</div>
           {currentWork?.liveLink && (
             <p>
               <span>↳</span>

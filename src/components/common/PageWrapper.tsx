@@ -6,10 +6,9 @@ import { useWorks } from '@/store/works.context';
 import { format } from 'date-fns';
 import type { LenisOptions } from 'lenis';
 import Link from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Fragment, PropsWithChildren, useEffect, useRef } from 'react';
 import GlobalError from './GlobalError';
-import GlobalLoader from './GlobalLoader';
 import { Lenis } from './Lenis';
 
 const ROUTES = [
@@ -39,7 +38,6 @@ interface PageWrapperProps extends PropsWithChildren {
 
 export default function PageWrapper(props: PageWrapperProps) {
   const pathname = usePathname();
-  const params = useParams();
   const { works, isLoading, error, fetchWorks } = useWorks();
 
   const lenisRef = useRef<HTMLDivElement>(null);
@@ -83,7 +81,7 @@ export default function PageWrapper(props: PageWrapperProps) {
 
   return (
     <div className={`${!isHome ? 'wp' : ''}`}>
-      {isLoading && <GlobalLoader isLoading={isLoading} message="Loading..." />}
+      {/* {isLoading && <GlobalLoader isLoading={isLoading} message="Loading..." />} */}
       {error && <GlobalError error={error} resetError={fetchWorks} />}
 
       {showHeader && (
