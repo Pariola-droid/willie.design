@@ -1,11 +1,21 @@
-import createImageUrlBuilder from '@sanity/image-url'
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import createImageUrlBuilder from '@sanity/image-url';
+import { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
-import { dataset, projectId } from '../env'
+import { dataset, projectId } from '../env';
 
 // https://www.sanity.io/docs/image-url
-const builder = createImageUrlBuilder({ projectId, dataset })
+const builder = createImageUrlBuilder({ projectId, dataset });
 
 export const urlFor = (source: SanityImageSource) => {
-  return builder.image(source)
-}
+  const imageBuilder = builder.image(source);
+
+  // Check if it's an object with asset property that has mimeType
+  const sourceObj = source as { asset?: { mimeType?: string } };
+  const isSvg = sourceObj?.asset?.mimeType === 'image/svg+xml';
+
+  if (isSvg) {
+    return imageBuilder;
+  }
+
+  return imageBuilder.format('webp').fit('crop');
+};

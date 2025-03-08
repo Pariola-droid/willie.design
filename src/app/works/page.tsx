@@ -2,6 +2,7 @@
 
 import PageWrapper from '@/components/common/PageWrapper';
 
+import { urlFor } from '@/sanity/lib/image';
 import { useWorks } from '@/store/works.context';
 import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
@@ -347,14 +348,25 @@ export default function WorksPage() {
                 onMouseEnter={() => setBgColor(work.hoverColor || '#ffffff')}
                 onMouseLeave={() => setBgColor('#ffffff')}
               >
-                <div className={`pageWorks__workCard-wImg`}>
-                  <Image
-                    src={work.coverImageUrl || '/images/works/work-amara.png'}
-                    width={456}
-                    height={300}
-                    priority
-                    alt={work.coverImageAlt || work.title}
-                  />
+                <div
+                  className={`pageWorks__workCard-wImg`}
+                  style={{
+                    backgroundColor: work.hoverColor || '#ffffff',
+                  }}
+                >
+                  {work.coverImage && (
+                    <Image
+                      src={urlFor(work?.coverImage).quality(100).url()}
+                      width={456}
+                      height={300}
+                      priority
+                      alt={
+                        work?.coverImage?.alt ||
+                        `cover image for ${work?.title}`
+                      }
+                      quality={100}
+                    />
+                  )}
                 </div>
                 <div className="pageWorks__workCard-wInfo">
                   <small>{`${(i % works.length) + 1}.`}</small>
@@ -373,11 +385,15 @@ export default function WorksPage() {
               works.map((work, i) => {
                 const getImageForPosition = (position: string) => {
                   if (!work || !work.caseStudyImages) return null;
-                  const image = work.caseStudyImages?.find(
-                    (img) => img.position === position
+                  return (
+                    work.caseStudyImages.find(
+                      (img) => img.position === position
+                    ) || null
                   );
-                  return image;
                 };
+
+                const caseImage1 = getImageForPosition('position_1');
+                const caseImage4 = getImageForPosition('position_4');
 
                 return (
                   <div
@@ -418,16 +434,19 @@ export default function WorksPage() {
                             router.push(`/works/${work.slug?.current}`)
                           }
                         >
-                          <Image
-                            src={
-                              work.coverImageUrl ||
-                              '/images/works/work-amara.png'
-                            }
-                            width={220}
-                            height={150}
-                            alt={work.coverImageAlt || work.title}
-                            priority
-                          />
+                          {work.coverImage && (
+                            <Image
+                              src={urlFor(work?.coverImage).quality(100).url()}
+                              alt={
+                                work?.coverImage?.alt ||
+                                `image for ${work.title}`
+                              }
+                              width={220}
+                              height={150}
+                              quality={100}
+                              priority
+                            />
+                          )}
                         </div>
                         <div
                           className="pageWorks__accordionRoot-accordionItemGalleryImg"
@@ -435,19 +454,16 @@ export default function WorksPage() {
                             router.push(`/works/${work.slug?.current}`)
                           }
                         >
-                          <Image
-                            src={
-                              getImageForPosition('position_1')?.url ||
-                              '/images/casestudy/w-img-a.png'
-                            }
-                            width={220}
-                            height={150}
-                            alt={
-                              getImageForPosition('position_1')?.alt ||
-                              'case study image'
-                            }
-                            priority
-                          />
+                          {caseImage1 && (
+                            <Image
+                              src={urlFor(caseImage1).quality(100).url()}
+                              alt={caseImage1.alt || `image for ${work.title}`}
+                              width={220}
+                              height={150}
+                              quality={100}
+                              priority
+                            />
+                          )}
                         </div>
                         <div
                           className="pageWorks__accordionRoot-accordionItemGalleryImg"
@@ -455,19 +471,16 @@ export default function WorksPage() {
                             router.push(`/works/${work.slug?.current}`)
                           }
                         >
-                          <Image
-                            src={
-                              getImageForPosition('position_4')?.url ||
-                              '/images/casestudy/w-img-d.png'
-                            }
-                            width={220}
-                            height={150}
-                            alt={
-                              getImageForPosition('position_4')?.alt ||
-                              'case study image'
-                            }
-                            priority
-                          />
+                          {caseImage4 && (
+                            <Image
+                              src={urlFor(caseImage4).quality(100).url()}
+                              alt={caseImage4.alt || `image for ${work.title}`}
+                              width={220}
+                              height={150}
+                              quality={100}
+                              priority
+                            />
+                          )}
                         </div>
                       </div>
                     </div>

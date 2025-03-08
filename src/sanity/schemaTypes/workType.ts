@@ -7,6 +7,16 @@ export const workType = defineType({
   title: 'Work',
   type: 'document',
   icon: DocumentTextIcon,
+  groups: [
+    {
+      name: 'content',
+      title: 'Content',
+    },
+    {
+      name: 'seo',
+      title: 'SEO',
+    },
+  ],
   fields: [
     defineField({
       name: 'featured',
@@ -16,6 +26,31 @@ export const workType = defineType({
       options: {
         layout: 'switch',
       },
+    }),
+    defineField({
+      name: 'ogImage',
+      title: 'Open Graph Image - [1200x630]',
+      type: 'image',
+      group: 'seo',
+    }),
+    defineField({
+      name: 'meta_title',
+      title: 'Meta Title',
+      type: 'string',
+      group: 'seo',
+    }),
+    defineField({
+      name: 'meta_description',
+      title: 'Meta Description',
+      type: 'text',
+      group: 'seo',
+    }),
+    defineField({
+      name: 'noindex',
+      title: 'No Index',
+      type: 'boolean',
+      initialValue: false,
+      group: 'seo',
     }),
     defineField({
       name: 'layout',
@@ -29,17 +64,20 @@ export const workType = defineType({
           { title: 'Secondary', value: 'layout_s' },
         ],
       },
+      group: 'content',
     }),
     defineField({
       name: 'hoverColor',
       type: 'string',
       title: 'Hover color',
+      group: 'content',
     }),
     defineField({
       name: 'title',
       type: 'string',
       placeholder: 'Project title',
       validation: (Rule) => Rule.required(),
+      group: 'content',
     }),
     defineField({
       name: 'slug',
@@ -49,6 +87,7 @@ export const workType = defineType({
         isUnique: isUniqueAcrossAllDocuments,
       },
       validation: (Rule) => Rule.required(),
+      group: 'content',
     }),
     defineField({
       name: 'coverImage',
@@ -64,6 +103,7 @@ export const workType = defineType({
         }),
       ],
       validation: (Rule) => Rule.required(),
+      group: 'content',
     }),
     defineField({
       name: 'captions',
@@ -72,17 +112,20 @@ export const workType = defineType({
       options: {
         layout: 'tags',
       },
+      group: 'content',
     }),
     defineField({
       name: 'description',
       type: 'text',
       rows: 4,
       validation: (Rule) => Rule.required(),
+      group: 'content',
     }),
     defineField({
       name: 'liveLink',
       type: 'url',
       title: 'Live link',
+      group: 'content',
     }),
     defineField({
       name: 'caseStudyImages',
@@ -120,6 +163,7 @@ export const workType = defineType({
         layout: 'grid',
       },
       validation: (Rule) => Rule.required().max(4),
+      group: 'content',
     }),
     defineField({
       name: 'collabs',
@@ -134,6 +178,7 @@ export const workType = defineType({
       options: {
         layout: 'list',
       },
+      group: 'content',
     }),
     defineField({
       name: 'accolades',
@@ -148,15 +193,18 @@ export const workType = defineType({
       options: {
         layout: 'list',
       },
+      group: 'content',
     }),
     defineField({
       name: 'publishedAt',
       type: 'datetime',
+      group: 'content',
     }),
   ],
   preview: {
     select: {
       title: 'title',
+      layout: 'layout',
       media: 'coverImage',
     },
     prepare(selection) {

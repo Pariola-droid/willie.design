@@ -1,64 +1,29 @@
-import gsap from "gsap";
-import React from "react";
+import gsap from 'gsap';
+import React from 'react';
 
 const REELS_DATA = [
   {
     id: 1,
-    title: "maker",
-    img: "/images/home/b.png",
+    title: 'maker',
+    img: '/images/home/b.png',
   },
   {
     id: 2,
-    title: "balky",
-    img: "/images/home/a.png",
+    title: 'balky',
+    img: '/images/home/a.png',
   },
   {
     id: 3,
-    title: "topsphere",
-    img: "/images/home/c.png",
+    title: 'topsphere',
+    img: '/images/home/c.png',
   },
-  //   {
-  //     id: 4,
-  //     title: "dandy",
-  //     img: "/images/home/d.png",
-  //   },
-  //   {
-  //     id: 5,
-  //     title: "eagle",
-  //     img: "/images/home/a.png",
-  //   },
-  //   {
-  //     id: 6,
-  //     title: "fancy",
-  //     img: "/images/home/c.png",
-  //   },
-  //   {
-  //     id: 7,
-  //     title: "giant",
-  //     img: "/images/home/b.png",
-  //   },
-  //   {
-  //     id: 8,
-  //     title: "honey",
-  //     img: "/images/home/d.png",
-  //   },
-  //   {
-  //     id: 9,
-  //     title: "indigo",
-  //     img: "/images/home/b.png",
-  //   },
-  //   {
-  //     id: 10,
-  //     title: "jolly",
-  //     img: "/images/home/a.png",
-  //   },
 ];
 
 function handleImgReel(e: React.MouseEvent<HTMLParagraphElement>) {
   const { currentTarget } = e;
   const currentTitle = currentTarget.textContent?.toLowerCase();
 
-  const allReelImgs = gsap.utils.toArray(".reel-image");
+  const allReelImgs = gsap.utils.toArray('.reel-image');
 
   const currentReel = REELS_DATA.filter((reel: any) => {
     // return reel.title.toLowerCase.includes(currentTitle);
@@ -66,14 +31,14 @@ function handleImgReel(e: React.MouseEvent<HTMLParagraphElement>) {
   })[0];
 
   const currentImgEl: any = allReelImgs.filter((pic: any) => {
-    const title = pic.getAttribute("data-title");
+    const title = pic.getAttribute('data-title');
 
     return title === currentReel.title;
   })[0];
 
   //   Check if the current Image is the same as the  Active Image
   const activeImg: any = allReelImgs.filter((pic: any) => {
-    return pic.classList.contains("active");
+    return pic.classList.contains('active');
   })[0];
 
   console.log(activeImg, currentImgEl);
@@ -85,16 +50,16 @@ function handleImgReel(e: React.MouseEvent<HTMLParagraphElement>) {
 
   allReelImgs.forEach((reel: any) => {
     gsap.to(reel, {
-      y: "100%",
+      y: '100%',
     });
 
-    reel.classList.remove("active");
+    reel.classList.remove('active');
 
     gsap.to(currentImgEl, {
       y: 0,
     });
 
-    currentImgEl.classList.add("active");
+    currentImgEl.classList.add('active');
   });
 }
 
@@ -112,7 +77,7 @@ export default function HomeScreen() {
                 src={pic.img}
                 alt="project"
                 data-title={pic.title}
-                className={`max-w-[250px] absolute w-full h-full object-cover top-0  ${idx === 0 ? "active" : "translate-y-[100%] "} reel-image`}
+                className={`max-w-[250px] absolute w-full h-full object-cover top-0  ${idx === 0 ? 'active' : 'translate-y-[100%] '} reel-image`}
               />
             );
           })}
