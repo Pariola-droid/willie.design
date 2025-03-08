@@ -1,39 +1,40 @@
-'use client';
+"use client";
 
-import Cursor from '@/lib/cursor';
-import { initSplit } from '@/lib/split';
-import { useWorks } from '@/store/works.context';
-import { format } from 'date-fns';
-import type { LenisOptions } from 'lenis';
-import Link from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
-import { Fragment, PropsWithChildren, useEffect, useRef } from 'react';
-import GlobalError from './GlobalError';
-import GlobalLoader from './GlobalLoader';
-import { Lenis } from './Lenis';
+import Cursor from "@/lib/cursor";
+import { initSplit } from "@/lib/split";
+import { useWorks } from "@/store/works.context";
+import { format } from "date-fns";
+import type { LenisOptions } from "lenis";
+import Link from "next/link";
+import { useParams, usePathname } from "next/navigation";
+import { Fragment, PropsWithChildren, useEffect, useRef } from "react";
+import GlobalError from "./GlobalError";
+import GlobalLoader from "./GlobalLoader";
+import { Lenis } from "./Lenis";
 
 const ROUTES = [
   {
-    path: '/works',
-    label: 'works',
+    path: "/works",
+    label: "works",
   },
   {
-    path: '/info',
-    label: 'info',
+    path: "/info",
+    label: "info",
   },
   {
-    path: '/contact',
-    label: 'contact',
+    path: "/contact",
+    label: "contact",
   },
 ];
 
 interface PageWrapperProps extends PropsWithChildren {
   backButton?: boolean;
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
   lenis?: boolean | LenisOptions;
   className: string;
   style?: React.CSSProperties;
   showHeader?: boolean;
+  isHome?: boolean;
 }
 
 export default function PageWrapper(props: PageWrapperProps) {
@@ -46,10 +47,11 @@ export default function PageWrapper(props: PageWrapperProps) {
   const {
     backButton,
     children,
-    theme = 'dark',
+    theme = "dark",
     lenis,
     className,
     showHeader = true,
+    isHome,
     ...rest
   } = props;
 
@@ -57,9 +59,9 @@ export default function PageWrapper(props: PageWrapperProps) {
     initSplit();
 
     const cursor = new Cursor({
-      container: 'body',
+      container: "body",
       speed: 0.7,
-      ease: 'expo.out',
+      ease: "expo.out",
       visibleTimeout: 300,
     });
   }, []);
@@ -72,8 +74,8 @@ export default function PageWrapper(props: PageWrapperProps) {
 
   useEffect(() => {
     if (
-      pathname.startsWith('/works/') &&
-      pathname !== '/works' &&
+      pathname.startsWith("/works/") &&
+      pathname !== "/works" &&
       params?.casestudy
     ) {
       const slug = params.casestudy as string;
@@ -82,16 +84,16 @@ export default function PageWrapper(props: PageWrapperProps) {
   }, [pathname, params, fetchWorkBySlug]);
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute("data-theme", theme);
   }, [pathname, theme]);
 
   const shouldShowLoader =
     isLoading &&
-    (pathname === '/works' ||
-      (pathname.startsWith('/works/') && pathname !== '/works'));
+    (pathname === "/works" ||
+      (pathname.startsWith("/works/") && pathname !== "/works"));
 
   return (
-    <div className="wp">
+    <div className={`${!isHome ? "wp" : ""}`}>
       {isLoading && <GlobalLoader isLoading={isLoading} message="Loading..." />}
       {error && <GlobalError error={error} resetError={fetchWorks} />}
 
@@ -107,7 +109,7 @@ export default function PageWrapper(props: PageWrapperProps) {
                 {ROUTES.map((route, i) => (
                   <li
                     key={`${route.path}-${i}`}
-                    className={pathname === route.path ? 'active' : ''}
+                    className={pathname === route.path ? "active" : ""}
                   >
                     <Link href={route.path}>{route.label}</Link>
                   </li>
@@ -119,7 +121,7 @@ export default function PageWrapper(props: PageWrapperProps) {
           <Link href="/" className="wp__pageHeader-bigText">
             <h1>Archive Of Selected</h1>
             <h1>
-              Works <sup>&apos;21—{format(new Date(), 'yyy')}</sup>
+              Works <sup>&apos;21—{format(new Date(), "yyy")}</sup>
             </h1>
           </Link>
         </header>
@@ -131,7 +133,7 @@ export default function PageWrapper(props: PageWrapperProps) {
           {`document.documentElement.setAttribute('data-theme', '${theme}');`}
         </script>
       </main>
-      {lenis && <Lenis root options={typeof lenis === 'object' ? lenis : {}} />}
+      {lenis && <Lenis root options={typeof lenis === "object" ? lenis : {}} />}
     </div>
   );
 }

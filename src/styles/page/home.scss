@@ -4,7 +4,7 @@
   background-color: $black;
   position: relative;
   @include flex(center, center);
-  overflow: hidden;
+  // overflow: hidden;
 
   &__main {
     width: 100%;
@@ -136,3 +136,27 @@
     }
   }
 }
+
+
+body.active {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.word {
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.img-container.active {
+  overflow: hidden;
+}
+
+@media (max-width: 800px) {
+  .zoom-images {
+    height: 500px;
+    width: 500px;
+  }
+} 
