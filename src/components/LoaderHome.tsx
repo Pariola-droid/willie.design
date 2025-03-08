@@ -179,6 +179,7 @@ export default function LoaderHome() {
           {pictures.map((pic, idx) => {
             return (
               <div
+                key={idx}
                 className="fixed h-[100vh] w-[100%] flex justify-center  scale-0 items-center img-container"
                 style={{ zIndex: idx + 12 }}
               >
@@ -196,6 +197,7 @@ export default function LoaderHome() {
           {pictures.map((pic, idx) => {
             return (
               <div
+                key={idx}
                 style={{ height: `${innerHeight * 2.8}px` }}
                 className=" w-[100%] white-height"
               ></div>

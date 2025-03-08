@@ -76,8 +76,8 @@ function handleImgReel(e: React.MouseEvent<HTMLParagraphElement>) {
     return pic.classList.contains("active");
   })[0];
 
-  console.log(activeImg, currentImgEl)
-  console.log(allReelImgs)
+  console.log(activeImg, currentImgEl);
+  console.log(allReelImgs);
 
   if (activeImg === currentImgEl) {
     return;
@@ -108,6 +108,7 @@ export default function HomeScreen() {
           {REELS_DATA.map((pic, idx) => {
             return (
               <img
+                key={pic.title}
                 src={pic.img}
                 alt="project"
                 data-title={pic.title}
