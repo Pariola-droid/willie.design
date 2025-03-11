@@ -9,7 +9,11 @@ import { Work } from '../../sanity.types';
 
 export const fetchSanityWorks = async (): Promise<Work[]> => {
   try {
-    const sanityWorks = await client.fetch<Work[]>(WORKS_QUERY);
+    const sanityWorks = await client.fetch<Work[]>(
+      WORKS_QUERY,
+      {},
+      { cache: 'no-store' }
+    );
     return sanityWorks;
   } catch (err) {
     console.error('Error fetching works:', err);
@@ -23,9 +27,14 @@ export const fetchSanityWorkBySlug = async ({
   slug: string;
 }): Promise<Work> => {
   try {
-    const currentWorkData = await client.fetch<Work>(WORK_QUERY, {
-      slug,
-    });
+    const currentWorkData = await client.fetch<Work>(
+      WORK_QUERY,
+      {
+        slug,
+      },
+      { cache: 'no-store' }
+    );
+
     return currentWorkData;
   } catch (err) {
     console.error('Error fetching work by slug:', err);
@@ -35,8 +44,13 @@ export const fetchSanityWorkBySlug = async ({
 
 export const fetchSanityWorkSlugs = async (): Promise<{ slug: string }[]> => {
   try {
-    const slugs = await client.fetch<{ slug: string }[]>(WORKS_SLUGS_QUERY);
-    return slugs;
+    const slugs = await client.fetch<{ slug: string }[]>(
+      WORKS_SLUGS_QUERY,
+      {},
+      { cache: 'no-store' }
+    );
+
+    return slugs.filter((item) => item && item.slug);
   } catch (err) {
     console.error('Error fetching work slugs:', err);
     throw err;

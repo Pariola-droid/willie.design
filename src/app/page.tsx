@@ -1,7 +1,6 @@
 'use client';
 
 import PageWrapper from '@/components/common/PageWrapper';
-import LoaderHome from '@/components/LoaderHome';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
 import { useRouter } from 'next/navigation';
@@ -16,7 +15,7 @@ export default function HomePage() {
 
   return (
     <PageWrapper showHeader={true} className="pageHome" lenis isHome={true}>
-      <LoaderHome />
+      {/* <LoaderHome /> */}
       {/* <HomeScreen /> */}
     </PageWrapper>
   );

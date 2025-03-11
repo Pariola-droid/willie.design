@@ -369,7 +369,7 @@ export default function WorksPage() {
                   )}
                 </div>
                 <div className="pageWorks__workCard-wInfo">
-                  <small>{`${(i % works.length) + 1}.`}</small>
+                  <small>{`0${(i % works.length) + 1}.`}</small>
                   <p>{work?.title}</p>
                 </div>
               </Link>
