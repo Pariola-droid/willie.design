@@ -10,7 +10,7 @@ export function generatePageMetadata({
   slug: string;
 }) {
   return {
-    title: page?.meta_title,
+    title: page?.meta_title || `${page?.title} | WILLIE UI`,
     description: page?.meta_description,
     openGraph: {
       images: [
