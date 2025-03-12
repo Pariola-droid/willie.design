@@ -251,6 +251,7 @@ export default function InfoPage() {
               height={330}
               src="/images/info/me.png"
               alt="willie's face"
+              priority
             />
           </div>
 
