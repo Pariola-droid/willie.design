@@ -1,7 +1,6 @@
 'use client';
 
 import PageWrapper from '@/components/common/PageWrapper';
-import { format } from 'date-fns';
 import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
 import Image from 'next/image';
@@ -22,14 +21,14 @@ const CONTACT_DETAILS = [
     ],
   },
   {
-    title: 'socials',
+    title: '@willie_ui',
     links: [
       {
         label: 'instagram',
         href: 'https://www.instagram.com/williedsgnr/',
       },
       {
-        label: 'x (prev twitter)',
+        label: 'x',
         href: 'https://twitter.com/williedsgnr',
       },
       {
@@ -48,6 +47,7 @@ export default function ContactPage() {
   useEffect(() => {
     const titleItem = document.querySelectorAll('.cTitleItem');
     const listItems = document.querySelectorAll('.cListItem');
+    const listLine = document.querySelectorAll('.cListLine');
 
     titleItem.forEach((item) => {
       const wrapper = document.createElement('div');
@@ -87,6 +87,12 @@ export default function ContactPage() {
       x: -10,
     });
 
+    gsap.set('.cListLine', {
+      scaleY: 0,
+      transformOrigin: 'top left',
+      autoAlpha: 0,
+    });
+
     gsap.set(['.cTitleItem', '.cListItem'], {
       y: 40,
       autoAlpha: 0,
@@ -112,6 +118,16 @@ export default function ContactPage() {
             duration: 1.2,
           },
           '<'
+        )
+        .to(
+          listLine,
+          {
+            scaleY: 1,
+            duration: 1.2,
+            autoAlpha: 1,
+            stagger: 0.05,
+          },
+          '-=1.1'
         )
         .to(
           ['.cTitleItem', '.cListItem'],
@@ -144,40 +160,47 @@ export default function ContactPage() {
   return (
     <PageWrapper className="pageContact" lenis>
       <section className="pageContact__main">
-        <div className="pageContact__main-contactImg cImg-reveal">
-          <Image
-            width={377}
-            height={500}
-            src="/images/contact/telephone.png"
-            alt="telephone image"
-          />
+        <div className="pageContact__main-leftSlot">
+          <div className="pageContact__main-contactImg cImg-reveal">
+            <Image
+              width={377}
+              height={500}
+              src="/images/contact/telephone.png"
+              alt="telephone image"
+              priority
+            />
+          </div>
         </div>
-        <div className="pageContact__main-details">
-          <h4 className="pageContact__main-details--title cTitleItem">
-            Let&apos;s collaborate and make good work together
-          </h4>
 
-          {CONTACT_DETAILS.map((contact, i: number) => (
-            <div key={i} className={`pageContact__main-details--list`}>
-              <div className="pageContact__main-details--listTitle cTitleItem">
-                {contact.title}:
-              </div>
-              {contact.links.map((link, j: number) => (
-                <p
-                  key={j}
-                  className={`pageContact__main-details--listItem ${contact.title} cListItem`}
-                >
-                  {contact.title !== 'email' ? <span>({j + 1})</span> : ''}
-                  <a
-                    href={link.href}
-                    link-interaction="underline"
-                    target="_blank"
-                    rel="noopener"
+        <div className="pageContact__main-rightSlot">
+          {CONTACT_DETAILS.map((detail, i) => (
+            <div key={i} className="pageContact__main-details">
+              <div className="pageContact__main-details--line cListLine" />
+              <h4 className="pageContact__main-details--title cTitleItem">
+                {i === 0 ? `Let's collaborate` : `See socials`}
+              </h4>
+
+              <div className={`pageContact__main-details--list`}>
+                <div className="pageContact__main-details--listTitle cTitleItem">
+                  {detail.title}
+                </div>
+                {detail.links.map((link, i: number) => (
+                  <p
+                    key={i}
+                    className={`pageContact__main-details--listItem cListItem`}
                   >
-                    {link.label}
-                  </a>
-                </p>
-              ))}
+                    <a
+                      href={link.href}
+                      link-interaction="underline"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      {link.label}
+                    </a>
+                    {i === 1 && <>&nbsp;(prev twitter)</>}
+                  </p>
+                ))}
+              </div>
             </div>
           ))}
         </div>
@@ -195,7 +218,7 @@ export default function ContactPage() {
             Pariola
           </a>
         </small>
-        <small>&copy;{format(new Date(), 'yyy')}. All rights reserved</small>
+        <small></small>
       </div>
     </PageWrapper>
   );

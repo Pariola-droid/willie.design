@@ -45,7 +45,6 @@ export default async function CaseStudyPage({
   }
 
   const allWorks = await fetchSanityWorks();
-  console.log(allWorks, 'allWorks');
   const currentIndex = allWorks.findIndex((w) => w.slug?.current === casestudy);
 
   const nextWorkIndex = (currentIndex + 1) % allWorks.length;

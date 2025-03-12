@@ -18,9 +18,13 @@
     width: 100%;
     min-height: toRem(300);
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: toRem(32);
-    padding-inline: 1rem;
+    grid-template-columns: 55% 45%;
+
+    &-leftSlot {
+      width: 100%;
+      @include flexed(unset, flex-start, column);
+      padding-bottom: toRem(116);
+    }
 
     &-contactImg {
       height: toRem(250);
@@ -35,19 +39,38 @@
       }
     }
 
+    &-rightSlot {
+      width: 100%;
+      padding-bottom: toRem(20);
+      display: grid;
+      grid-template-columns: 60% 40%;
+    }
+
     &-details {
-      max-width: toRem(340);
-      min-height: toRem(200);
+      height: 100%;
+      width: 100%;
       @include flexed(unset, flex-start, column);
-      row-gap: toRem(56);
+      row-gap: toRem(105);
+      position: relative;
+      padding-left: toRem(20);
+
+      &--line {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 1px;
+        background-color: #ffffff3d;
+        opacity: 0;
+        visibility: hidden;
+      }
 
       &--title {
-        font-size: toRem(24);
+        font-size: toRem(14);
         font-weight: 400;
-        line-height: toRem(32.4);
-        letter-spacing: -0.02em;
+        line-height: 100%;
+        letter-spacing: -2%;
         text-align: left;
-        max-width: toRem(300);
         opacity: 0;
         visibility: hidden;
       }
@@ -57,42 +80,26 @@
       }
 
       &--listTitle {
-        font-size: toRem(16);
+        font-size: toRem(14);
         font-weight: 300;
-        line-height: toRem(16);
-        letter-spacing: -0.02em;
+        line-height: 125%;
+        letter-spacing: -2%;
         text-align: left;
         margin-bottom: toRem(8);
+        color: #ffffff99;
         opacity: 0;
         visibility: hidden;
       }
 
       &--listItem {
-        font-size: toRem(24);
+        font-size: toRem(16);
         font-weight: 400;
-        line-height: toRem(32.4);
-        letter-spacing: -0.02em;
+        line-height: 135%;
+        letter-spacing: -2%;
         text-align: left;
-        margin-left: toRem(38);
         position: relative;
         opacity: 0;
         visibility: hidden;
-
-        &.socials {
-          & a {
-            margin-left: 1.15rem;
-          }
-        }
-
-        & span {
-          position: absolute;
-          top: -6px;
-          left: 0;
-          font-size: toRem(14);
-          font-weight: 400;
-          line-height: toRem(32.4);
-          letter-spacing: -0.02em;
-        }
 
         & a {
           &::before,
