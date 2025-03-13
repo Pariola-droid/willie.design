@@ -22,7 +22,11 @@
 .pageInfo {
   width: 100%;
   position: relative;
-  padding-bottom: toRem(20);
+  padding-bottom: toRem(25);
+
+  @include media('>tablet') {
+    padding-bottom: toRem(20);
+  }
 
   &__hero {
     width: 100%;
@@ -33,18 +37,28 @@
     overflow: hidden;
 
     &-middleFace {
-      width: toRem(438);
-      height: toRem(383);
+      width: toRem(345);
+      height: toRem(310);
       @include flex(center, flex-end);
       position: relative;
       z-index: 1;
 
+      @include media('>tablet') {
+        width: toRem(438);
+        height: toRem(383);
+      }
+
       &Img {
-        height: toRem(330);
-        width: toRem(250);
+        height: toRem(266);
+        width: toRem(200);
         background-color: $black;
         overflow: hidden;
         position: relative;
+
+        @include media('>tablet') {
+          height: toRem(330);
+          width: toRem(250);
+        }
 
         & img {
           width: 100%;
@@ -56,23 +70,18 @@
 
     &-faceCaption {
       // position: absolute;
-      font-size: toRem(48);
+      font-size: toRem(36);
       font-weight: 400;
-      line-height: toRem(48);
+      line-height: 100%;
       letter-spacing: -0.02em;
       text-transform: capitalize;
       opacity: 0;
       visibility: hidden;
 
-      // &.a {
-      //   top: 0;
-      //   left: toRem(92);
-      // }
-
-      // &.b {
-      //   top: toRem(60);
-      //   left: toRem(-35);
-      // }
+      @include media('>tablet') {
+        font-size: toRem(48);
+        line-height: toRem(48);
+      }
 
       &.c {
         padding-bottom: 2px;
@@ -95,7 +104,7 @@
     &-bottomBar {
       width: 100%;
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       position: absolute;
       z-index: 2;
       bottom: 0;
@@ -103,18 +112,35 @@
       padding-inline: 1rem;
       padding-bottom: toRem(20);
 
+      @include media('>tablet') {
+        grid-template-columns: repeat(5, 1fr);
+      }
+
       & small {
         @extend %BodyText;
         opacity: 0;
         visibility: hidden;
 
         &:nth-of-type(1) {
-          grid-column: 1/4;
+          @include media('>tablet') {
+            grid-column: 1/4;
+          }
+        }
+
+        &:nth-of-type(2) {
+          @include media('<tablet') {
+            display: flex;
+            justify-content: flex-end;
+          }
         }
 
         &:nth-of-type(3) {
-          display: flex;
+          display: none;
           justify-content: flex-end;
+
+          @include media('>tablet') {
+            display: flex;
+          }
         }
       }
     }
@@ -122,26 +148,41 @@
 
   &__aboutMe {
     width: 100%;
-    padding-left: 1rem;
-    padding-top: toRem(20);
-    padding-right: toRem(135);
+    padding-top: toRem(36);
+    padding-inline: 1rem 1rem;
     @include flexed(unset, flex-start, column);
     row-gap: toRem(36);
-    margin-bottom: toRem(150);
+    margin-bottom: toRem(75);
+
+    @include media('>tablet') {
+      padding-top: toRem(20);
+      padding-inline: 1rem toRem(135);
+      margin-bottom: toRem(150);
+    }
 
     & * {
       color: $black;
     }
 
     &--paragraph {
-      font-size: toRem(36) !important;
+      font-size: toRem(22.5) !important;
       font-weight: 400;
-      line-height: toRem(45);
-      letter-spacing: -0.02em;
+      line-height: 125%;
+      letter-spacing: -2%;
       text-align: left;
+
+      @include media('>tablet') {
+        font-size: toRem(36) !important;
+        line-height: toRem(45);
+        letter-spacing: -0.02em;
+      }
 
       & span {
         padding-inline: 1.6rem;
+
+        @include media('<tablet') {
+          padding-inline: 0.66rem;
+        }
       }
 
       & a {
@@ -158,26 +199,50 @@
   &__services {
     width: 100%;
     padding-left: 1rem;
-    @include flex(flex-start, flex-start);
+    @include flexed(space-between, flex-start, column);
     column-gap: toRem(253);
-    margin-bottom: toRem(150);
+    margin-bottom: toRem(75);
+    row-gap: toRem(48);
+    height: auto;
+
+    @include media('>tablet') {
+      margin-bottom: toRem(150);
+      row-gap: 0;
+      @include flexed(flex-start, flex-start, row);
+    }
 
     & * {
       color: $black;
     }
 
     &-leftSlot {
-      width: max-content;
-      @include flex(flex-start, flex-start);
-      column-gap: toRem(185);
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: fit-content;
+
+      @include media('>tablet') {
+        width: max-content;
+        column-gap: toRem(185);
+        @include flex(flex-start, flex-start);
+      }
 
       &.title {
         @extend %BodyText;
+
+        @include media('<tablet') {
+          width: 100%;
+        }
       }
 
       &.list {
         @include flexed(unset, flex-start, column);
         row-gap: toRem(4);
+        height: auto;
+
+        @include media('<tablet') {
+          width: 100%;
+        }
 
         & li {
           @extend %BodyText;
@@ -187,24 +252,44 @@
     }
 
     &-rightSlot {
-      width: max-content;
-      @include flexed(unset, flex-start, column);
-      row-gap: toRem(84);
+      width: 100%;
+      @include flexed(flex-start, flex-start, column);
+      row-gap: toRem(48);
+
+      @include media('>tablet') {
+        row-gap: toRem(84);
+        width: max-content;
+        @include flexed(flex-start, flex-start, column);
+      }
 
       &--row {
-        width: max-content;
-        @include flex(flex-start, flex-start);
-        column-gap: toRem(175);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+
+        @include media('>tablet') {
+          column-gap: toRem(175);
+          width: max-content;
+          @include flex(flex-start, flex-start);
+        }
       }
 
       &.title {
         @extend %BodyText;
         min-width: toRem(77);
+
+        @include media('<tablet') {
+          min-width: 100%;
+        }
       }
 
       &.list {
         @include flexed(unset, flex-start, column);
         row-gap: toRem(4);
+
+        @include media('<tablet') {
+          width: 100%;
+        }
 
         & li {
           @extend %BodyText;
@@ -222,10 +307,12 @@
   &__footer {
     padding-inline: 1rem;
     width: 100%;
-    @include flex(space-between, flex-end);
-    // background-color: red;
+    @include flexed(unset, flex-start, column);
     overflow: hidden;
-    // min-height: toRem(355);
+
+    @include media('>tablet') {
+      @include flexed(space-between, flex-end, row);
+    }
 
     & * {
       color: $black;
@@ -235,15 +322,25 @@
       @include flexed(flex-end, flex-start, column);
       max-width: toRem(385);
       position: relative;
-      // background-color: blue;
+
+      @include media('<=tablet') {
+        margin-bottom: toRem(72);
+      }
 
       &--location {
-        font-size: toRem(24);
+        font-size: toRem(18);
         font-weight: 400;
-        line-height: toRem(32.4);
-        letter-spacing: -0.02em;
+        line-height: 140%;
+        letter-spacing: -2%;
         text-align: left;
-        margin-bottom: toRem(36);
+        margin-bottom: toRem(24);
+
+        @include media('>tablet') {
+          font-size: toRem(24);
+          line-height: toRem(32.4);
+          letter-spacing: -0.02em;
+          margin-bottom: toRem(36);
+        }
 
         & span {
           &:nth-of-type(1) {
@@ -253,17 +350,27 @@
       }
 
       &--contact {
-        font-size: toRem(24);
+        font-size: toRem(18);
         font-weight: 400;
-        line-height: toRem(32.4);
-        letter-spacing: -0.02em;
+        line-height: 140%;
+        letter-spacing: -2%;
         text-align: left;
-        margin-bottom: toRem(175);
+
+        @include media('>tablet') {
+          font-size: toRem(24);
+          line-height: toRem(32.4);
+          letter-spacing: -0.02em;
+          margin-bottom: toRem(175);
+        }
       }
 
       &--credit {
         @extend %BodyText;
         opacity: 40%;
+
+        @include media('<=tablet') {
+          display: none;
+        }
 
         & a {
           &::before,
@@ -276,9 +383,13 @@
     }
 
     &-photos {
-      // height: toRem(355);
       @include flex(flex-end, flex-end);
       overflow: hidden;
+
+      @include media('<=tablet') {
+        width: 100%;
+        margin-bottom: toRem(36);
+      }
 
       & img {
         height: 100%;
@@ -286,19 +397,50 @@
         object-fit: cover;
       }
 
-      &.img1 {
+      &--img1 {
         width: toRem(337);
         height: toRem(355);
+
+        @include media('<=tablet') {
+          width: 100%;
+        }
       }
 
-      &.img2 {
+      &--img2 {
         width: toRem(258);
         height: toRem(200);
+
+        @include media('<=tablet') {
+          display: none;
+        }
       }
 
-      &.img3 {
+      &--img3 {
         width: toRem(218);
         height: toRem(127);
+
+        @include media('<=tablet') {
+          display: none;
+        }
+      }
+    }
+
+    &-mobileCredit {
+      @extend %BodyText;
+      opacity: 40%;
+      color: $black;
+      display: block;
+
+      @include media('>tablet') {
+        display: none;
+      }
+
+      & a {
+        &::before,
+        &::after {
+          height: 1px !important;
+          bottom: 2% !important;
+        }
       }
     }
   }

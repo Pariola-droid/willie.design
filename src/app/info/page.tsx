@@ -159,7 +159,7 @@ export default function InfoPage() {
       ],
       {
         autoAlpha: 1,
-        y: 10,
+        y: 0,
         duration: 0.4,
         stagger: 0.05,
         ease: 'power2.out',
@@ -392,7 +392,7 @@ export default function InfoPage() {
         </div>
 
         <div className="pageInfo__footer-photos">
-          <div className="pageInfo__footer-photos img3 iImg-reveal">
+          <div className="pageInfo__footer-photos--img3 iImg-reveal">
             <Image
               width={218}
               height={127}
@@ -401,7 +401,7 @@ export default function InfoPage() {
             />
           </div>
 
-          <div className="pageInfo__footer-photos img2 iImg-reveal">
+          <div className="pageInfo__footer-photos--img2 iImg-reveal">
             <Image
               width={258}
               height={200}
@@ -409,7 +409,7 @@ export default function InfoPage() {
               alt="willie's face"
             />
           </div>
-          <div className="pageInfo__footer-photos img1 iImg-reveal">
+          <div className="pageInfo__footer-photos--img1 iImg-reveal">
             <Image
               width={337}
               height={355}
@@ -417,6 +417,13 @@ export default function InfoPage() {
               alt="willie's face"
             />
           </div>
+        </div>
+
+        <div className="pageInfo__footer-mobileCredit">
+          build by:{' '}
+          <a href="#0" link-interaction="underline">
+            Pariola
+          </a>
         </div>
       </div>
     </PageWrapper>

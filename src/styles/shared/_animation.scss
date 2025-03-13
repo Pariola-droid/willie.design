@@ -115,15 +115,27 @@ span.word_wrap {
   &.pos-a {
     top: 0;
     left: toRem(92);
+
+    @include media('<=tablet') {
+      left: toRem(72);
+    }
   }
 
   &.pos-b {
     top: toRem(60);
     left: toRem(-35);
+
+    @include media('<=tablet') {
+      left: 0;
+    }
   }
 
   &.pos-c {
     bottom: toRem(24);
     right: toRem(15);
+
+    @include media('<=tablet') {
+      right: 0;
+    }
   }
 }
