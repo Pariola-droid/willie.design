@@ -1,47 +1,3 @@
-[wp-theme='dark'] {
-  * {
-    color: $white !important;
-  }
-
-  & li {
-    &.active {
-      & * {
-        background-color: $white !important;
-        color: $black !important;
-      }
-    }
-
-    & * {
-      &:hover {
-        background-color: $white;
-        color: $black !important;
-      }
-    }
-  }
-}
-
-[wp-theme='light'] {
-  * {
-    color: $black !important;
-  }
-
-  & li {
-    &.active {
-      & * {
-        background-color: $black !important;
-        color: $white !important;
-      }
-    }
-
-    & * {
-      &:hover {
-        background-color: $black;
-        color: $white !important;
-      }
-    }
-  }
-}
-
 .wp {
   @include flexed(unset, center, column);
   height: auto;
@@ -91,7 +47,7 @@
       @extend %CommonLinkStyle;
 
       @include media('>tablet') {
-        display: none;
+        display: none !important;
       }
     }
 
@@ -143,6 +99,50 @@
             vertical-align: super;
           }
         }
+      }
+    }
+  }
+}
+
+[wp-theme='dark'] {
+  * {
+    color: $white !important;
+  }
+
+  & li {
+    &.active {
+      & * {
+        background-color: $white !important;
+        color: $black !important;
+      }
+    }
+
+    & * {
+      &:hover {
+        background-color: $white;
+        color: $black !important;
+      }
+    }
+  }
+}
+
+[wp-theme='light'] {
+  * {
+    color: $black !important;
+  }
+
+  & li {
+    &.active {
+      & * {
+        background-color: $black !important;
+        color: $white !important;
+      }
+    }
+
+    & * {
+      &:hover {
+        background-color: $black;
+        color: $white !important;
       }
     }
   }
