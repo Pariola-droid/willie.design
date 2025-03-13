@@ -19,21 +19,14 @@
   background-color: $white;
   padding-inline: 1rem;
   position: relative;
-  padding-block: toRem(370) toRem(56);
+  padding-block: toRem(350) toRem(40);
+
+  @include media('>tablet') {
+    padding-block: toRem(370) toRem(56);
+  }
 
   & * {
     color: $black;
-  }
-
-  &__loading {
-    inset: 0;
-    position: absolute;
-    @include flex(center, center);
-    font-size: toRem(14);
-    font-weight: 400;
-    line-height: toRem(16.59);
-    letter-spacing: -0.02em;
-    text-align: center;
   }
 
   &__hero {
@@ -41,45 +34,70 @@
     @include flexed(unset, flex-start, column);
 
     & h2 {
-      font-size: toRem(36);
+      font-size: toRem(22.5);
       font-weight: 400;
-      line-height: toRem(40.36);
-      letter-spacing: -0.02em;
+      line-height: 100%;
+      letter-spacing: -2%;
       text-align: left;
       opacity: 0;
       visibility: hidden;
+
+      @include media('>tablet') {
+        font-size: toRem(36);
+        line-height: toRem(40.36);
+        letter-spacing: -0.02em;
+      }
     }
 
     &-imgWrapper {
       width: 100%;
-      max-width: toRem(1166);
       @include flexed(unset, flex-start, column);
-      row-gap: toRem(16);
-      margin-top: toRem(36);
+      row-gap: toRem(24);
+      margin-top: toRem(24);
       position: relative;
       overflow: hidden;
       clip-path: inset(0 0 100% 0);
 
+      @include media('>tablet') {
+        margin-top: toRem(36);
+        max-width: toRem(1166);
+        row-gap: toRem(16);
+      }
+
       &--img {
         width: 100%;
-        height: toRem(700);
+        aspect-ratio: auto;
+        // height: toRem(265);
         background-color: $white;
         will-change: transform;
         overflow: hidden;
+        background-color: red;
+
+        @include media('>tablet') {
+          height: toRem(700);
+        }
 
         img {
           will-change: transform;
           width: 100%;
-          height: 115%;
+          height: 120%;
           object-fit: cover;
           object-position: center;
+
+          @include media('>tablet') {
+            height: 115%;
+          }
         }
 
         &Caption {
           width: 100%;
           @include flex(space-between, center);
           row-gap: toRem(16);
-          max-width: 66.8%;
+          max-width: 100%;
+
+          @include media('>tablet') {
+            max-width: 66.8%;
+          }
 
           & p {
             font-size: toRem(14);
@@ -94,10 +112,19 @@
 
     &-descWrapper {
       width: 100%;
-      max-width: toRem(575);
-      margin-top: toRem(24);
+      max-width: 100%;
+      margin-top: toRem(48);
       @include flexed(unset, flex-start, column);
       row-gap: toRem(24);
+
+      @include media('>phone') {
+        max-width: 75%;
+      }
+
+      @include media('>tablet') {
+        max-width: toRem(575);
+        margin-top: toRem(24);
+      }
 
       & div {
         @extend %BodyText;
@@ -118,16 +145,27 @@
 
   &__gallery {
     width: 100%;
-    margin-top: toRem(96);
+    margin-top: toRem(48);
     @include flexed(unset, flex-start, column);
+
+    @include media('>tablet') {
+      margin-top: toRem(96);
+    }
 
     &--imgOne {
       width: 100%;
+      background-color: purple;
 
       &Img {
-        width: toRem(575);
-        height: toRem(427);
+        width: 100%;
+        aspect-ratio: auto;
+        // height: toRem(250);
         background-color: $white;
+
+        @include media('>tablet') {
+          width: toRem(575);
+          height: toRem(427);
+        }
 
         &.layout_s {
           width: toRem(337);
@@ -138,39 +176,68 @@
 
     &--imgTwo {
       width: 100%;
-      padding-left: toRem(238);
-      margin-top: toRem(96);
+      margin-top: toRem(48);
+      background-color: yellow;
+
+      @include media('>tablet') {
+        padding-left: toRem(238);
+        margin-top: toRem(96);
+      }
 
       &.layout_s {
         padding-left: 0;
       }
 
       &Img {
-        width: toRem(694);
-        height: toRem(750);
+        width: 100%;
+        height: toRem(450);
+        aspect-ratio: auto;
         background-color: $white;
 
+        @include media('>tablet') {
+          width: toRem(694);
+          height: toRem(750);
+          margin-left: unset;
+        }
+
         &.layout_s {
-          height: toRem(500);
+          height: toRem(450);
           margin-left: auto;
+
+          @include media('>tablet') {
+            height: toRem(500);
+          }
         }
       }
     }
 
     &--imgThree {
       width: 100%;
-      padding-right: toRem(234);
-      margin-top: toRem(93);
+      margin-top: toRem(48);
+      background-color: green;
+
+      @include media('>tablet') {
+        padding-right: toRem(234);
+        margin-top: toRem(93);
+      }
 
       &.layout_s {
         margin-top: toRem(72);
       }
 
       &Img {
-        width: toRem(238);
-        height: toRem(175);
+        width: toRem(185);
+        // height: toRem(135);
+        aspect-ratio: auto;
         background-color: $white;
         margin-left: auto;
+        margin-right: auto;
+
+        @include media('>tablet') {
+          width: toRem(238);
+          height: toRem(175);
+          margin-right: unset;
+        }
 
         & img {
           height: 120% !important;
@@ -180,8 +247,13 @@
 
     &--imgFour {
       width: 100%;
-      padding-left: toRem(238);
-      margin-top: toRem(128);
+      margin-top: toRem(48);
+      background-color: violet;
+
+      @include media('>tablet') {
+        padding-left: toRem(238);
+        margin-top: toRem(128);
+      }
 
       &.layout_s {
         padding-left: 0;
@@ -189,9 +261,15 @@
       }
 
       &Img {
-        width: toRem(456);
-        height: toRem(420);
+        width: 100%;
+        // height: toRem(300);
+        aspect-ratio: auto;
         background-color: $white;
+
+        @include media('>tablet') {
+          width: toRem(456);
+          height: toRem(420);
+        }
 
         & img {
           height: 120% !important;
@@ -208,45 +286,72 @@
 
   &__moreDetails {
     width: 100%;
-    margin-top: toRem(175);
+    margin-top: toRem(72);
     @include flexed(unset, flex-start, column);
+
+    @include media('>tablet') {
+      margin-top: toRem(175);
+    }
 
     & * {
       color: $black;
     }
 
     & h3 {
-      font-size: toRem(24);
+      font-size: toRem(18);
       font-weight: 400;
-      line-height: toRem(26.9);
-      letter-spacing: -0.02em;
+      line-height: 100%;
+      letter-spacing: -2%;
       text-align: left;
-      // opacity: 0;
-      // visibility: hidden;
+
+      @include media('>tablet') {
+        font-size: toRem(24);
+        line-height: toRem(26.9);
+        letter-spacing: -0.02em;
+      }
     }
 
     &--credit {
       width: 100%;
-      margin-top: toRem(56);
-      max-width: toRem(430);
+      margin-top: toRem(36);
+      max-width: 100%;
       @include flexed(unset, flex-start, column);
       row-gap: toRem(64);
 
+      @include media('>tablet') {
+        margin-top: toRem(56);
+        max-width: toRem(430);
+      }
+
       &Col {
-        @include flex(flex-start, flex-start);
-        column-gap: toRem(175);
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        @include media('>tablet') {
+          width: max-content;
+          @include flex(flex-start, flex-start);
+          column-gap: toRem(175);
+        }
       }
 
       &Label {
         @extend %BodyText;
-        min-width: toRem(64);
+
+        @include media('>tablet') {
+          min-width: toRem(64);
+        }
       }
 
       &Content {
         @extend %BodyText;
         @include flexed(unset, flex-start, column);
         row-gap: toRem(4);
-        max-width: toRem(192);
+        width: 100%;
+
+        @include media('>tablet') {
+          max-width: toRem(192);
+        }
 
         & p {
           white-space: nowrap;
@@ -256,11 +361,14 @@
   }
 
   &__nextProject {
-    padding-left: toRem(238);
     width: 100%;
-    margin-top: toRem(165);
-    @include flexed(unset, flex-start, column);
+    margin-top: toRem(96);
     row-gap: toRem(5);
+
+    @include media('>tablet') {
+      padding-left: toRem(238);
+      margin-top: toRem(165);
+    }
 
     & * {
       color: $black;
@@ -268,21 +376,38 @@
 
     &--CTA {
       width: 100%;
-      max-width: toRem(603);
-      @include flex(space-between, flex-end);
+      @include flexed(unset, flex-start, column-reverse);
+      row-gap: toRem(24);
+
+      @include media('>tablet') {
+        max-width: toRem(603);
+        @include flexed(space-between, flex-end, row);
+        row-gap: unset;
+      }
     }
 
     &--leftSlot {
-      width: toRem(218);
+      width: 100%;
       @include flexed(unset, flex-start, column);
-      row-gap: toRem(5);
+      row-gap: toRem(8);
+
+      @include media('>tablet') {
+        width: toRem(218);
+        row-gap: toRem(5);
+      }
     }
 
     &--img {
-      width: toRem(218);
-      height: toRem(143);
+      width: 100%;
+      aspect-ratio: auto;
+      // height: toRem(225);
       background-color: $white;
       overflow: hidden;
+
+      @include media('>tablet') {
+        width: toRem(218);
+        height: toRem(143);
+      }
 
       & img {
         width: 100%;
@@ -322,11 +447,17 @@
       }
 
       & h4 {
-        font-size: toRem(24);
+        font-size: toRem(18);
         font-weight: 400;
-        line-height: toRem(26.9);
-        letter-spacing: -0.02em;
+        line-height: 100%;
+        letter-spacing: -2%;
         text-align: left;
+
+        @include media('>tablet') {
+          font-size: toRem(24);
+          line-height: toRem(26.9);
+          letter-spacing: -0.02em;
+        }
       }
     }
   }
