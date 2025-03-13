@@ -11,6 +11,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { FEATURED_WORKS } from '../../utils/constant';
 
 gsap.registerPlugin(Flip, CustomEase);
@@ -41,6 +42,8 @@ export default function WorksPage() {
 
   const verticalTl = useRef<gsap.core.Timeline | null>(null);
   const horizontalTl = useRef<gsap.core.Timeline | null>(null);
+
+  const modifiedWorks = !isMobile ? [...works, ...works, ...works] : works;
 
   const handleLayoutChange = () => {
     if (isFlipping.current) return;
@@ -332,7 +335,7 @@ export default function WorksPage() {
         className={`pageWorks`}
         style={{ backgroundColor: bgColor }}
         lenis={{
-          infinite: Boolean(isVertical),
+          infinite: !isMobile && Boolean(isVertical),
         }}
       >
         <div
@@ -340,7 +343,7 @@ export default function WorksPage() {
           className={`pageWorks__verticalContainer`}
         >
           {works.length > 0 &&
-            [...works, ...works, ...works].map((work, i) => (
+            modifiedWorks.map((work, i) => (
               <Link
                 key={`${work._id}-${i}`}
                 href={`/works/${work.slug?.current || 'aria-amara'}`}
