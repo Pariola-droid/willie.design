@@ -14,14 +14,11 @@
   position: relative;
   overflow: hidden;
 
-  // background-color: red;
-
   &__main {
     width: 100%;
     min-height: toRem(300);
     display: grid;
     grid-template-columns: 1fr;
-    // background-color: blue;
 
     @include media('>tablet') {
       grid-template-columns: 55% 45%;
@@ -39,7 +36,8 @@
     }
 
     &-contactImg {
-      height: toRem(200);
+      // height: toRem(200);
+      aspect-ratio: auto;
       width: 40%;
       background-color: $black;
 
