@@ -61,36 +61,52 @@
     position: fixed;
     top: 0;
     padding-top: 1rem;
-    padding-inline: 1rem toRem(77);
+    padding-inline: 1rem 1rem;
     z-index: 10;
+
+    @include media('>tablet') {
+      padding-inline: 1rem toRem(77);
+    }
+
+    %CommonLinkStyle {
+      font-size: toRem(14);
+      font-weight: 300;
+      line-height: toRem(15.7);
+      letter-spacing: -0.02em;
+      text-align: center;
+      width: toRem(84);
+      height: toRem(24);
+      padding: toRem(4) toRem(24);
+      border: 1px solid currentColor;
+      border-radius: 100px;
+      @include flex(center, center);
+      background-color: transparent;
+
+      &:hover {
+        border-color: transparent !important;
+      }
+    }
+
+    &-menuBtn {
+      @extend %CommonLinkStyle;
+
+      @include media('>tablet') {
+        display: none;
+      }
+    }
 
     &-navLinks {
       width: max-content;
-      @include flex(flex-start, center);
+      display: none;
       column-gap: toRem(5);
+
+      @include media('>tablet') {
+        @include flex(flex-start, center);
+      }
 
       & li {
         & * {
-          font-size: toRem(14);
-          font-weight: 300;
-          line-height: toRem(15.7);
-          letter-spacing: -0.02em;
-          text-align: center;
-          width: toRem(84);
-          height: toRem(24);
-          padding: toRem(4) toRem(24);
-          border: 1px solid currentColor;
-          border-radius: 100px;
-          @include flex(center, center);
-          background-color: transparent;
-
-          &:hover {
-            border-color: transparent !important;
-          }
-        }
-
-        & .modal-trigger {
-          cursor: zoom-in;
+          @extend %CommonLinkStyle;
         }
       }
     }
@@ -98,13 +114,18 @@
     &-bigText {
       & h1 {
         @extend %CB;
-        font-size: toRem(36);
+        font-size: toRem(24);
         font-weight: 400;
-        line-height: toRem(36);
+        line-height: toRem(24);
         letter-spacing: 0.02em;
         text-align: center;
         position: relative;
         text-transform: uppercase;
+
+        @include media('>tablet') {
+          font-size: toRem(36);
+          line-height: toRem(36);
+        }
 
         & sup {
           @extend %BS;
@@ -115,9 +136,12 @@
           text-align: left;
           position: relative;
           user-select: none;
-          vertical-align: super;
           margin-top: 4px;
           white-space: nowrap;
+
+          @include media('>tablet') {
+            vertical-align: super;
+          }
         }
       }
     }

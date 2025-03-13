@@ -14,22 +14,39 @@
   position: relative;
   overflow: hidden;
 
+  // background-color: red;
+
   &__main {
     width: 100%;
     min-height: toRem(300);
     display: grid;
-    grid-template-columns: 55% 45%;
+    grid-template-columns: 1fr;
+    // background-color: blue;
+
+    @include media('>tablet') {
+      grid-template-columns: 55% 45%;
+    }
 
     &-leftSlot {
       width: 100%;
-      @include flexed(unset, flex-start, column);
-      padding-bottom: toRem(116);
+      @include flexed(unset, flex-end, column);
+      padding-bottom: toRem(168);
+
+      @include media('>tablet') {
+        @include flexed(unset, flex-start, column);
+        padding-bottom: toRem(116);
+      }
     }
 
     &-contactImg {
-      height: toRem(250);
-      width: toRem(218);
+      height: toRem(200);
+      width: 40%;
       background-color: $black;
+
+      @include media('>tablet') {
+        width: toRem(218);
+        height: toRem(250);
+      }
 
       & img {
         width: 100%;
@@ -41,9 +58,13 @@
 
     &-rightSlot {
       width: 100%;
-      padding-bottom: toRem(20);
+      padding-bottom: toRem(16);
       display: grid;
       grid-template-columns: 60% 40%;
+
+      @include media('>tablet') {
+        padding-bottom: toRem(20);
+      }
     }
 
     &-details {
@@ -52,7 +73,16 @@
       @include flexed(unset, flex-start, column);
       row-gap: toRem(105);
       position: relative;
-      padding-left: toRem(20);
+      padding-left: toRem(8);
+      padding-bottom: toRem(24);
+
+      @include media('>tablet') {
+        padding-bottom: 0;
+      }
+
+      @include media('>phone') {
+        padding-left: toRem(20);
+      }
 
       &--line {
         position: absolute;
@@ -117,11 +147,15 @@
     padding-inline: 1rem;
     padding-bottom: 1rem;
     width: 100%;
-    @include flex(space-between, center);
+    display: none;
     overflow: hidden;
     position: absolute;
     bottom: 0;
     left: 0;
+
+    @include media('>tablet') {
+      @include flex(space-between, center);
+    }
 
     & * {
       color: $white;

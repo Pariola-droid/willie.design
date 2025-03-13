@@ -86,6 +86,10 @@ export default function PageWrapper(props: PageWrapperProps) {
 
       {showHeader && (
         <header wp-theme={theme} className="wp__pageHeader">
+          <button aria-label="menu" className="wp__pageHeader-menuBtn">
+            menu
+          </button>
+
           <ul className="wp__pageHeader-navLinks">
             {backButton ? (
               <li>
