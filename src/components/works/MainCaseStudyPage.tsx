@@ -148,13 +148,16 @@ export default function MainCaseStudyPage({
 
           const img = imgRef.querySelector('img');
           if (img) {
+            const yValue = isMobile
+              ? index === 1 || index === 3
+                ? -50
+                : 0
+              : index % 2 === 0
+                ? -35
+                : -70;
+
             gsap.to(img, {
-              // y: isMobile
-              //   ? index === (1 && 3) && -35
-              //   : index % 2 === 0
-              //     ? -35
-              //     : -70,
-              y: isMobile ? 0 : index % 2 === 0 ? -35 : -70,
+              y: yValue,
               ease: 'none',
               scrollTrigger: {
                 trigger: imgRef,
