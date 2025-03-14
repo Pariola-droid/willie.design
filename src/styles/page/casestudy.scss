@@ -7,9 +7,13 @@
   img {
     will-change: transform;
     width: 100%;
-    height: 115%;
+    height: 100%;
     object-fit: cover;
     object-position: center;
+
+    @include media('>tablet') {
+      height: 115%;
+    }
   }
 }
 
@@ -71,7 +75,6 @@
         background-color: $white;
         will-change: transform;
         overflow: hidden;
-        background-color: red;
 
         @include media('>tablet') {
           height: toRem(700);
@@ -80,7 +83,7 @@
         img {
           will-change: transform;
           width: 100%;
-          height: 120%;
+          height: 100%;
           object-fit: cover;
           object-position: center;
 
@@ -154,7 +157,6 @@
 
     &--imgOne {
       width: 100%;
-      background-color: purple;
 
       &Img {
         width: 100%;
@@ -177,7 +179,6 @@
     &--imgTwo {
       width: 100%;
       margin-top: toRem(48);
-      background-color: yellow;
 
       @include media('>tablet') {
         padding-left: toRem(238);
@@ -214,7 +215,6 @@
     &--imgThree {
       width: 100%;
       margin-top: toRem(48);
-      background-color: green;
 
       @include media('>tablet') {
         padding-right: toRem(234);
@@ -248,7 +248,6 @@
     &--imgFour {
       width: 100%;
       margin-top: toRem(48);
-      background-color: violet;
 
       @include media('>tablet') {
         padding-left: toRem(238);
