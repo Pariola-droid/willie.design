@@ -504,9 +504,6 @@ export default function MainCaseStudyPage({
               className="pageCaseStudy__nextProject--content"
               onClick={() => {
                 router.push(`/works/${nextWork.slug?.current}`);
-                setTimeout(() => {
-                  window.scrollTo(0, 0);
-                }, 50);
               }}
               style={{ cursor: 'pointer' }}
             >
