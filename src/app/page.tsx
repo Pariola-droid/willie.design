@@ -14,7 +14,7 @@ export default function HomePage() {
   const router = useRouter();
 
   return (
-    <PageWrapper showHeader={true} className="pageHome" lenis isHome={true}>
+    <PageWrapper showHeader={true} className="pageHome" lenis isHome={false}>
       {/* <LoaderHome /> */}
       {/* <HomeScreen /> */}
     </PageWrapper>
