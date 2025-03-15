@@ -31,12 +31,11 @@
     &-workImg {
       // height: toRem(200);
       aspect-ratio: auto;
-      width: 60%;
+      width: calc(60% - 19.5%);
       background-color: $black;
       position: absolute;
-      z-index: 1;
+      min-height: toRem(200);
       max-height: toRem(200);
-      padding-right: 19.5%;
 
       @include media('>tablet') {
         width: toRem(218);

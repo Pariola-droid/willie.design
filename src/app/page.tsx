@@ -6,14 +6,24 @@ import gsap from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 gsap.registerPlugin(CustomEase);
 CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
+interface IFeaturedWork {
+  id: number;
+  title: string;
+  key: string;
+  img: string;
+}
+
 export default function HomePage() {
   const router = useRouter();
+  const [activeWork, setActiveWork] = useState<IFeaturedWork | null>(null);
+  const imageWrapperRef = useRef<HTMLDivElement>(null);
+  const imagesRef = useRef<{ [key: string]: HTMLImageElement | null }>({});
 
   useEffect(() => {
     const titleItem = document.querySelectorAll('.cTitleItem');
@@ -123,29 +133,77 @@ export default function HomePage() {
         );
     }
 
+    setActiveWork(FEATURED_WORKS[0]);
+
+    FEATURED_WORKS.forEach((work, index) => {
+      if (index === 0) {
+        gsap.set(imagesRef.current[work.key], {
+          autoAlpha: 1,
+          position: 'relative',
+          zIndex: 2,
+        });
+      } else {
+        gsap.set(imagesRef.current[work.key], {
+          autoAlpha: 0,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: 1,
+        });
+      }
+    });
+
     return () => {
       tl.kill();
     };
   }, []);
 
+  useEffect(() => {
+    if (!activeWork || !imageWrapperRef.current) return;
+
+    FEATURED_WORKS.forEach((work) => {
+      if (work.key !== activeWork.key && imagesRef.current[work.key]) {
+        gsap.to(imagesRef.current[work.key], {
+          autoAlpha: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          zIndex: 1,
+        });
+      }
+    });
+
+    if (imagesRef.current[activeWork.key]) {
+      gsap.to(imagesRef.current[activeWork.key], {
+        autoAlpha: 1,
+        duration: 0.5,
+        ease: 'power2.in',
+        zIndex: 2,
+      });
+    }
+  }, [activeWork]);
+
   return (
     <PageWrapper showHeader={true} className="pageHome" lenis isHome={false}>
       <section className="pageHome__main">
         <div className="pageHome__main-leftSlot">
-          <div className="pageHome__main-workImg cImg-reveal">
-            {FEATURED_WORKS.map((work, idx) => {
-              return (
-                <Image
-                  key={idx}
-                  width={377}
-                  height={500}
-                  src={work.img}
-                  alt={`${work.title} image`}
-                  data-title={work.key}
-                  priority
-                />
-              );
-            })}
+          <div
+            className="pageHome__main-workImg cImg-reveal"
+            ref={imageWrapperRef}
+          >
+            {FEATURED_WORKS.map((work) => (
+              <Image
+                key={work.key}
+                ref={(el) => {
+                  imagesRef.current[work.key] = el;
+                }}
+                width={377}
+                height={500}
+                src={work.img}
+                alt={`${work.title} image`}
+                data-title={work.key}
+                priority
+              />
+            ))}
           </div>
         </div>
 
@@ -162,7 +220,8 @@ export default function HomePage() {
                 {FEATURED_WORKS.map((work) => (
                   <p
                     key={work.id}
-                    className={`pageHome__main-details--listItem cListItem cursor-pointer`}
+                    className={`pageHome__main-details--listItem cListItem cursor-pointer ${activeWork?.key === work.key ? 'active' : ''}`}
+                    onMouseEnter={() => setActiveWork(work)}
                   >
                     <a
                       link-interaction="no-line"
