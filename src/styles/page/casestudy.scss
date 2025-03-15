@@ -408,10 +408,16 @@
       // height: toRem(225);
       background-color: $white;
       overflow: hidden;
+      cursor: pointer;
+      transition: filter 0.3s;
 
       @include media('>tablet') {
         width: toRem(218);
         height: toRem(143);
+      }
+
+      &:hover {
+        filter: brightness(90%);
       }
 
       & img {

@@ -335,6 +335,9 @@ export default function WorksPage() {
         className={`pageWorks`}
         style={{ backgroundColor: bgColor }}
         lenis={{
+          lerp: 0.07,
+          wheelMultiplier: 0.7,
+          touchMultiplier: 0.7,
           infinite: !isMobile && Boolean(isVertical),
         }}
       >
