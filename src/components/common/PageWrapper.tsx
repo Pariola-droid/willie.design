@@ -279,7 +279,7 @@ export default function PageWrapper(props: PageWrapperProps) {
             ))}
           </ul>
           <div className="wp__mobileHeader-bottom" ref={mobileBottomRef}>
-            <small>©{format(new Date(), 'yyy')}</small>
+            <small>©{format(new Date(), 'yyyy')}</small>
             <div className="wp__mobileHeader--socials">
               <p>socials:</p>
               <ul className="wp__mobileHeader--socialsList">
