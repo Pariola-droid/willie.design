@@ -27,6 +27,10 @@ CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 const ROUTES = [
   {
+    path: '/',
+    label: 'home',
+  },
+  {
     path: '/works',
     label: 'works',
   },
@@ -239,7 +243,7 @@ export default function PageWrapper(props: PageWrapperProps) {
               </li>
             ) : (
               <Fragment>
-                {ROUTES.map((route, i) => (
+                {ROUTES.slice(1, 4).map((route, i) => (
                   <li
                     key={`${route.path}-${i}`}
                     className={pathname === route.path ? 'active' : ''}
