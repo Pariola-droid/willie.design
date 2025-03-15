@@ -38,18 +38,39 @@ export const CONTACT_DETAILS = [
 export const FEATURED_WORKS = [
   {
     id: 1,
-    title: "Nature's Web",
-    img: '/images/works/featured-balky.png',
+    key: 'the-maker',
+    title: 'The Maker Studio',
+    img: '/images/works/the-maker.webp',
   },
   {
     id: 2,
-    title: 'The Great Outdoors',
-    img: '/images/works/featured-vana.png',
+    key: 'the-balky',
+    title: 'Balky Studio',
+    img: '/images/works/the-balky.webp',
   },
   {
     id: 3,
-    title: 'The Inner Workings',
-    img: '/images/works/featured-cinema.png',
+    key: 'the-topsphere',
+    title: 'Topsphere Media',
+    img: '/images/works/the-topsphere.webp',
+  },
+];
+
+const REELS_DATA = [
+  {
+    id: 1,
+    title: 'maker',
+    img: '/images/home/b.png',
+  },
+  {
+    id: 2,
+    title: 'balky',
+    img: '/images/home/a.png',
+  },
+  {
+    id: 3,
+    title: 'topsphere',
+    img: '/images/home/c.png',
   },
 ];
 
