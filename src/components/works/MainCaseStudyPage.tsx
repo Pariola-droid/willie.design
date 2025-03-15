@@ -252,7 +252,7 @@ export default function MainCaseStudyPage({
 
         // swipe up or down
         if (diff > 0) {
-          progress = Math.min(progress + 0.01, 1);
+          progress = Math.min(progress + 0.02, 1);
         } else if (diff < 0) {
           progress = Math.max(progress - 0.02, 0);
 
@@ -482,6 +482,9 @@ export default function MainCaseStudyPage({
               <div
                 className="pageCaseStudy__nextProject--img"
                 ref={nextProjectImgRef}
+                onClick={() => {
+                  router.push(`/works/${nextWork.slug?.current}`);
+                }}
               >
                 {nextWork?.coverImage && (
                   <Image

@@ -27,7 +27,7 @@
     &-leftSlot {
       width: 100%;
       @include flexed(unset, flex-end, column);
-      padding-bottom: toRem(168);
+      padding-bottom: toRem(100);
 
       @include media('>tablet') {
         @include flexed(unset, flex-start, column);
