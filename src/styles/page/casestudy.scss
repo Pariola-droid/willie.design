@@ -119,6 +119,8 @@
       margin-top: toRem(48);
       @include flexed(unset, flex-start, column);
       row-gap: toRem(24);
+      opacity: 0;
+      visibility: hidden;
 
       @include media('>phone') {
         max-width: 75%;
