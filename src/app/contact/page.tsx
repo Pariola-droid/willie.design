@@ -10,7 +10,7 @@ gsap.registerPlugin(CustomEase);
 CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
-const CONTACT_DETAILS = [
+export const CONTACT_DETAILS = [
   {
     title: 'email',
     links: [
@@ -25,18 +25,22 @@ const CONTACT_DETAILS = [
     links: [
       {
         label: 'instagram',
+        shortLabel: 'IG',
         href: 'https://www.instagram.com/williedsgnr/',
       },
       {
         label: 'x',
+        shortLabel: 'X',
         href: 'https://twitter.com/williedsgnr',
       },
       {
         label: 'are.na',
+        shortLabel: 'Are.na',
         href: 'https://www.are.na/willie-olwage',
       },
       {
         label: 'dribbble',
+        shortLabel: 'DB',
         href: 'https://dribbble.com/williedsgnr',
       },
     ],

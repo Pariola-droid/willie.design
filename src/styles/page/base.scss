@@ -37,14 +37,17 @@
       border-radius: 100px;
       @include flex(center, center);
       background-color: transparent;
-
-      &:hover {
-        border-color: transparent !important;
-      }
     }
 
     &-menuBtn {
       @extend %CommonLinkStyle;
+      overflow: hidden !important;
+
+      & span {
+        position: absolute;
+        opacity: 0;
+        visibility: hidden;
+      }
 
       @include media('>tablet') {
         display: none !important;
@@ -63,6 +66,10 @@
       & li {
         & * {
           @extend %CommonLinkStyle;
+
+          &:hover {
+            border-color: transparent !important;
+          }
         }
       }
     }
@@ -99,6 +106,101 @@
             vertical-align: super;
           }
         }
+      }
+    }
+  }
+
+  &__mobileHeaderRoot {
+    width: 100vw;
+    height: 0%;
+    background-color: $black;
+    position: fixed;
+    overflow: hidden;
+    z-index: 6;
+    pointer-events: none;
+
+    &-overlay {
+      width: 100%;
+      height: 100%;
+      background-color: $black;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 6;
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  &__mobileHeader {
+    width: 100%;
+    height: 100dvh;
+    background-color: $black;
+    position: relative;
+    z-index: 9;
+    @include flexed(center, center, column);
+    padding-inline: 1rem;
+    visibility: hidden;
+    opacity: 0;
+
+    &-navLinks {
+      width: 100%;
+      height: fit-content;
+      @include flexed(unset, flex-end, column);
+      row-gap: toRem(5);
+
+      & li {
+        text-align: right;
+        overflow: hidden;
+
+        & * {
+          font-weight: 400;
+          font-size: toRem(48);
+          line-height: 100%;
+          letter-spacing: -2%;
+          text-align: right;
+        }
+      }
+    }
+
+    &-bottom {
+      width: 100%;
+      height: fit-content;
+      padding-bottom: toRem(24);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      @include flex(space-between, flex-end);
+      padding-inline: 1rem;
+
+      & * {
+        font-weight: 300;
+        font-size: toRem(16);
+        line-height: 100%;
+        letter-spacing: -2%;
+      }
+    }
+
+    &--socials {
+      width: 100%;
+      height: fit-content;
+      @include flexed(flex-end, flex-end, column);
+      row-gap: toRem(8);
+
+      & li {
+        & a {
+          &::before,
+          &::after {
+            height: 1px !important;
+            bottom: 0 !important;
+            background-color: $white;
+          }
+        }
+      }
+
+      &List {
+        @include flex(flex-end, center);
+        column-gap: toRem(16);
       }
     }
   }

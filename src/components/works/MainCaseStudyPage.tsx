@@ -148,13 +148,16 @@ export default function MainCaseStudyPage({
 
           const img = imgRef.querySelector('img');
           if (img) {
+            const yValue = isMobile
+              ? index === 1 || index === 3
+                ? -50
+                : 0
+              : index % 2 === 0
+                ? -35
+                : -70;
+
             gsap.to(img, {
-              // y: isMobile
-              //   ? index === (1 && 3) && -35
-              //   : index % 2 === 0
-              //     ? -35
-              //     : -70,
-              y: isMobile ? 0 : index % 2 === 0 ? -35 : -70,
+              y: yValue,
               ease: 'none',
               scrollTrigger: {
                 trigger: imgRef,
@@ -174,23 +177,36 @@ export default function MainCaseStudyPage({
       let progress = 0;
       let isNavigating = false;
       let touchStartY = 0;
+      let isAtBottom = false;
+      let isTracking = false;
 
       const progressBar = progressBarRef.current;
 
-      // Handle mouse wheel scrolling (desktop)
+      const checkIfAtPageButt = () => {
+        const buffer = 100;
+        return (
+          window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - buffer
+        );
+      };
+
+      // desktop
       const handleScroll = (e: {
         deltaY: number;
         preventDefault: () => void;
       }) => {
-        if (
-          window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 100
-        ) {
+        isAtBottom = checkIfAtPageButt();
+
+        if (isAtBottom) {
           if (e.deltaY > 0) {
             // reduced speed
             progress = Math.min(progress + 0.01, 1);
           } else if (e.deltaY < 0) {
             progress = Math.max(progress - 0.04, 0);
+
+            if (progress <= 0) {
+              return;
+            }
           }
 
           progressBar.style.transform = `scaleX(${progress})`;
@@ -202,70 +218,78 @@ export default function MainCaseStudyPage({
             }, 50);
           }
 
-          e.preventDefault();
-        }
-      };
-
-      // Handle touch start (mobile)
-      const handleTouchStart = (e: TouchEvent) => {
-        if (
-          window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 100
-        ) {
-          touchStartY = e.touches[0].clientY;
-        }
-      };
-
-      // Handle touch move (mobile)
-      const handleTouchMove = (e: TouchEvent) => {
-        if (
-          window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 100
-        ) {
-          const touchY = e.touches[0].clientY;
-          const diff = touchStartY - touchY;
-
-          // Update progress based on touch movement
-          if (diff > 0) {
-            // Swiping up
-            progress = Math.min(progress + 0.01, 1);
-          } else if (diff < 0) {
-            // Swiping down
-            progress = Math.max(progress - 0.02, 0);
-          }
-
-          progressBar.style.transform = `scaleX(${progress})`;
-
-          // Navigate if progress is complete
-          if (progress >= 1 && !isNavigating) {
-            isNavigating = true;
-            setTimeout(() => {
-              router.push(`/works/${nextWork.slug?.current}`);
-            }, 50);
-          }
-
-          // Prevent default only when we're handling the event
-          if (Math.abs(diff) > 5) {
+          if (progress > 0) {
             e.preventDefault();
           }
-
-          // Update touch start position for continuous movement
-          touchStartY = touchY;
         }
       };
 
-      // Add event listeners
+      // mobile
+      const handleTouchStart = (e: TouchEvent) => {
+        isAtBottom = checkIfAtPageButt();
+
+        if (isAtBottom) {
+          touchStartY = e.touches[0].clientY;
+          isTracking = true;
+        }
+      };
+
+      const handleTouchMove = (e: TouchEvent) => {
+        if (!isTracking) return;
+
+        const touchY = e.touches[0].clientY;
+        const diff = touchStartY - touchY;
+
+        // swipe up or down
+        if (diff > 0) {
+          progress = Math.min(progress + 0.01, 1);
+        } else if (diff < 0) {
+          progress = Math.max(progress - 0.02, 0);
+
+          if (progress <= 0) {
+            isTracking = false;
+            return;
+          }
+        }
+
+        progressBar.style.transform = `scaleX(${progress})`;
+
+        if (progress >= 1 && !isNavigating) {
+          isNavigating = true;
+
+          setTimeout(() => {
+            router.push(`/works/${nextWork.slug?.current}`);
+          }, 50);
+        }
+
+        if (progress > 0) {
+          e.preventDefault();
+        }
+
+        touchStartY = touchY;
+      };
+
+      const handleTouchEnd = () => {
+        isTracking = false;
+
+        if (progress < 0.1) {
+          progress = 0;
+          progressBar.style.transform = `scaleX(${progress})`;
+        }
+      };
+
       window.addEventListener('wheel', handleScroll, { passive: false });
       window.addEventListener('touchstart', handleTouchStart, {
         passive: true,
       });
       window.addEventListener('touchmove', handleTouchMove, { passive: false });
+      window.addEventListener('touchend', handleTouchEnd, { passive: true });
 
       return () => {
-        // Clean up event listeners
         window.removeEventListener('wheel', handleScroll);
         window.removeEventListener('touchstart', handleTouchStart);
         window.removeEventListener('touchmove', handleTouchMove);
+        window.removeEventListener('touchend', handleTouchEnd);
       };
     }
   }, [nextWork, router]);
@@ -318,24 +342,22 @@ export default function MainCaseStudyPage({
           </div>
         </div>
 
-        {showWorkDesc && (
-          <div className="pageCaseStudy__hero-descWrapper">
-            <div data-animation="skew-heading">{currentWork?.description}</div>
-            {currentWork?.liveLink && (
-              <p>
-                <span>↳</span>
-                <a
-                  href={currentWork?.liveLink}
-                  target="_blank"
-                  rel="noopener"
-                  link-interaction="underline"
-                >
-                  view live
-                </a>
-              </p>
-            )}
-          </div>
-        )}
+        <div className="pageCaseStudy__hero-descWrapper">
+          <div data-animation="skew-heading">{currentWork?.description}</div>
+          {currentWork?.liveLink && (
+            <p>
+              <span>↳</span>
+              <a
+                href={currentWork?.liveLink}
+                target="_blank"
+                rel="noopener"
+                link-interaction="underline"
+              >
+                view live
+              </a>
+            </p>
+          )}
+        </div>
       </section>
 
       <section className="pageCaseStudy__gallery">
@@ -483,7 +505,9 @@ export default function MainCaseStudyPage({
             </div>
             <div
               className="pageCaseStudy__nextProject--content"
-              onClick={() => router.push(`/works/${nextWork.slug?.current}`)}
+              onClick={() => {
+                router.push(`/works/${nextWork.slug?.current}`);
+              }}
               style={{ cursor: 'pointer' }}
             >
               <p>Next Project</p>

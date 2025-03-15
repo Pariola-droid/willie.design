@@ -26,6 +26,7 @@ export function Lenis({ root, options }: LenisProps) {
   });
 
   useEffect(() => {
+    lenis?.scrollTo(0, { immediate: true });
     if (isNavOpened || isAnimating) {
       lenis?.stop();
     } else {
