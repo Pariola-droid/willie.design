@@ -34,6 +34,7 @@ export default function MainCaseStudyPage({
   const [showWorkDesc, setShowWorkDesc] = useState<boolean>(false);
 
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const descRef = useRef<HTMLDivElement>(null);
   const heroImgWrapperRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLDivElement>(null);
   const galleryImgsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -56,6 +57,10 @@ export default function MainCaseStudyPage({
         y: 40,
         autoAlpha: 0,
         transformStyle: 'preserve-3d',
+      });
+
+      gsap.set(descRef.current, {
+        autoAlpha: 0,
       });
 
       gsap.set(heroImgWrapperRef.current, {
@@ -103,7 +108,12 @@ export default function MainCaseStudyPage({
             duration: 1.2,
           },
           '<'
-        );
+        )
+        .to(descRef.current, {
+          autoAlpha: 1,
+          duration: 0.8,
+          ease: 'power2.out',
+        });
 
       gsap.to(heroImgRef.current.querySelector('img'), {
         y: isMobile ? 0 : -70,
@@ -342,7 +352,7 @@ export default function MainCaseStudyPage({
           </div>
         </div>
 
-        <div className="pageCaseStudy__hero-descWrapper">
+        <div className="pageCaseStudy__hero-descWrapper" ref={descRef}>
           <div data-animation="skew-heading">{currentWork?.description}</div>
           {currentWork?.liveLink && (
             <p>
