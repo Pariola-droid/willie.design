@@ -1,6 +1,7 @@
 'use client';
 
 import PageWrapper from '@/components/common/PageWrapper';
+import { CONTACT_DETAILS } from '@/utils/constant';
 import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
 import Image from 'next/image';
@@ -9,43 +10,6 @@ import { useEffect } from 'react';
 gsap.registerPlugin(CustomEase);
 CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
-
-export const CONTACT_DETAILS = [
-  {
-    title: 'email',
-    links: [
-      {
-        label: 'williedsgnr@gmail.com',
-        href: 'mailto:williedsgnr@gmail.com',
-      },
-    ],
-  },
-  {
-    title: '@willie_ui',
-    links: [
-      {
-        label: 'instagram',
-        shortLabel: 'IG',
-        href: 'https://www.instagram.com/williedsgnr/',
-      },
-      {
-        label: 'x',
-        shortLabel: 'X',
-        href: 'https://twitter.com/williedsgnr',
-      },
-      {
-        label: 'are.na',
-        shortLabel: 'Are.na',
-        href: 'https://www.are.na/willie-olwage',
-      },
-      {
-        label: 'dribbble',
-        shortLabel: 'DB',
-        href: 'https://dribbble.com/williedsgnr',
-      },
-    ],
-  },
-];
 
 export default function ContactPage() {
   useEffect(() => {

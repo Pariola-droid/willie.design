@@ -1,10 +1,10 @@
 'use client';
 
-import { CONTACT_DETAILS } from '@/app/contact/page';
 import Cursor from '@/lib/cursor';
 import { initSplit } from '@/lib/split';
 import { useStore } from '@/lib/store';
 import { useWorks } from '@/store/works.context';
+import { CONTACT_DETAILS } from '@/utils/constant';
 import { format } from 'date-fns';
 import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';

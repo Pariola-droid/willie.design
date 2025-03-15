@@ -1,3 +1,40 @@
+export const CONTACT_DETAILS = [
+  {
+    title: 'email',
+    links: [
+      {
+        label: 'williedsgnr@gmail.com',
+        href: 'mailto:williedsgnr@gmail.com',
+      },
+    ],
+  },
+  {
+    title: '@willie_ui',
+    links: [
+      {
+        label: 'instagram',
+        shortLabel: 'IG',
+        href: 'https://www.instagram.com/williedsgnr/',
+      },
+      {
+        label: 'x',
+        shortLabel: 'X',
+        href: 'https://twitter.com/williedsgnr',
+      },
+      {
+        label: 'are.na',
+        shortLabel: 'Are.na',
+        href: 'https://www.are.na/willie-olwage',
+      },
+      {
+        label: 'dribbble',
+        shortLabel: 'DB',
+        href: 'https://dribbble.com/williedsgnr',
+      },
+    ],
+  },
+];
+
 export const FEATURED_WORKS = [
   {
     id: 1,
