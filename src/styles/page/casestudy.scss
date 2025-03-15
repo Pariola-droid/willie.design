@@ -353,7 +353,11 @@
         }
 
         & p {
-          white-space: nowrap;
+          white-space: pre-wrap;
+
+          @include media('>tablet') {
+            white-space: nowrap;
+          }
         }
       }
     }
