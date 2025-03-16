@@ -4,9 +4,13 @@
   background-color: $black;
   padding-inline: 1rem;
   position: relative;
-  @include flexed(flex-end, center, column);
+  // @include flexed(flex-end, center, column);
   position: relative;
   overflow: hidden;
+
+  &.loader {
+    overflow: visible;
+  }
 
   &__main {
     width: 100%;
@@ -14,7 +18,7 @@
     display: grid;
     grid-template-columns: 1fr;
 
-    @include media('>tablet') {
+    @include media(">tablet") {
       grid-template-columns: 55% 45%;
     }
 
@@ -23,7 +27,7 @@
       @include flexed(unset, flex-start, column);
       padding-bottom: toRem(96);
 
-      @include media('>tablet') {
+      @include media(">tablet") {
         padding-bottom: toRem(116);
       }
     }
@@ -37,7 +41,7 @@
       min-height: toRem(200);
       max-height: toRem(200);
 
-      @include media('>tablet') {
+      @include media(">tablet") {
         width: toRem(218);
         height: toRem(250);
         max-height: unset;
@@ -58,7 +62,7 @@
       display: grid;
       grid-template-columns: 60% 40%;
 
-      @include media('>tablet') {
+      @include media(">tablet") {
         padding-bottom: toRem(20);
       }
     }
@@ -72,11 +76,11 @@
       padding-left: toRem(8);
       padding-bottom: toRem(24);
 
-      @include media('>tablet') {
+      @include media(">tablet") {
         padding-bottom: 0;
       }
 
-      @include media('>phone') {
+      @include media(">phone") {
         padding-left: toRem(20);
       }
 
@@ -106,7 +110,7 @@
         row-gap: toRem(56);
         max-width: 70%;
 
-        @include media('>tablet') {
+        @include media(">tablet") {
           row-gap: toRem(72);
           max-width: 60%;
         }
@@ -160,7 +164,7 @@
     bottom: 0;
     left: 0;
 
-    @include media('>tablet') {
+    @include media(">tablet") {
       @include flex(space-between, center);
     }
 
@@ -202,9 +206,9 @@ body.active {
   overflow: hidden;
 }
 
-@media (max-width: 800px) {
-  .zoom-images {
-    height: 500px;
-    width: 500px;
-  }
-}
+// @media (max-width: 800px) {
+//   .zoom-images {
+//     height: 500px;
+//     width: 500px;
+//   }
+// }
