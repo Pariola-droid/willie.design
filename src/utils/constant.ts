@@ -14,22 +14,22 @@ export const CONTACT_DETAILS = [
       {
         label: 'instagram',
         shortLabel: 'IG',
-        href: 'https://www.instagram.com/williedsgnr/',
+        href: ' https://www.instagram.com/willie_ui',
       },
       {
         label: 'x',
         shortLabel: 'X',
-        href: 'https://twitter.com/williedsgnr',
+        href: 'https://www.x.com/willie_ui',
       },
       {
         label: 'are.na',
         shortLabel: 'Are.na',
-        href: 'https://www.are.na/willie-olwage',
+        href: 'https://www.are.na/williams-alamu/channels',
       },
       {
         label: 'dribbble',
         shortLabel: 'DB',
-        href: 'https://dribbble.com/williedsgnr',
+        href: 'https://dribbble.com/williamslovesui',
       },
     ],
   },
