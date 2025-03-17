@@ -1,17 +1,12 @@
-"use client";
+'use client';
 
-import PageWrapper from "@/components/common/PageWrapper";
-import LoaderHome from "@/components/LoaderHome";
-import { FEATURED_WORKS } from "@/utils/constant";
-import gsap from "gsap";
-import { CustomEase } from "gsap/dist/CustomEase";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import LoaderHome from '@/components/LoaderHome';
+import gsap from 'gsap';
+import { CustomEase } from 'gsap/dist/CustomEase';
 
 gsap.registerPlugin(CustomEase);
-CustomEase.create("ease-in-out-circ", "0.785,0.135,0.15,0.86");
-CustomEase.create("ease-in-out-cubic", "0.645,0.045,0.355,1");
+CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
+CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 interface IFeaturedWork {
   id: number;

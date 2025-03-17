@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { FEATURED_WORKS } from '../../utils/constant';
+import { FEATURED_BRANDS } from '../../utils/constant';
 
 gsap.registerPlugin(Flip, CustomEase);
 
@@ -31,7 +31,7 @@ export default function WorksPage() {
   const verticalContainerRef = useRef(null);
   const horizontalContainerRef = useRef(null);
   const imageRefs = useRef<(HTMLDivElement | null)[]>(
-    FEATURED_WORKS.map(() => null)
+    FEATURED_BRANDS.map(() => null)
   );
   const imageWrapperRef = useRef(null);
   const isAnimating = useRef(false);
@@ -122,9 +122,9 @@ export default function WorksPage() {
     imageRefs.current.forEach((ref, index) => {
       if (ref) {
         const relativePos =
-          (index - currentIndex + FEATURED_WORKS.length) %
-          FEATURED_WORKS.length;
-        ref.style.zIndex = String(FEATURED_WORKS.length - relativePos);
+          (index - currentIndex + FEATURED_BRANDS.length) %
+          FEATURED_BRANDS.length;
+        ref.style.zIndex = String(FEATURED_BRANDS.length - relativePos);
       }
     });
   };
@@ -134,7 +134,7 @@ export default function WorksPage() {
     isAnimating.current = true;
 
     const currentImage = imageRefs.current[activeIndex];
-    const nextIndex = (activeIndex + 1) % FEATURED_WORKS.length;
+    const nextIndex = (activeIndex + 1) % FEATURED_BRANDS.length;
 
     gsap.to(currentImage, {
       // yPercent: 100,
@@ -524,15 +524,16 @@ export default function WorksPage() {
               ref={imageWrapperRef}
             >
               <div className="pageWorks__footer-scImgContainer">
-                {FEATURED_WORKS.map((work, index) => (
+                {FEATURED_BRANDS.map((brand, index) => (
                   <div
-                    key={work.id}
+                    key={brand.id}
                     ref={(el) => {
                       imageRefs.current[index] = el;
                     }}
+                    aria-label={brand.title}
                     className="pageWorks__footer-scImg"
                     style={{
-                      backgroundImage: `url(${work.img})`,
+                      backgroundImage: `url(${brand.img})`,
                     }}
                   />
                 ))}

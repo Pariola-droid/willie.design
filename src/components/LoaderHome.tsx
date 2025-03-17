@@ -1,20 +1,19 @@
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/all";
-import Lenis from "lenis";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import SplitType from "split-type";
-import pic_1 from "../app/assets/images/pic_1.webp";
-import pic_2 from "../app/assets/images/pic_2.webp";
-import pic_3 from "../app/assets/images/pic_3.webp";
-import pic_4 from "../app/assets/images/pic_4.webp";
-import pic_5 from "../app/assets/images/pic_5.webp";
-import pic_6 from "../app/assets/images/pic_6.webp";
-import HomePage from "./HomePage";
-import PageWrapper from "./common/PageWrapper";
-import { useStore } from "@/lib/store";
-import { updateWith } from "lodash";
+import { useStore } from '@/lib/store';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/all';
+import Lenis from 'lenis';
+import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
+import SplitType from 'split-type';
+import pic_1 from '../app/assets/images/pic_1.webp';
+import pic_2 from '../app/assets/images/pic_2.webp';
+import pic_3 from '../app/assets/images/pic_3.webp';
+import pic_4 from '../app/assets/images/pic_4.webp';
+import pic_5 from '../app/assets/images/pic_5.webp';
+import pic_6 from '../app/assets/images/pic_6.webp';
+import HomePage from './HomePage';
+import PageWrapper from './common/PageWrapper';
 
 export default function LoaderHome() {
   let loaderTimeline = useRef<GSAPTimeline>(gsap.timeline());
@@ -35,11 +34,11 @@ export default function LoaderHome() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    const split = new SplitType(".split", { types: "words,chars" });
+    const split = new SplitType('.split', { types: 'words,chars' });
 
-    const allTextContainers = document.querySelectorAll(".text-container");
+    const allTextContainers = document.querySelectorAll('.text-container');
 
-    const splitNames = document.querySelectorAll(".split-name .char");
+    const splitNames = document.querySelectorAll('.split-name .char');
 
     splitNames.forEach((char) => {
       gsap.set(char, { y: 100 });
@@ -52,17 +51,17 @@ export default function LoaderHome() {
         loaderTimeline.current
           .to(
             i > 0
-              ? document.querySelector(".split-descrip")
-              : container.querySelectorAll(".char"),
+              ? document.querySelector('.split-descrip')
+              : container.querySelectorAll('.char'),
             {
               y: 0,
               duration: 1.7,
               // duration: 0.2,
               scale: 1,
-              ease: "power2.inOut",
+              ease: 'power2.inOut',
               opacity: 1,
             },
-            i > 0 ? ">-75%" : ""
+            i > 0 ? '>-75%' : ''
           )
           .to(
             container,
@@ -70,9 +69,9 @@ export default function LoaderHome() {
               scale: 800,
               duration: 3.5,
               // duration: 0.2,
-              ease: "power4.inOut",
+              ease: 'power4.inOut',
               onStart: () => {
-                gsap.to(".wp__pageHeader", {
+                gsap.to('.wp__pageHeader', {
                   opacity: 0,
                 });
 
@@ -82,38 +81,38 @@ export default function LoaderHome() {
                 }
               },
             },
-            ">"
+            '>'
           );
       }
     } else {
       scaleImages();
     }
 
-    gsap.matchMedia().add("(max-width: 800px)", () => {
+    gsap.matchMedia().add('(max-width: 800px)', () => {
       setScaleValue(2.7);
     });
-    gsap.matchMedia().add("(min-width: 800px)", () => {
+    gsap.matchMedia().add('(min-width: 800px)', () => {
       setScaleValue(2);
     });
   });
 
   function scaleImages() {
-    const body = document.querySelector("body");
+    const body = document.querySelector('body');
 
-    body?.classList.remove("active");
+    body?.classList.remove('active');
 
     gsap.timeline().to(
-      ".img-container",
+      '.img-container',
       {
         //   display: "block",
         scale: 1,
         delay: 1,
-        transformOrigin: "center",
+        transformOrigin: 'center',
         duration: 1.5,
-        ease: "power2.inOut",
+        ease: 'power2.inOut',
         onStart: () => {
           const zoomImages = gsap.utils.toArray(
-            ".zoom-images"
+            '.zoom-images'
           ) as HTMLElement[];
 
           gsap.to(zoomImages[0], {
@@ -123,7 +122,7 @@ export default function LoaderHome() {
               gsap.to(zoomImages, {
                 opacity: 1,
               });
-              gsap.to(".image-number-container", {
+              gsap.to('.image-number-container', {
                 opacity: 1,
                 delay: 1,
                 duration: 1,
@@ -132,61 +131,61 @@ export default function LoaderHome() {
           });
         },
         onComplete: () => {
-          gsap.to(".home-screen", {
+          gsap.to('.home-screen', {
             opacity: 1,
           });
-          gsap.to(".wp__pageHeader", {
+          gsap.to('.wp__pageHeader', {
             opacity: 1,
           });
-          gsap.to(".name-loader", {
+          gsap.to('.name-loader', {
             opacity: 0,
-            pointerEvents: "none",
+            pointerEvents: 'none',
           });
 
-          const imgConts = document.querySelectorAll(".img-container");
+          const imgConts = document.querySelectorAll('.img-container');
           imgConts.forEach((cont) => {
-            cont.classList.add("active");
+            cont.classList.add('active');
           });
         },
       },
-      "<"
+      '<'
     );
   }
 
   // Images being scaled by the whitespace heights along with number animation
   useGSAP(() => {
-    const allImages = document.querySelectorAll(".zoom-images");
+    const allImages = document.querySelectorAll('.zoom-images');
 
-    const allHeights = document.querySelectorAll(".white-height");
+    const allHeights = document.querySelectorAll('.white-height');
 
-    const allNumbers = document.querySelectorAll(".image-number");
+    const allNumbers = document.querySelectorAll('.image-number');
 
     allImages.forEach((pic, idx) => {
       gsap.to(pic, {
         scale: 1.2,
-        ease: "power2.inOut",
+        ease: 'power2.inOut',
         scrollTrigger: {
           trigger: allHeights[idx],
           scrub: 1,
-          end: "bottom bottom",
-          start: idx === 0 ? "-100% bottom" : "-60% bottom",
+          end: 'bottom bottom',
+          start: idx === 0 ? '-100% bottom' : '-60% bottom',
         },
       });
     });
 
     allNumbers.forEach((num, idx) => {
       const imgContainer = document.querySelector(
-        ".image-number-list"
+        '.image-number-list'
       ) as HTMLElement;
 
       const gap = window.getComputedStyle(imgContainer).gap;
 
-      gsap.to(".image-number-list", {
-        ease: "power2.inOut",
+      gsap.to('.image-number-list', {
+        ease: 'power2.inOut',
         scrollTrigger: {
           trigger: allHeights[idx],
-          end: "bottom bottom",
-          start: idx === 0 ? "-150% bottom" : "-60% bottom",
+          end: 'bottom bottom',
+          start: idx === 0 ? '-150% bottom' : '-60% bottom',
           scrub: true,
           onEnter: () => {
             imgContainer.style.transform = `translate(0px, -${(num.clientHeight + parseFloat(gap)) * idx}px)`;
@@ -201,24 +200,24 @@ export default function LoaderHome() {
 
     const revealHome = gsap
       .timeline()
-      .to(".img-container", {
+      .to('.img-container', {
         yPercent: -100,
       })
       .to(
-        ".image-number-container",
+        '.image-number-container',
         {
           y: -innerHeight,
         },
-        "<"
+        '<'
       );
 
     // Animation to reveal home screen
     ScrollTrigger.create({
-      trigger: ".home-controller",
+      trigger: '.home-controller',
       scrub: 1,
       animation: revealHome,
-      start: "top bottom",
-      end: "top top",
+      start: 'top bottom',
+      end: 'top top',
       //   markers: true,
     });
   }, [scaleValue]);
@@ -230,94 +229,86 @@ export default function LoaderHome() {
     const biggerValue = Math.max(innerHeight, innerWidth);
     setPicDimension(biggerValue);
 
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       setPicDimension(biggerValue);
     });
   }, []);
 
   return (
-    <>
-      {" "}
-      <section className="w-[100%] h-[100%] text-black">
-        {/* Loader container */}
-        <div className="h-[100vh] fixed inset-0 w-[100vw] flex justify-center items-center text-[48px] bg-white z-[11] overflow-hidden name-loader">
-          <div className="text-container absolute overflow-hidden">
-            {" "}
-            <p className="leading-[100%] split split-name">Williams</p>
-            <p className="ml-[100px] leading-[100%] split split-name">Alamu</p>
+    <section className="w-[100%] h-[100%] text-black">
+      <div className="h-[100vh] fixed inset-0 w-[100vw] flex justify-center items-center text-[48px] bg-white z-[11] overflow-hidden name-loader">
+        <div className="text-container absolute overflow-hidden">
+          <p className="leading-[100%] split split-name">Williams</p>
+          <p className="ml-[100px] leading-[100%] split split-name">Alamu</p>
+        </div>
+        <div className="text-container absolute  overflow-hidden">
+          <p className="text-zoom scale-[0.2] opacity-0 split-descrip mb-[10px] split">
+            a creative visual designer
+          </p>
+        </div>
+      </div>
+
+      <PageWrapper
+        showHeader={true}
+        className="pageHome loader relative images-container w-[100%] h-[100vh]"
+        lenis
+        overflowClass="loader"
+      >
+        {pictures.map((pic, idx) => {
+          return (
+            <div
+              key={idx}
+              className="fixed h-[100vh] w-[100%] flex justify-center  scale-0 items-center img-container inset-0"
+              style={{ zIndex: 11 }}
+            >
+              <Image
+                src={pic}
+                className={`zoom-images scale-0  object-cover ${idx > 0 ? 'opacity-0' : ''} relative inset-0`}
+                style={{
+                  zIndex: 11,
+                  width: `${picDimension}px`,
+                  height: `${picDimension}px`,
+                }}
+                alt=""
+              />
+            </div>
+          );
+        })}
+
+        <div className="flex items-start gap-[4px] image-number-container opacity-0 fixed bottom-[100px] left-[50%] translate-x-[-50%] z-[13] h-[19px] overflow-hidden mix-blend-difference leading-[100%]">
+          <div className="flex flex-col gap-[30px] image-number-list duration-500 ease-in-out">
+            {pictures.map((pic, idx) => {
+              return (
+                <p key={idx} className="image-number">
+                  {idx + 1}
+                </p>
+              );
+            })}
           </div>
-          <div className="text-container absolute  overflow-hidden">
-            <p className="text-zoom scale-[0.2] opacity-0 split-descrip mb-[10px] split">
-              a creative visual designer
-            </p>
-          </div>
+          <div className="w-[20px] h-[1px] bg-white translate-y-[9px]"></div>
+          <p>{pictures.length}</p>
         </div>
 
-        <PageWrapper
-          showHeader={true}
-          className="pageHome loader relative images-container w-[100%] h-[100vh]"
-          lenis
-          isHome={false}
-          overflowClass="loader"
-        >
-          {pictures.map((pic, idx) => {
-            return (
-              <div
-                key={idx}
-                className="fixed h-[100vh] w-[100%] flex justify-center  scale-0 items-center img-container inset-0"
-                style={{ zIndex: 11 }}
-              >
-                <Image
-                  src={pic}
-                  className={`zoom-images scale-0  object-cover ${idx > 0 ? "opacity-0" : ""} relative inset-0`}
-                  style={{
-                    zIndex: 11,
-                    width: `${picDimension}px`,
-                    height: `${picDimension}px`,
-                  }}
-                  alt=""
-                />
-              </div>
-            );
-          })}
+        {/* White space Heights to control the picture animation */}
+        {pictures.map((pic, idx) => {
+          return (
+            <div
+              key={idx}
+              style={{ height: `${innerHeight * 2.8}px` }}
+              className=" w-[100%] white-height"
+            ></div>
+          );
+        })}
 
-          {/* Container for numbers that count up */}
-          <div className="flex items-start gap-[4px] image-number-container opacity-0 fixed bottom-[100px] left-[50%] translate-x-[-50%] z-[13] h-[19px] overflow-hidden mix-blend-difference leading-[100%]">
-            {/* container for vertical 1 to 6 */}
-            <div className="flex flex-col gap-[30px] image-number-list duration-500 ease-in-out">
-              {pictures.map((pic, idx) => {
-                return <p className="image-number">{idx + 1}</p>;
-              })}
-            </div>
+        <div
+          className=" w-[100%] home-controller bg-[transparent] relative "
+          style={{ height: `${innerHeight * 1.3}px` }}
+        ></div>
 
-            {/* Dash */}
-            <div className="w-[20px] h-[1px] bg-white translate-y-[9px]"></div>
-
-            {/* Number 6 */}
-            <p>6</p>
-          </div>
-
-          {/* White space Heights to control the picture animation */}
-          {pictures.map((pic, idx) => {
-            return (
-              <div
-                key={idx}
-                style={{ height: `${innerHeight * 2.8}px` }}
-                className=" w-[100%] white-height"
-              ></div>
-            );
-          })}
-
-          <div
-            className=" w-[100%] home-controller bg-[transparent] relative "
-            style={{ height: `${innerHeight * 1.3}px` }}
-          ></div>
-
-          <div className="fixed inset-0 w-[100%] h-[100%] home-screen flex justify-end items-end">
-            <HomePage />
-          </div>
-        </PageWrapper>
-      </section>
-    </>
+        <div className="fixed inset-0 w-[100%] h-[100%] home-screen flex justify-end items-end">
+          <HomePage />
+        </div>
+      </PageWrapper>
+    </section>
   );
 }

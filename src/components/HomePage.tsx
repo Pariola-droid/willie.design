@@ -1,12 +1,11 @@
 'use client';
 
-import PageWrapper from '@/components/common/PageWrapper';
 import { FEATURED_WORKS } from '@/utils/constant';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 
 gsap.registerPlugin(CustomEase);
 CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
@@ -183,7 +182,7 @@ export default function HomePage() {
   }, [activeWork]);
 
   return (
-    <>
+    <Fragment>
       <section className="pageHome__main">
         <div className="pageHome__main-leftSlot">
           <div
@@ -274,6 +273,6 @@ export default function HomePage() {
         </small>
         <small></small>
       </div>
-    </>
+    </Fragment>
   );
 }
