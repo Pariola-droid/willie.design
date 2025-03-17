@@ -1,6 +1,7 @@
 'use client';
 
 import PageWrapper from '@/components/common/PageWrapper';
+import { useStore } from '@/lib/store';
 import { CONTACT_DETAILS } from '@/utils/constant';
 import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
@@ -12,7 +13,21 @@ CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function ContactPage() {
+  const hasLoaded = useStore((state) => state.hasLoaded);
+
   useEffect(() => {
+    if (hasLoaded) return;
+
+    gsap.set('.cImg-reveal', { clipPath: 'inset(100% 0 0 0)' });
+    gsap.set('.cImg-reveal img', { filter: 'brightness(20%)', scale: 1.4 });
+    gsap.set('.cListLine', { scaleY: 0, autoAlpha: 0 });
+    gsap.set(['.cTitleItem', '.cListItem'], { y: 40, autoAlpha: 0 });
+    gsap.set('.pageContact__footer small', { autoAlpha: 0 });
+  }, [hasLoaded]);
+
+  useEffect(() => {
+    if (!hasLoaded) return;
+
     const titleItem = document.querySelectorAll('.cTitleItem');
     const listItems = document.querySelectorAll('.cListItem');
     const listLine = document.querySelectorAll('.cListLine');
@@ -123,7 +138,7 @@ export default function ContactPage() {
     return () => {
       tl.kill();
     };
-  }, []);
+  }, [hasLoaded]);
 
   return (
     <PageWrapper className="pageContact" lenis>

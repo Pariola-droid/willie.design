@@ -21,6 +21,7 @@ export default function GlobalLoader() {
       if (loaderRef.current) {
         gsap.set(loaderRef.current, {
           display: 'none',
+          autoAlpha: 0,
         });
       }
     } else {
@@ -72,10 +73,10 @@ export default function GlobalLoader() {
                   duration: 0.3,
                 });
 
-                gsap.to('.main-main', {
-                  filter: 'brightness(0)',
-                  duration: 0.3,
-                });
+                // gsap.to('.main-main', {
+                //   filter: 'brightness(0)',
+                //   duration: 0.3,
+                // });
               },
               onComplete: () => {
                 gsap.to(loaderRef.current, {
@@ -99,19 +100,18 @@ export default function GlobalLoader() {
                       },
                     });
 
-                    revealTl
-                      .to('.wp__pageHeader', {
-                        autoAlpha: 1,
-                        duration: 0.4,
-                      })
-                      .to(
-                        '.main-main',
-                        {
-                          filter: 'brightness(1)',
-                          duration: 0.8,
-                        },
-                        '-=0.1'
-                      );
+                    revealTl.to('.wp__pageHeader', {
+                      autoAlpha: 1,
+                      duration: 0.6,
+                    });
+                    // .to(
+                    //   '.main-main',
+                    //   {
+                    //     filter: 'brightness(1)',
+                    //     duration: 0.8,
+                    //   },
+                    //   '-=0.1'
+                    // );
                   },
                 });
               },
