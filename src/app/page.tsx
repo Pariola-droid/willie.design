@@ -1,6 +1,7 @@
 'use client';
 
-import LoaderHome from '@/components/LoaderHome';
+// import LoaderHome from '@/components/LoaderHome';
+import PageWrapper from '@/components/common/PageWrapper';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
 
@@ -179,8 +180,11 @@ export default function HomePage() {
   // }, [activeWork]);
 
   return (
-    <>
-      <LoaderHome />
-    </>
+    <PageWrapper
+      showHeader={true}
+      className="pageHome loader relative images-container w-[100%] h-[100vh]"
+      lenis
+      overflowClass="loader"
+    ></PageWrapper>
   );
 }

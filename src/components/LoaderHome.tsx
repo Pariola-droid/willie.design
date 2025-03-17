@@ -76,7 +76,7 @@ export default function LoaderHome() {
                 });
 
                 if (i > 0) {
-                  scaleImages();
+                  // scaleImages();
                   setHasLoaded(true);
                 }
               },
@@ -236,18 +236,6 @@ export default function LoaderHome() {
 
   return (
     <section className="w-[100%] h-[100%] text-black">
-      <div className="h-[100vh] fixed inset-0 w-[100vw] flex justify-center items-center text-[48px] bg-white z-[11] overflow-hidden name-loader">
-        <div className="text-container absolute overflow-hidden">
-          <p className="leading-[100%] split split-name">Williams</p>
-          <p className="ml-[100px] leading-[100%] split split-name">Alamu</p>
-        </div>
-        <div className="text-container absolute  overflow-hidden">
-          <p className="text-zoom scale-[0.2] opacity-0 split-descrip mb-[10px] split">
-            a creative visual designer
-          </p>
-        </div>
-      </div>
-
       <PageWrapper
         showHeader={true}
         className="pageHome loader relative images-container w-[100%] h-[100vh]"

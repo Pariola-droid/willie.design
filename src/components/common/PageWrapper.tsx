@@ -19,6 +19,7 @@ import {
   useState,
 } from 'react';
 import GlobalError from './GlobalError';
+import GlobalLoader from './GlobalLoader';
 import { Lenis } from './Lenis';
 
 gsap.registerPlugin(CustomEase);
@@ -87,8 +88,11 @@ export default function PageWrapper(props: PageWrapperProps) {
       height: '0%',
     });
 
-    // gsap.set(pageMainRef.current, { filter: "brightness(1)" });
-    gsap.set(pageMainRef.current, { opacity: '1' });
+    if (menuOpen) {
+      gsap.set(pageMainRef.current, { filter: 'brightness(0.5)' });
+    }
+
+    // gsap.set(pageMainRef.current, { opacity: '1' });
 
     gsap.set(mobileHeaderRef.current, { autoAlpha: 0 });
     gsap.set(closeTextRef.current, { autoAlpha: 0 });
@@ -107,8 +111,8 @@ export default function PageWrapper(props: PageWrapperProps) {
       .to(
         pageMainRef.current,
         {
-          // filter: "brightness(0.5)",
-          opacity: 0.5,
+          filter: 'brightness(0.5)',
+          // opacity: 0.5,
           duration: 0.3,
           ease: 'power2.inOut',
         },
@@ -166,7 +170,7 @@ export default function PageWrapper(props: PageWrapperProps) {
     return () => {
       menuAnimation.current?.kill();
     };
-  }, []);
+  }, [menuOpen]);
 
   const toggleMenu = () => {
     if (!menuAnimation.current) return;
@@ -223,7 +227,7 @@ export default function PageWrapper(props: PageWrapperProps) {
 
   return (
     <div className={`wp ${overflowClass}`}>
-      {/* {isLoading && <GlobalLoader isLoading={isLoading} message="Loading..." />} */}
+      <GlobalLoader />
       {error && <GlobalError error={error} resetError={fetchWorks} />}
 
       {showHeader && (
@@ -309,7 +313,7 @@ export default function PageWrapper(props: PageWrapperProps) {
         </div>
       </div>
 
-      <main className={`${className}`} {...rest} ref={pageMainRef}>
+      <main className={`${className} main-main`} {...rest} ref={pageMainRef}>
         {children}
 
         <script>
