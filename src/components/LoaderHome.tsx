@@ -15,6 +15,8 @@ import pic_6 from '../app/assets/images/pic_6.webp';
 import HomePage from './HomePage';
 import PageWrapper from './common/PageWrapper';
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function LoaderHome() {
   let loaderTimeline = useRef<GSAPTimeline>(gsap.timeline());
   const pictures = [pic_1, pic_2, pic_3, pic_4, pic_5, pic_6];
@@ -31,8 +33,6 @@ export default function LoaderHome() {
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
     });
-
-    gsap.registerPlugin(ScrollTrigger);
 
     const split = new SplitType('.split', { types: 'words,chars' });
 
@@ -235,7 +235,7 @@ export default function LoaderHome() {
   }, []);
 
   return (
-    <section className="w-[100%] h-[100%] text-black">
+    <section className="w-[100%] h-[100%]">
       <PageWrapper
         showHeader={true}
         className="pageHome loader relative images-container w-[100%] h-[100vh]"
