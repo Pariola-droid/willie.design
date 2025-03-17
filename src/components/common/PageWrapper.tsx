@@ -88,10 +88,6 @@ export default function PageWrapper(props: PageWrapperProps) {
     });
     gsap.set(pageMainRef.current, { filter: 'brightness(1)' });
 
-    // if (menuOpen) {
-    //   gsap.set(pageMainRef.current, { filter: 'brightness(0.5)' });
-    // }
-
     // gsap.set(pageMainRef.current, { opacity: '1' });
 
     gsap.set(mobileHeaderRef.current, { autoAlpha: 0 });
@@ -170,7 +166,7 @@ export default function PageWrapper(props: PageWrapperProps) {
     return () => {
       menuAnimation.current?.kill();
     };
-  }, [menuOpen]);
+  }, []);
 
   const toggleMenu = () => {
     if (!menuAnimation.current) return;
