@@ -16,10 +16,12 @@ CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function InfoPage() {
   const { basicFormat } = useCurrentTime();
-
+  const hasLoaded = useStore((state) => state.hasLoaded);
   const setIsAnimating = useStore((state) => state.setIsAnimating);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     const faceCaptions = document.querySelectorAll(
       '.pageInfo__hero-faceCaption'
     );
@@ -115,9 +117,11 @@ export default function InfoPage() {
       document.documentElement.style.setProperty('--cursor', 'auto');
       heroTl.kill();
     };
-  }, [setIsAnimating]);
+  }, [setIsAnimating, hasLoaded]);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     const serviceTl = gsap.timeline({
       scrollTrigger: {
         trigger: '.pageInfo__services',
@@ -170,9 +174,11 @@ export default function InfoPage() {
     return () => {
       serviceTl.kill();
     };
-  }, []);
+  }, [hasLoaded]);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     const footerReachout = gsap.utils.toArray('.reach-out');
 
     footerReachout.forEach((reachout: any) => {
@@ -239,7 +245,7 @@ export default function InfoPage() {
     return () => {
       ScrollTrigger.getAll().forEach((st) => st.kill());
     };
-  }, []);
+  }, [hasLoaded]);
 
   return (
     <PageWrapper theme="dark" className="pageInfo" lenis>

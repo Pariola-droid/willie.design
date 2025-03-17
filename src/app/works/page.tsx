@@ -2,6 +2,7 @@
 
 import PageWrapper from '@/components/common/PageWrapper';
 
+import { useStore } from '@/lib/store';
 import { urlFor } from '@/sanity/lib/image';
 import { useWorks } from '@/store/works.context';
 import { gsap } from 'gsap';
@@ -10,7 +11,7 @@ import { Flip } from 'gsap/dist/Flip';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { FEATURED_BRANDS } from '../../utils/constant';
 
@@ -20,8 +21,10 @@ CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function WorksPage() {
-  const { works } = useWorks();
   const router = useRouter();
+
+  const { works } = useWorks();
+  const hasLoaded = useStore((state) => state.hasLoaded);
 
   const [bgColor, setBgColor] = useState('#ffffff');
   const [activeIndex, setActiveIndex] = useState(0);
@@ -271,6 +274,8 @@ export default function WorksPage() {
   }, []);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     if (
       verticalContainerRef.current &&
       works.length > 0 &&
@@ -283,6 +288,10 @@ export default function WorksPage() {
         filter: 'grayscale(1)',
       });
 
+      gsap.set('.pageWorks__footer', {
+        autoAlpha: 0,
+      });
+
       verticalTl.current.play().eventCallback('onComplete', () => {
         gsap.to(verticalContainerRef.current, {
           filter: 'none',
@@ -291,11 +300,17 @@ export default function WorksPage() {
           duration: 0.8,
           ease: 'ease-in-out-cubic',
         });
+        gsap.to('.pageWorks__footer', {
+          autoAlpha: 1,
+          duration: 0.6,
+        });
       });
     }
-  }, [works]);
+  }, [works, hasLoaded]);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     if (works.length > 0 && !isVertical) {
       accordionContentsRef.current.forEach((content, index) => {
         if (!content) return;
@@ -316,9 +331,11 @@ export default function WorksPage() {
         }
       });
     }
-  }, [works.length, isVertical]);
+  }, [works.length, isVertical, hasLoaded]);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     updateZIndices(activeIndex);
 
     const interval = setInterval(() => {
@@ -326,10 +343,10 @@ export default function WorksPage() {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [activeIndex]);
+  }, [activeIndex, hasLoaded]);
 
   return (
-    <>
+    <Fragment>
       <PageWrapper
         theme="light"
         className={`pageWorks`}
@@ -546,6 +563,6 @@ export default function WorksPage() {
           </p>
         </div>
       </div>
-    </>
+    </Fragment>
   );
 }

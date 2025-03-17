@@ -16,16 +16,6 @@ export default function ContactPage() {
   const hasLoaded = useStore((state) => state.hasLoaded);
 
   useEffect(() => {
-    if (hasLoaded) return;
-
-    gsap.set('.cImg-reveal', { clipPath: 'inset(100% 0 0 0)' });
-    gsap.set('.cImg-reveal img', { filter: 'brightness(20%)', scale: 1.4 });
-    gsap.set('.cListLine', { scaleY: 0, autoAlpha: 0 });
-    gsap.set(['.cTitleItem', '.cListItem'], { y: 40, autoAlpha: 0 });
-    gsap.set('.pageContact__footer small', { autoAlpha: 0 });
-  }, [hasLoaded]);
-
-  useEffect(() => {
     if (!hasLoaded) return;
 
     const titleItem = document.querySelectorAll('.cTitleItem');

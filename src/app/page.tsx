@@ -173,11 +173,7 @@ export default function LoaderHome() {
 
   return (
     <section className="w-[100%] h-[100%]">
-      <PageWrapper
-        showHeader={true}
-        className="pageHome relative images-container"
-        lenis
-      >
+      <PageWrapper showHeader={true} className="pageHome" lenis>
         {pictures.map((pic, idx) => {
           return (
             <div
