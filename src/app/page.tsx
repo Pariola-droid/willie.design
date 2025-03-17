@@ -1,6 +1,6 @@
 'use client';
 
-import HomePage from '@/components/HomePage';
+import MainHomePage from '@/components/MainHomePage';
 import PageWrapper from '@/components/common/PageWrapper';
 import { useStore } from '@/lib/store';
 import { useGSAP } from '@gsap/react';
@@ -18,7 +18,7 @@ import pic_6 from '../app/assets/images/pic_6.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function LoaderHome() {
+export default function HomePage() {
   const pictures = [pic_1, pic_2, pic_3, pic_4, pic_5, pic_6];
   const { innerHeight, innerWidth } = window;
   const [scaleValue, setScaleValue] = useState(2);
@@ -226,7 +226,7 @@ export default function LoaderHome() {
         ></div>
 
         <div className="fixed inset-0 w-[100%] h-[100%] home-screen flex justify-end items-end">
-          <HomePage />
+          <MainHomePage />
         </div>
       </PageWrapper>
     </section>

@@ -18,7 +18,7 @@ interface IFeaturedWork {
   img: string;
 }
 
-export default function HomePage() {
+export default function MainHomePage() {
   const router = useRouter();
   const [activeWork, setActiveWork] = useState<IFeaturedWork | null>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);

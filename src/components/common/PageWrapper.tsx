@@ -57,9 +57,8 @@ interface PageWrapperProps extends PropsWithChildren {
 
 export default function PageWrapper(props: PageWrapperProps) {
   const pathname = usePathname();
-  const { works, isLoading, error, fetchWorks } = useWorks();
+  const { works, error, fetchWorks } = useWorks();
 
-  const lenisRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuAnimation = useRef<gsap.core.Timeline | null>(null);
   const pageMainRef = useRef<HTMLDivElement>(null);
@@ -87,10 +86,11 @@ export default function PageWrapper(props: PageWrapperProps) {
       pointerEvents: 'none',
       height: '0%',
     });
+    gsap.set(pageMainRef.current, { filter: 'brightness(1)' });
 
-    if (menuOpen) {
-      gsap.set(pageMainRef.current, { filter: 'brightness(0.5)' });
-    }
+    // if (menuOpen) {
+    //   gsap.set(pageMainRef.current, { filter: 'brightness(0.5)' });
+    // }
 
     // gsap.set(pageMainRef.current, { opacity: '1' });
 
@@ -174,16 +174,17 @@ export default function PageWrapper(props: PageWrapperProps) {
 
   const toggleMenu = () => {
     if (!menuAnimation.current) return;
-
     setIsAnimating(true);
 
     if (menuOpen) {
+      console.log('toggleMenu', menuOpen);
       menuAnimation.current.reverse().eventCallback('onReverseComplete', () => {
         setMenuOpen(false);
         setIsAnimating(false);
       });
     } else {
       setMenuOpen(true);
+      console.log('toggleMenu', menuOpen);
       menuAnimation.current.play().eventCallback('onComplete', () => {
         setIsAnimating(false);
       });
@@ -219,11 +220,6 @@ export default function PageWrapper(props: PageWrapperProps) {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [pathname, theme]);
-
-  const shouldShowLoader =
-    isLoading &&
-    (pathname === '/works' ||
-      (pathname.startsWith('/works/') && pathname !== '/works'));
 
   return (
     <div className={`wp ${overflowClass}`}>

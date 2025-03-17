@@ -12,7 +12,7 @@ import pic_3 from '../app/assets/images/pic_3.webp';
 import pic_4 from '../app/assets/images/pic_4.webp';
 import pic_5 from '../app/assets/images/pic_5.webp';
 import pic_6 from '../app/assets/images/pic_6.webp';
-import HomePage from './HomePage';
+import HomePage from './MainHomePage';
 import PageWrapper from './common/PageWrapper';
 
 gsap.registerPlugin(ScrollTrigger);
