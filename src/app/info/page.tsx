@@ -4,9 +4,7 @@ import PageWrapper from '@/components/common/PageWrapper';
 import { useCurrentTime } from '@/hooks/useCurrentTime';
 import { useStore } from '@/lib/store';
 import { gsap } from 'gsap';
-import { CSSRulePlugin } from 'gsap/dist/CSSRulePlugin';
-import { CustomEase } from 'gsap/dist/CustomEase';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import { CSSRulePlugin, CustomEase, ScrollTrigger } from 'gsap/all';
 import Image from 'next/image';
 import { useEffect } from 'react';
 

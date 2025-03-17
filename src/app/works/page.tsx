@@ -6,8 +6,7 @@ import { useStore } from '@/lib/store';
 import { urlFor } from '@/sanity/lib/image';
 import { useWorks } from '@/store/works.context';
 import { gsap } from 'gsap';
-import { CustomEase } from 'gsap/dist/CustomEase';
-import { Flip } from 'gsap/dist/Flip';
+import { CustomEase, Flip } from 'gsap/all';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -303,6 +302,7 @@ export default function WorksPage() {
         gsap.to('.pageWorks__footer', {
           autoAlpha: 1,
           duration: 0.6,
+          ease: 'ease-in-out-cubic',
         });
       });
     }

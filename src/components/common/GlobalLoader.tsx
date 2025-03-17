@@ -3,11 +3,12 @@
 import { useStore } from '@/lib/store';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/all';
+import { CustomEase } from 'gsap/all';
 import { useEffect, useRef } from 'react';
 import SplitType from 'split-type';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(CustomEase);
+CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function GlobalLoader() {
   const hasLoaded = useStore((state) => state.hasLoaded);
@@ -90,6 +91,7 @@ export default function GlobalLoader() {
                     });
 
                     const revealTl = gsap.timeline({
+                      defaults: { ease: 'ease-in-out-cubic' },
                       onComplete: () => {
                         setHasLoaded(true);
                         setIsAnimating(false);
