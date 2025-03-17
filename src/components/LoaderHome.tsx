@@ -45,7 +45,7 @@ export default function LoaderHome() {
     });
 
     // Animation for animating the text in and zooming them out
-    if (hasLoaded) {
+    if (!hasLoaded) {
       for (let i = 0; i < 2; i++) {
         const container = allTextContainers[i];
         loaderTimeline.current
