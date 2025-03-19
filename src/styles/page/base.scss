@@ -101,7 +101,7 @@
           text-align: left;
           position: relative;
           user-select: none;
-          margin-top: 4px;
+          top: -3px;
           white-space: nowrap;
 
           @include media('>tablet') {
