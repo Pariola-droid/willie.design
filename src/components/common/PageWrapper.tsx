@@ -228,6 +228,7 @@ export default function PageWrapper(props: PageWrapperProps) {
           className="wp__pageHeader"
         >
           <button
+            type="button"
             aria-label="menu"
             onClick={toggleMenu}
             className="wp__pageHeader-menuBtn"

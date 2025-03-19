@@ -7,48 +7,54 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/all';
 import Lenis from 'lenis';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import pic_1 from '../app/assets/images/pic_1.webp';
-import pic_2 from '../app/assets/images/pic_2.webp';
-import pic_3 from '../app/assets/images/pic_3.webp';
-import pic_4 from '../app/assets/images/pic_4.webp';
-import pic_5 from '../app/assets/images/pic_5.webp';
-import pic_6 from '../app/assets/images/pic_6.webp';
+import Image, { type StaticImageData } from 'next/image';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import pic_1 from '../../public/images/home/pic_1.webp';
+import pic_2 from '../../public/images/home/pic_2.webp';
+import pic_3 from '../../public/images/home/pic_3.webp';
+import pic_4 from '../../public/images/home/pic_4.webp';
+import pic_5 from '../../public/images/home/pic_5.webp';
+import pic_6 from '../../public/images/home/pic_6.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
+type ImageInfo = {
+  src: StaticImageData;
+  alt: string;
+};
+
 export default function HomePage() {
-  const pictures = [pic_1, pic_2, pic_3, pic_4, pic_5, pic_6];
+  const pictures: ImageInfo[] = [
+    { src: pic_1, alt: 'Portfolio image 1' },
+    { src: pic_2, alt: 'Portfolio image 2' },
+    { src: pic_3, alt: 'Portfolio image 3' },
+    { src: pic_4, alt: 'Portfolio image 4' },
+    { src: pic_5, alt: 'Portfolio image 5' },
+    { src: pic_6, alt: 'Portfolio image 6' },
+  ];
+
   const { innerHeight, innerWidth } = window;
   const [scaleValue, setScaleValue] = useState(2);
   const hasLoaded = useStore((state) => state.hasLoaded);
   const setHasLoaded = useStore((state) => state.setHasLoaded);
+  const [picDimension, setPicDimension] = useState<number | undefined>();
 
-  useGSAP(() => {
-    const lenis = new Lenis({
-      duration: 0.8,
-    });
+  const lenisRef = useRef<Lenis | null>(null);
+  const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
 
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-
-    scaleImages();
-
-    gsap.matchMedia().add('(max-width: 800px)', () => {
-      setScaleValue(2.7);
-    });
-    gsap.matchMedia().add('(min-width: 800px)', () => {
-      setScaleValue(2);
-    });
-  });
-
-  function scaleImages() {
+  const scaleImages = useCallback(() => {
     const body = document.querySelector('body');
-
     body?.classList.remove('active');
 
+    const imgContainers = document.querySelectorAll('.img-container');
+    const zoomImages = document.querySelectorAll('.zoom-images');
+
+    if (imgContainers.length > 0 && zoomImages.length > 0) {
+      gsap.set(imgContainers[0], { scale: 1 });
+      gsap.set(zoomImages[0], { opacity: 1, scale: 1 });
+    }
+
+    // Original animation for other containers
     gsap.timeline().to(
       '.img-container',
       {
@@ -89,53 +95,110 @@ export default function HomePage() {
       },
       '<'
     );
-  }
+  }, []);
 
-  // Images being scaled by the whitespace heights along with number animation
+  useEffect(() => {
+    const calculateDimension = () => {
+      const biggerValue = Math.max(window.innerHeight, window.innerWidth);
+      setPicDimension(biggerValue);
+    };
+
+    calculateDimension();
+
+    let resizeTimer: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(calculateDimension, 250);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimer);
+    };
+  }, []);
+
+  useGSAP(() => {
+    lenisRef.current = new Lenis({
+      duration: 0.8,
+    });
+
+    gsap.ticker.add((time) => {
+      lenisRef.current?.raf(time * 1000);
+    });
+
+    scaleImages();
+
+    gsap.matchMedia().add('(max-width: 800px)', () => {
+      setScaleValue(2.7);
+    });
+
+    gsap.matchMedia().add('(min-width: 800px)', () => {
+      setScaleValue(2);
+    });
+
+    return () => {
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+      }
+
+      if (lenisRef.current) {
+        gsap.ticker.remove(lenisRef.current?.raf);
+      }
+    };
+  }, [scaleImages]);
+
   useGSAP(() => {
     const allImages = document.querySelectorAll('.zoom-images');
     const allHeights = document.querySelectorAll('.white-height');
     const allNumbers = document.querySelectorAll('.image-number');
 
+    scrollTriggersRef.current.forEach((trigger) => trigger.kill());
+    scrollTriggersRef.current = [];
+
     allImages.forEach((pic, idx) => {
-      gsap.to(pic, {
-        scale: 1.2,
-        ease: 'power2.inOut',
-        scrollTrigger: {
-          trigger: allHeights[idx],
-          scrub: 1,
-          end: 'bottom bottom',
-          start: idx === 0 ? '-100% bottom' : '-60% bottom',
-        },
+      const trigger = ScrollTrigger.create({
+        trigger: allHeights[idx],
+        scrub: 1,
+        end: 'bottom bottom',
+        start: idx === 0 ? '-100% bottom' : '-60% bottom',
+        animation: gsap.to(pic, {
+          scale: 1.2,
+          ease: 'power2.inOut',
+          paused: true,
+        }),
       });
+
+      scrollTriggersRef.current.push(trigger);
     });
 
     allNumbers.forEach((num, idx) => {
       const imgContainer = document.querySelector(
         '.image-number-list'
       ) as HTMLElement;
+      if (!imgContainer) return;
 
       const gap = window.getComputedStyle(imgContainer).gap;
 
-      gsap.to('.image-number-list', {
-        ease: 'power2.inOut',
-        scrollTrigger: {
-          trigger: allHeights[idx],
-          end: 'bottom bottom',
-          start: idx === 0 ? '-150% bottom' : '-60% bottom',
-          scrub: true,
-          onEnter: () => {
-            imgContainer.style.transform = `translate(0px, -${(num.clientHeight + parseFloat(gap)) * idx}px)`;
-          },
-          onEnterBack: () => {
-            imgContainer.style.transform = `translate(0px, -${(num.clientHeight + parseFloat(gap)) * idx}px)`;
-          },
+      const trigger = ScrollTrigger.create({
+        trigger: allHeights[idx],
+        end: 'bottom bottom',
+        start: idx === 0 ? '-150% bottom' : '-60% bottom',
+        scrub: true,
+        onEnter: () => {
+          imgContainer.style.transform = `translate(0px, -${(num.clientHeight + parseFloat(gap)) * idx}px)`;
+        },
+        onEnterBack: () => {
+          imgContainer.style.transform = `translate(0px, -${(num.clientHeight + parseFloat(gap)) * idx}px)`;
         },
       });
+
+      scrollTriggersRef.current.push(trigger);
     });
 
     const revealHome = gsap
-      .timeline()
+      .timeline({ paused: true })
       .to('.img-container', {
         yPercent: -100,
       })
@@ -147,86 +210,90 @@ export default function HomePage() {
         '<'
       );
 
-    // Animation to reveal home screen
-    ScrollTrigger.create({
+    const finalTrigger = ScrollTrigger.create({
       trigger: '.home-controller',
       scrub: 1,
       animation: revealHome,
       start: 'top bottom',
       end: 'top top',
-      markers: true,
+      // markers: false,
     });
-  }, [scaleValue]);
 
-  const [picDimension, setPicDimension] = useState<number | null>();
+    scrollTriggersRef.current.push(finalTrigger);
 
-  // Updates the value of the height and width on resize
-  useEffect(() => {
-    const biggerValue = Math.max(innerHeight, innerWidth);
-    setPicDimension(biggerValue);
-
-    window.addEventListener('resize', () => {
-      setPicDimension(biggerValue);
-    });
-  }, []);
+    return () => {
+      scrollTriggersRef.current.forEach((trigger) => trigger.kill());
+      scrollTriggersRef.current = [];
+    };
+  }, [scaleValue, innerHeight]);
 
   return (
-    <section className="w-[100%] h-[100%]">
+    <section className="w-full h-full" aria-label="Portfolio image gallery">
       <PageWrapper
         showHeader={true}
         className="pageHomeRoot"
         overflowClass="loader"
         lenis
       >
-        {pictures.map((pic, idx) => {
-          return (
-            <div
-              key={idx}
-              className="fixed h-[100vh] w-[100%] flex justify-center  scale-0 items-center img-container inset-0"
-              style={{ zIndex: 11 }}
-            >
-              <Image
-                src={pic}
-                className={`zoom-images scale-0  object-cover ${idx > 0 ? 'opacity-0' : ''} relative inset-0`}
-                style={{
-                  zIndex: 11,
-                  width: `${picDimension}px`,
-                  height: `${picDimension}px`,
-                }}
-                alt=""
-              />
-            </div>
-          );
-        })}
+        {/* skip button for accessibility - not in use yet*/}
+        <button
+          className="skip-animation-btn sr-only focus:not-sr-only"
+          onClick={() => setHasLoaded(true)}
+        >
+          Skip animation
+        </button>
 
-        <div className="flex items-start gap-[4px] image-number-container opacity-0 fixed bottom-[100px] left-[50%] translate-x-[-50%] z-[13] h-[19px] overflow-hidden mix-blend-difference leading-[100%]">
+        {pictures.map(({ src, alt }, idx) => (
+          <div
+            key={idx}
+            className={`fixed h-[100vh] w-full flex justify-center items-center img-container inset-0`}
+            style={{ zIndex: 11, scale: idx === 0 ? 1 : 0 }}
+          >
+            <Image
+              src={src}
+              className={`zoom-images object-cover relative inset-0`}
+              style={{
+                zIndex: 11,
+                width: picDimension ? `${picDimension}px` : '100%',
+                height: picDimension ? `${picDimension}px` : '100%',
+                opacity: idx === 0 ? 1 : 0,
+                scale: idx === 0 ? 1 : 0,
+              }}
+              alt={alt}
+              priority={idx === 0}
+            />
+          </div>
+        ))}
+
+        <div
+          className="flex items-start gap-[4px] image-number-container opacity-0 fixed bottom-[100px] left-[50%] translate-x-[-50%] z-[13] h-[19px] overflow-hidden mix-blend-difference leading-[100%]"
+          aria-hidden="true"
+        >
           <div className="flex flex-col gap-[30px] image-number-list duration-500 ease-in-out">
-            {pictures.map((pic, idx) => {
-              return (
-                <p key={idx} className="image-number">
-                  {idx + 1}
-                </p>
-              );
-            })}
+            {pictures.map((_, idx) => (
+              <p key={idx} className="image-number">
+                {idx + 1}
+              </p>
+            ))}
           </div>
           <div className="w-[20px] h-[1px] bg-white translate-y-[9px]"></div>
           <p>{pictures.length}</p>
         </div>
 
         {/* White space Heights to control the picture animation */}
-        {pictures.map((pic, idx) => {
-          return (
-            <div
-              key={idx}
-              style={{ height: `${innerHeight * 2.8}px` }}
-              className=" w-[100%] white-height"
-            ></div>
-          );
-        })}
+        {pictures.map((_, idx) => (
+          <div
+            key={idx}
+            style={{ height: `${innerHeight * 2.8}px` }}
+            className="w-full white-height"
+            aria-hidden="true"
+          ></div>
+        ))}
 
         <div
-          className=" w-[100%] home-controller bg-[transparent] relative "
+          className="w-full home-controller bg-transparent relative"
           style={{ height: `${innerHeight * 1.3}px` }}
+          aria-hidden="true"
         ></div>
 
         <div className="pageHome home-screen">
