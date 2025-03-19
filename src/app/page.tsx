@@ -37,6 +37,7 @@ export default function HomePage() {
   const [scaleValue, setScaleValue] = useState(2);
   const hasLoaded = useStore((state) => state.hasLoaded);
   const setHasLoaded = useStore((state) => state.setHasLoaded);
+  const setIsHomeRevealed = useStore((state) => state.setIsHomeRevealed);
   const [picDimension, setPicDimension] = useState<number | undefined>();
 
   const lenisRef = useRef<Lenis | null>(null);
@@ -54,7 +55,6 @@ export default function HomePage() {
       gsap.set(zoomImages[0], { opacity: 1, scale: 1 });
     }
 
-    // Original animation for other containers
     gsap.timeline().to(
       '.img-container',
       {
@@ -188,9 +188,25 @@ export default function HomePage() {
         scrub: true,
         onEnter: () => {
           imgContainer.style.transform = `translate(0px, -${(num.clientHeight + parseFloat(gap)) * idx}px)`;
+
+          allNumbers.forEach((n, i) => {
+            if (i === idx) {
+              n.classList.add('active-number');
+            } else {
+              n.classList.remove('active-number');
+            }
+          });
         },
         onEnterBack: () => {
           imgContainer.style.transform = `translate(0px, -${(num.clientHeight + parseFloat(gap)) * idx}px)`;
+
+          allNumbers.forEach((n, i) => {
+            if (i === idx) {
+              n.classList.add('active-number');
+            } else {
+              n.classList.remove('active-number');
+            }
+          });
         },
       });
 
@@ -217,6 +233,14 @@ export default function HomePage() {
       start: 'top bottom',
       end: 'top top',
       // markers: false,
+      onLeave: () => {
+        setTimeout(() => {
+          setIsHomeRevealed(true);
+        }, 100);
+      },
+      onEnterBack: () => {
+        setIsHomeRevealed(false);
+      },
     });
 
     scrollTriggersRef.current.push(finalTrigger);
@@ -266,18 +290,22 @@ export default function HomePage() {
         ))}
 
         <div
-          className="flex items-start gap-[4px] image-number-container opacity-0 fixed bottom-[100px] left-[50%] translate-x-[-50%] z-[13] h-[19px] overflow-hidden mix-blend-difference leading-[100%]"
+          className="flex items-center justify-center gap-[4px] image-number-container opacity-0 fixed bottom-[32px] left-[50%] translate-x-[-50%] z-[13] h-[19px] overflow-hidden mix-blend-difference leading-[100%]"
           aria-hidden="true"
         >
-          <div className="flex flex-col gap-[30px] image-number-list duration-500 ease-in-out">
+          {/* <div className="flex flex-col gap-[30px] image-number-list duration-500 ease-in-out">
             {pictures.map((_, idx) => (
-              <p key={idx} className="image-number">
+              <p
+                key={idx}
+                className="image-number text-center w-[16px] h-[19px]"
+              >
                 {idx + 1}
               </p>
             ))}
-          </div>
-          <div className="w-[20px] h-[1px] bg-white translate-y-[9px]"></div>
-          <p>{pictures.length}</p>
+          </div> */}
+          <p className="h-[19px] text-center w-[16px"></p>
+          <div className="w-[20px] h-[1px] bg-white"></div>
+          <p className="h-[19px] text-center w-[16px]">{pictures.length}</p>
         </div>
 
         {/* White space Heights to control the picture animation */}
