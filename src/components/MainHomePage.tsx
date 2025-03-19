@@ -115,7 +115,7 @@ export default function MainHomePage() {
             autoAlpha: 1,
             stagger: 0.05,
           },
-          '-=1.3'
+          '-=1.4'
         )
         .to(
           ['.cTitleItem', '.cListItem'],
@@ -126,7 +126,7 @@ export default function MainHomePage() {
             duration: 0.8,
             ease: 'power2.out',
           },
-          '-=0.7'
+          '-=0.8'
         )
         .to(
           '.pageHome__footer small',
@@ -136,7 +136,7 @@ export default function MainHomePage() {
             stagger: 0.1,
             duration: 0.6,
           },
-          '-=1.0'
+          '-=1.1'
         );
     }
 
