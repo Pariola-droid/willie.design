@@ -9,12 +9,12 @@ import { ScrollTrigger } from 'gsap/all';
 import Lenis from 'lenis';
 import Image, { type StaticImageData } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import pic_1 from '../app/assets/images/pic_1.webp';
-import pic_2 from '../app/assets/images/pic_2.webp';
-import pic_3 from '../app/assets/images/pic_3.webp';
-import pic_4 from '../app/assets/images/pic_4.webp';
-import pic_5 from '../app/assets/images/pic_5.webp';
-import pic_6 from '../app/assets/images/pic_6.webp';
+import pic_1 from '../../public/images/home/pic_1.webp';
+import pic_2 from '../../public/images/home/pic_2.webp';
+import pic_3 from '../../public/images/home/pic_3.webp';
+import pic_4 from '../../public/images/home/pic_4.webp';
+import pic_5 from '../../public/images/home/pic_5.webp';
+import pic_6 from '../../public/images/home/pic_6.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
