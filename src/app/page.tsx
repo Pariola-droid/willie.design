@@ -34,7 +34,7 @@ export default function HomePage() {
   ];
 
   const { innerHeight, innerWidth } = window;
-  const [scaleValue, setScaleValue] = useState(2);
+  const [scaleValue, setScaleValue] = useState(1.5);
   const hasLoaded = useStore((state) => state.hasLoaded);
   const setHasLoaded = useStore((state) => state.setHasLoaded);
   const setIsHomeRevealed = useStore((state) => state.setIsHomeRevealed);
