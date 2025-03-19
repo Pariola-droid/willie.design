@@ -24,7 +24,7 @@
     padding-inline: 1rem 1rem;
     z-index: 12;
 
-    @include media(">tablet") {
+    @include media('>tablet') {
       padding-inline: 1rem toRem(77);
     }
 
@@ -53,7 +53,7 @@
         visibility: hidden;
       }
 
-      @include media(">tablet") {
+      @include media('>tablet') {
         display: none !important;
       }
     }
@@ -63,7 +63,7 @@
       display: none;
       column-gap: toRem(5);
 
-      @include media(">tablet") {
+      @include media('>tablet') {
         @include flex(flex-start, center);
       }
 
@@ -80,33 +80,31 @@
 
     &-bigText {
       & h1 {
-        @extend %CB;
+        @extend %BS;
         font-size: toRem(24);
-        font-weight: 400;
-        line-height: toRem(24);
-        letter-spacing: 0.02em;
+        font-weight: 500;
+        line-height: 100%;
+        letter-spacing: -0.02em;
         text-align: center;
         position: relative;
-        text-transform: uppercase;
 
-        @include media(">tablet") {
-          font-size: toRem(36);
-          line-height: toRem(36);
+        @include media('>tablet') {
+          font-size: toRem(32);
         }
 
         & sup {
           @extend %BS;
           font-size: toRem(14);
           font-weight: 300;
-          line-height: toRem(15.7);
+          line-height: 100%;
           letter-spacing: -0.02em;
           text-align: left;
           position: relative;
           user-select: none;
-          margin-top: 4px;
+          top: -3px;
           white-space: nowrap;
 
-          @include media(">tablet") {
+          @include media('>tablet') {
             vertical-align: super;
           }
         }
@@ -210,7 +208,7 @@
   }
 }
 
-[wp-theme="dark"] {
+[wp-theme='dark'] {
   * {
     color: $white !important;
   }
@@ -232,7 +230,7 @@
   }
 }
 
-[wp-theme="light"] {
+[wp-theme='light'] {
   * {
     color: $black !important;
   }

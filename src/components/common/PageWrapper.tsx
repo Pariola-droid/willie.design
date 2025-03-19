@@ -256,7 +256,7 @@ export default function PageWrapper(props: PageWrapperProps) {
           </ul>
 
           <Link href="/" className="wp__pageHeader-bigText">
-            <h1>Archive Of Selected</h1>
+            <h1>Archive of Selected</h1>
             <h1>
               Works <sup>&apos;21—{format(new Date(), 'yyy')}</sup>
             </h1>
