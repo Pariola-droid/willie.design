@@ -46,6 +46,15 @@ export default function HomePage() {
     const body = document.querySelector('body');
     body?.classList.remove('active');
 
+    const imgContainers = document.querySelectorAll('.img-container');
+    const zoomImages = document.querySelectorAll('.zoom-images');
+
+    if (imgContainers.length > 0 && zoomImages.length > 0) {
+      gsap.set(imgContainers[0], { scale: 1 });
+      gsap.set(zoomImages[0], { opacity: 1, scale: 1 });
+    }
+
+    // Original animation for other containers
     gsap.timeline().to(
       '.img-container',
       {
@@ -88,7 +97,6 @@ export default function HomePage() {
     );
   }, []);
 
-  // Handle responsive sizing with debounce
   useEffect(() => {
     const calculateDimension = () => {
       const biggerValue = Math.max(window.innerHeight, window.innerWidth);
@@ -97,7 +105,6 @@ export default function HomePage() {
 
     calculateDimension();
 
-    // Debounce resize handler
     let resizeTimer: NodeJS.Timeout;
     const handleResize = () => {
       clearTimeout(resizeTimer);
@@ -239,16 +246,18 @@ export default function HomePage() {
         {pictures.map(({ src, alt }, idx) => (
           <div
             key={idx}
-            className="fixed h-[100vh] w-full flex justify-center scale-0 items-center img-container inset-0"
-            style={{ zIndex: 11 }}
+            className={`fixed h-[100vh] w-full flex justify-center items-center img-container inset-0`}
+            style={{ zIndex: 11, scale: idx === 0 ? 1 : 0 }}
           >
             <Image
               src={src}
-              className={`zoom-images scale-0 object-cover ${idx > 0 ? 'opacity-0' : ''} relative inset-0`}
+              className={`zoom-images object-cover relative inset-0`}
               style={{
                 zIndex: 11,
                 width: picDimension ? `${picDimension}px` : '100%',
                 height: picDimension ? `${picDimension}px` : '100%',
+                opacity: idx === 0 ? 1 : 0,
+                scale: idx === 0 ? 1 : 0,
               }}
               alt={alt}
               priority={idx === 0}
