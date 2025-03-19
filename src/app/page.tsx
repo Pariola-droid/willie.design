@@ -236,7 +236,7 @@ export default function HomePage() {
       onLeave: () => {
         setTimeout(() => {
           setIsHomeRevealed(true);
-        }, 100);
+        }, 10);
       },
       onEnterBack: () => {
         setIsHomeRevealed(false);
