@@ -86,9 +86,12 @@ export default function PageWrapper(props: PageWrapperProps) {
       pointerEvents: 'none',
       height: '0%',
     });
-    // gsap.set(pageMainRef.current, { filter: 'brightness(1)' });
 
-    gsap.set(pageMainRef.current, { opacity: '1' });
+    if (pathname !== '/') {
+      gsap.set(pageMainRef.current, { filter: 'brightness(1)' });
+    } else {
+      gsap.set(pageMainRef.current, { opacity: '1' });
+    }
 
     gsap.set(mobileHeaderRef.current, { autoAlpha: 0 });
     gsap.set(closeTextRef.current, { autoAlpha: 0 });
@@ -103,17 +106,31 @@ export default function PageWrapper(props: PageWrapperProps) {
         pointerEvents: 'auto',
         duration: 0.8,
         ease: 'ease-in-out-cubic',
-      })
-      .to(
+      });
+
+    if (pathname !== '/') {
+      menuAnimation.current.to(
         pageMainRef.current,
         {
-          // filter: 'brightness(0.5)',
+          filter: 'brightness(0.5)',
+          duration: 0.3,
+          ease: 'power2.inOut',
+        },
+        '<'
+      );
+    } else {
+      menuAnimation.current.to(
+        pageMainRef.current,
+        {
           opacity: 0.5,
           duration: 0.3,
           ease: 'power2.inOut',
         },
         '<'
-      )
+      );
+    }
+
+    menuAnimation.current
       .to(
         mobileHeaderRef.current,
         {
@@ -170,7 +187,9 @@ export default function PageWrapper(props: PageWrapperProps) {
 
   const toggleMenu = () => {
     if (!menuAnimation.current) return;
-    setIsAnimating(true);
+    if (pathname !== '/') {
+      setIsAnimating(true);
+    }
 
     if (menuOpen) {
       console.log('toggleMenu', menuOpen);
