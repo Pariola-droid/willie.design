@@ -37,6 +37,7 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchWorks = useCallback(async () => {
     try {
+      document.documentElement.style.setProperty('--cursor', 'wait');
       setIsLoading(true);
       setError(null);
 
@@ -45,8 +46,10 @@ export const WorksProvider = ({ children }: { children: ReactNode }) => {
     } catch (err) {
       console.error('Error fetching works:', err);
       setError(err instanceof Error ? err : new Error('Unknown error'));
+      document.documentElement.style.setProperty('--cursor', 'auto');
     } finally {
       setIsLoading(false);
+      document.documentElement.style.setProperty('--cursor', 'auto');
     }
   }, []);
 

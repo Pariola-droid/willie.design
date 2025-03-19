@@ -19,6 +19,7 @@ import {
   useState,
 } from 'react';
 import GlobalError from './GlobalError';
+import GlobalLoader from './GlobalLoader';
 import { Lenis } from './Lenis';
 
 gsap.registerPlugin(CustomEase);
@@ -51,14 +52,13 @@ interface PageWrapperProps extends PropsWithChildren {
   className: string;
   style?: React.CSSProperties;
   showHeader?: boolean;
-  isHome?: boolean;
+  overflowClass?: string;
 }
 
 export default function PageWrapper(props: PageWrapperProps) {
   const pathname = usePathname();
-  const { works, isLoading, error, fetchWorks } = useWorks();
+  const { works, error, fetchWorks } = useWorks();
 
-  const lenisRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuAnimation = useRef<gsap.core.Timeline | null>(null);
   const pageMainRef = useRef<HTMLDivElement>(null);
@@ -77,7 +77,7 @@ export default function PageWrapper(props: PageWrapperProps) {
     lenis,
     className,
     showHeader = true,
-    isHome,
+    overflowClass,
     ...rest
   } = props;
 
@@ -86,7 +86,10 @@ export default function PageWrapper(props: PageWrapperProps) {
       pointerEvents: 'none',
       height: '0%',
     });
-    gsap.set(pageMainRef.current, { filter: 'brightness(1)' });
+    // gsap.set(pageMainRef.current, { filter: 'brightness(1)' });
+
+    gsap.set(pageMainRef.current, { opacity: '1' });
+
     gsap.set(mobileHeaderRef.current, { autoAlpha: 0 });
     gsap.set(closeTextRef.current, { autoAlpha: 0 });
     gsap.set(menuTextRef.current, { autoAlpha: 1 });
@@ -104,7 +107,8 @@ export default function PageWrapper(props: PageWrapperProps) {
       .to(
         pageMainRef.current,
         {
-          filter: 'brightness(0.5)',
+          // filter: 'brightness(0.5)',
+          opacity: 0.5,
           duration: 0.3,
           ease: 'power2.inOut',
         },
@@ -166,16 +170,17 @@ export default function PageWrapper(props: PageWrapperProps) {
 
   const toggleMenu = () => {
     if (!menuAnimation.current) return;
-
     setIsAnimating(true);
 
     if (menuOpen) {
+      console.log('toggleMenu', menuOpen);
       menuAnimation.current.reverse().eventCallback('onReverseComplete', () => {
         setMenuOpen(false);
         setIsAnimating(false);
       });
     } else {
       setMenuOpen(true);
+      console.log('toggleMenu', menuOpen);
       menuAnimation.current.play().eventCallback('onComplete', () => {
         setIsAnimating(false);
       });
@@ -212,14 +217,9 @@ export default function PageWrapper(props: PageWrapperProps) {
     document.documentElement.setAttribute('data-theme', theme);
   }, [pathname, theme]);
 
-  const shouldShowLoader =
-    isLoading &&
-    (pathname === '/works' ||
-      (pathname.startsWith('/works/') && pathname !== '/works'));
-
   return (
-    <div className={`${!isHome ? 'wp' : ''}`}>
-      {/* {isLoading && <GlobalLoader isLoading={isLoading} message="Loading..." />} */}
+    <div className={`wp ${overflowClass}`}>
+      <GlobalLoader />
       {error && <GlobalError error={error} resetError={fetchWorks} />}
 
       {showHeader && (
@@ -305,7 +305,7 @@ export default function PageWrapper(props: PageWrapperProps) {
         </div>
       </div>
 
-      <main className={`${className}`} {...rest} ref={pageMainRef}>
+      <main className={`${className} main-main`} {...rest} ref={pageMainRef}>
         {children}
 
         <script>

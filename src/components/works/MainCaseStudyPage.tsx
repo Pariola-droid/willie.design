@@ -7,8 +7,8 @@ import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Image from 'next/image';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Work } from '../../../sanity.types';
 import CaseStudyImage from './CasestudyImage';
@@ -27,11 +27,9 @@ export default function MainCaseStudyPage({
   currentWork: Work;
   nextWork: Work;
 }) {
-  const params = useParams();
   const router = useRouter();
-
   const setIsAnimating = useStore((state) => state.setIsAnimating);
-  const [showWorkDesc, setShowWorkDesc] = useState<boolean>(false);
+  const hasLoaded = useStore((state) => state.hasLoaded);
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLDivElement>(null);
@@ -42,6 +40,8 @@ export default function MainCaseStudyPage({
   const progressBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     if (
       currentWork &&
       titleRef.current &&
@@ -81,7 +81,6 @@ export default function MainCaseStudyPage({
         },
         onComplete: () => {
           setIsAnimating(false);
-          setShowWorkDesc(true);
           document.documentElement.style.setProperty('--cursor', 'auto');
         },
       });
@@ -131,9 +130,11 @@ export default function MainCaseStudyPage({
         document.documentElement.style.setProperty('--cursor', 'auto');
       };
     }
-  }, [currentWork, setIsAnimating]);
+  }, [currentWork, hasLoaded, setIsAnimating]);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     if (currentWork) {
       galleryImgsRef.current.forEach((imgRef, index) => {
         if (imgRef) {
@@ -180,7 +181,7 @@ export default function MainCaseStudyPage({
         }
       });
     }
-  }, [currentWork]);
+  }, [currentWork, hasLoaded]);
 
   useEffect(() => {
     if (progressBarRef.current && nextWork) {

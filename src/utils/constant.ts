@@ -14,22 +14,22 @@ export const CONTACT_DETAILS = [
       {
         label: 'instagram',
         shortLabel: 'IG',
-        href: 'https://www.instagram.com/williedsgnr/',
+        href: ' https://www.instagram.com/willie_ui',
       },
       {
         label: 'x',
         shortLabel: 'X',
-        href: 'https://twitter.com/williedsgnr',
+        href: 'https://www.x.com/willie_ui',
       },
       {
         label: 'are.na',
         shortLabel: 'Are.na',
-        href: 'https://www.are.na/willie-olwage',
+        href: 'https://www.are.na/williams-alamu/channels',
       },
       {
         label: 'dribbble',
         shortLabel: 'DB',
-        href: 'https://dribbble.com/williedsgnr',
+        href: 'https://dribbble.com/williamslovesui',
       },
     ],
   },
@@ -53,6 +53,44 @@ export const FEATURED_WORKS = [
     key: 'the-topsphere',
     title: 'Topsphere Media',
     img: '/images/works/the-topsphere.webp',
+  },
+];
+
+export const FEATURED_BRANDS = [
+  {
+    id: 1,
+    title: 'Balky studio',
+    img: '/images/featured/brand/brand-a.png',
+  },
+  {
+    id: 2,
+    title: 'The Maker studio',
+    img: '/images/featured/brand/brand-b.png',
+  },
+  {
+    id: 3,
+    title: 'Vana',
+    img: '/images/featured/brand/brand-c.png',
+  },
+  {
+    id: 4,
+    title: 'Topsphere media',
+    img: '/images/featured/brand/brand-d.png',
+  },
+  {
+    id: 5,
+    title: 'Paystack',
+    img: '/images/featured/brand/brand-e.png',
+  },
+  {
+    id: 6,
+    title: 'Topsphere media',
+    img: '/images/featured/brand/brand-f.png',
+  },
+  {
+    id: 7,
+    title: 'Nomba banking',
+    img: '/images/featured/brand/brand-g.png',
   },
 ];
 

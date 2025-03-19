@@ -8,7 +8,7 @@ import { bagoss, cowboy } from './font';
 export const metadata: Metadata = {
   metadataBase: new URL('https://willie.design'),
   title: 'Willie UI',
-  description: `I'm creative designer with keen interest in design`,
+  description: `I'm creative visual designer focused on playing with layout compositions, colors and typography to create immersive digital experiences.`,
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',
@@ -16,15 +16,15 @@ export const metadata: Metadata = {
   },
   twitter: {
     title: 'Willie UI',
-    description: `I'm creative designer with keen interest in design`,
+    description: `I'm creative visual designer focused on playing with layout compositions, colors and typography to create immersive digital experiences.`,
     images: [
       {
-        url: '/og-image-b.jpg',
+        url: '/og-image-md.jpg',
         width: 800,
         height: 600,
       },
       {
-        url: '/og-image-b.jpg',
+        url: '/og-image-lg.jpg',
         width: 1800,
         height: 1600,
       },
@@ -32,17 +32,17 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Willie UI',
-    description: `I'm creative designer with keen interest in design`,
+    description: `I'm creative visual designer focused on playing with layout compositions, colors and typography to create immersive digital experiences.`,
     url: 'https://willie.design',
-    siteName: 'Pariola',
+    siteName: 'Willie UI',
     images: [
       {
-        url: '/og-image-b.jpg',
+        url: '/og-image-md.jpg',
         width: 800,
         height: 600,
       },
       {
-        url: '/og-image-b.jpg',
+        url: '/og-image-lg.jpg',
         width: 1800,
         height: 1600,
       },

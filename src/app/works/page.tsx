@@ -2,17 +2,17 @@
 
 import PageWrapper from '@/components/common/PageWrapper';
 
+import { useStore } from '@/lib/store';
 import { urlFor } from '@/sanity/lib/image';
 import { useWorks } from '@/store/works.context';
 import { gsap } from 'gsap';
-import { CustomEase } from 'gsap/dist/CustomEase';
-import { Flip } from 'gsap/dist/Flip';
+import { CustomEase, Flip } from 'gsap/all';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { FEATURED_WORKS } from '../../utils/constant';
+import { FEATURED_BRANDS } from '../../utils/constant';
 
 gsap.registerPlugin(Flip, CustomEase);
 
@@ -20,8 +20,10 @@ CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 export default function WorksPage() {
-  const { works } = useWorks();
   const router = useRouter();
+
+  const { works } = useWorks();
+  const hasLoaded = useStore((state) => state.hasLoaded);
 
   const [bgColor, setBgColor] = useState('#ffffff');
   const [activeIndex, setActiveIndex] = useState(0);
@@ -31,7 +33,7 @@ export default function WorksPage() {
   const verticalContainerRef = useRef(null);
   const horizontalContainerRef = useRef(null);
   const imageRefs = useRef<(HTMLDivElement | null)[]>(
-    FEATURED_WORKS.map(() => null)
+    FEATURED_BRANDS.map(() => null)
   );
   const imageWrapperRef = useRef(null);
   const isAnimating = useRef(false);
@@ -122,9 +124,9 @@ export default function WorksPage() {
     imageRefs.current.forEach((ref, index) => {
       if (ref) {
         const relativePos =
-          (index - currentIndex + FEATURED_WORKS.length) %
-          FEATURED_WORKS.length;
-        ref.style.zIndex = String(FEATURED_WORKS.length - relativePos);
+          (index - currentIndex + FEATURED_BRANDS.length) %
+          FEATURED_BRANDS.length;
+        ref.style.zIndex = String(FEATURED_BRANDS.length - relativePos);
       }
     });
   };
@@ -134,7 +136,7 @@ export default function WorksPage() {
     isAnimating.current = true;
 
     const currentImage = imageRefs.current[activeIndex];
-    const nextIndex = (activeIndex + 1) % FEATURED_WORKS.length;
+    const nextIndex = (activeIndex + 1) % FEATURED_BRANDS.length;
 
     gsap.to(currentImage, {
       // yPercent: 100,
@@ -271,6 +273,8 @@ export default function WorksPage() {
   }, []);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     if (
       verticalContainerRef.current &&
       works.length > 0 &&
@@ -283,6 +287,10 @@ export default function WorksPage() {
         filter: 'grayscale(1)',
       });
 
+      gsap.set('.pageWorks__footer', {
+        autoAlpha: 0,
+      });
+
       verticalTl.current.play().eventCallback('onComplete', () => {
         gsap.to(verticalContainerRef.current, {
           filter: 'none',
@@ -291,11 +299,18 @@ export default function WorksPage() {
           duration: 0.8,
           ease: 'ease-in-out-cubic',
         });
+        gsap.to('.pageWorks__footer', {
+          autoAlpha: 1,
+          duration: 0.6,
+          ease: 'ease-in-out-cubic',
+        });
       });
     }
-  }, [works]);
+  }, [works, hasLoaded]);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     if (works.length > 0 && !isVertical) {
       accordionContentsRef.current.forEach((content, index) => {
         if (!content) return;
@@ -316,9 +331,11 @@ export default function WorksPage() {
         }
       });
     }
-  }, [works.length, isVertical]);
+  }, [works.length, isVertical, hasLoaded]);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     updateZIndices(activeIndex);
 
     const interval = setInterval(() => {
@@ -326,10 +343,10 @@ export default function WorksPage() {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [activeIndex]);
+  }, [activeIndex, hasLoaded]);
 
   return (
-    <>
+    <Fragment>
       <PageWrapper
         theme="light"
         className={`pageWorks`}
@@ -524,15 +541,16 @@ export default function WorksPage() {
               ref={imageWrapperRef}
             >
               <div className="pageWorks__footer-scImgContainer">
-                {FEATURED_WORKS.map((work, index) => (
+                {FEATURED_BRANDS.map((brand, index) => (
                   <div
-                    key={work.id}
+                    key={brand.id}
                     ref={(el) => {
                       imageRefs.current[index] = el;
                     }}
+                    aria-label={brand.title}
                     className="pageWorks__footer-scImg"
                     style={{
-                      backgroundImage: `url(${work.img})`,
+                      backgroundImage: `url(${brand.img})`,
                     }}
                   />
                 ))}
@@ -545,6 +563,6 @@ export default function WorksPage() {
           </p>
         </div>
       </div>
-    </>
+    </Fragment>
   );
 }

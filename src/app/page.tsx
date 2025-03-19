@@ -1,279 +1,234 @@
 'use client';
 
+import MainHomePage from '@/components/MainHomePage';
 import PageWrapper from '@/components/common/PageWrapper';
-import { FEATURED_WORKS } from '@/utils/constant';
+import { useStore } from '@/lib/store';
+import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { CustomEase } from 'gsap/dist/CustomEase';
+import { ScrollTrigger } from 'gsap/all';
+import Lenis from 'lenis';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import pic_1 from '../app/assets/images/pic_1.webp';
+import pic_2 from '../app/assets/images/pic_2.webp';
+import pic_3 from '../app/assets/images/pic_3.webp';
+import pic_4 from '../app/assets/images/pic_4.webp';
+import pic_5 from '../app/assets/images/pic_5.webp';
+import pic_6 from '../app/assets/images/pic_6.webp';
 
-gsap.registerPlugin(CustomEase);
-CustomEase.create('ease-in-out-circ', '0.785,0.135,0.15,0.86');
-CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
-
-interface IFeaturedWork {
-  id: number;
-  title: string;
-  key: string;
-  img: string;
-}
+gsap.registerPlugin(ScrollTrigger);
 
 export default function HomePage() {
-  const router = useRouter();
-  const [activeWork, setActiveWork] = useState<IFeaturedWork | null>(null);
-  const imageWrapperRef = useRef<HTMLDivElement>(null);
-  const imagesRef = useRef<{ [key: string]: HTMLImageElement | null }>({});
+  const pictures = [pic_1, pic_2, pic_3, pic_4, pic_5, pic_6];
+  const { innerHeight, innerWidth } = window;
+  const [scaleValue, setScaleValue] = useState(2);
+  const hasLoaded = useStore((state) => state.hasLoaded);
+  const setHasLoaded = useStore((state) => state.setHasLoaded);
 
-  useEffect(() => {
-    const titleItem = document.querySelectorAll('.cTitleItem');
-    const listItems = document.querySelectorAll('.cListItem');
-    const listLine = document.querySelectorAll('.cListLine');
-
-    titleItem.forEach((item) => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'cText-wrapper';
-      item.parentNode?.insertBefore(wrapper, item);
-      wrapper.appendChild(item);
+  useGSAP(() => {
+    const lenis = new Lenis({
+      duration: 0.8,
     });
 
-    listItems.forEach((item) => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'cText-wrapper';
-      item.parentNode?.insertBefore(wrapper, item);
-      wrapper.appendChild(item);
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
     });
 
-    const imageWrapper = document.querySelector('.cImg-reveal');
-    const image = imageWrapper?.querySelector('img');
-    const revealWrappers = gsap.utils.toArray('.cText-wrapper');
+    scaleImages();
 
-    if (imageWrapper && image) {
-      gsap.set(imageWrapper, {
-        clipPath: 'inset(100% 0 0 0)',
-      });
-
-      gsap.set(image, {
-        filter: 'brightness(20%)',
-        scale: 1.4,
-      });
-    }
-
-    gsap.set(revealWrappers, {
-      autoAlpha: 1,
+    gsap.matchMedia().add('(max-width: 800px)', () => {
+      setScaleValue(2.7);
     });
-
-    gsap.set('.pageHome__footer small', {
-      autoAlpha: 0,
-      x: -10,
+    gsap.matchMedia().add('(min-width: 800px)', () => {
+      setScaleValue(2);
     });
+  });
 
-    gsap.set('.cListLine', {
-      scaleY: 0,
-      transformOrigin: 'top left',
-      autoAlpha: 0,
-    });
+  function scaleImages() {
+    const body = document.querySelector('body');
 
-    gsap.set(['.cTitleItem', '.cListItem'], {
-      y: 40,
-      autoAlpha: 0,
-      transformStyle: 'preserve-3d',
-    });
+    body?.classList.remove('active');
 
-    const tl = gsap.timeline({
-      defaults: {
-        ease: 'ease-in-out-cubic',
+    gsap.timeline().to(
+      '.img-container',
+      {
+        //   display: "block",
+        scale: 1,
+        delay: 1,
+        transformOrigin: 'center',
+        duration: 1.5,
+        ease: 'power2.inOut',
+        onStart: () => {
+          const zoomImages = gsap.utils.toArray(
+            '.zoom-images'
+          ) as HTMLElement[];
+
+          gsap.to(zoomImages[0], {
+            opacity: 1,
+            duration: 0,
+            onComplete: () => {
+              gsap.to(zoomImages, {
+                opacity: 1,
+              });
+              gsap.to('.image-number-container', {
+                opacity: 1,
+                delay: 1,
+                duration: 1,
+              });
+            },
+          });
+        },
+        onComplete: () => {
+          gsap.to('.home-screen', {
+            opacity: 1,
+          });
+          const imgConts = document.querySelectorAll('.img-container');
+          imgConts.forEach((cont) => {
+            cont.classList.add('active');
+          });
+        },
       },
+      '<'
+    );
+  }
+
+  // Images being scaled by the whitespace heights along with number animation
+  useGSAP(() => {
+    const allImages = document.querySelectorAll('.zoom-images');
+    const allHeights = document.querySelectorAll('.white-height');
+    const allNumbers = document.querySelectorAll('.image-number');
+
+    allImages.forEach((pic, idx) => {
+      gsap.to(pic, {
+        scale: 1.2,
+        ease: 'power2.inOut',
+        scrollTrigger: {
+          trigger: allHeights[idx],
+          scrub: 1,
+          end: 'bottom bottom',
+          start: idx === 0 ? '-100% bottom' : '-60% bottom',
+        },
+      });
     });
 
-    if (imageWrapper && image) {
-      tl.to(imageWrapper, {
-        clipPath: 'inset(0% 0 0 0)',
-        duration: 1.2,
+    allNumbers.forEach((num, idx) => {
+      const imgContainer = document.querySelector(
+        '.image-number-list'
+      ) as HTMLElement;
+
+      const gap = window.getComputedStyle(imgContainer).gap;
+
+      gsap.to('.image-number-list', {
+        ease: 'power2.inOut',
+        scrollTrigger: {
+          trigger: allHeights[idx],
+          end: 'bottom bottom',
+          start: idx === 0 ? '-150% bottom' : '-60% bottom',
+          scrub: true,
+          onEnter: () => {
+            imgContainer.style.transform = `translate(0px, -${(num.clientHeight + parseFloat(gap)) * idx}px)`;
+          },
+          onEnterBack: () => {
+            imgContainer.style.transform = `translate(0px, -${(num.clientHeight + parseFloat(gap)) * idx}px)`;
+          },
+        },
+      });
+    });
+
+    const revealHome = gsap
+      .timeline()
+      .to('.img-container', {
+        yPercent: -100,
       })
-        .to(
-          image,
-          {
-            scale: 1,
-            filter: 'brightness(100%)',
-            duration: 1.2,
-          },
-          '<'
-        )
-        .to(
-          listLine,
-          {
-            scaleY: 1,
-            duration: 1.2,
-            autoAlpha: 1,
-            stagger: 0.05,
-          },
-          '-=1.1'
-        )
-        .to(
-          ['.cTitleItem', '.cListItem'],
-          {
-            y: 0,
-            autoAlpha: 1,
-            stagger: 0.05,
-            duration: 0.8,
-            ease: 'power2.out',
-          },
-          '-=0.5'
-        )
-        .to(
-          '.pageHome__footer small',
-          {
-            autoAlpha: 0.4,
-            x: 0,
-            stagger: 0.1,
-            duration: 0.6,
-          },
-          '-=0.8'
-        );
-    }
+      .to(
+        '.image-number-container',
+        {
+          y: -innerHeight,
+        },
+        '<'
+      );
 
-    setActiveWork(FEATURED_WORKS[0]);
-
-    FEATURED_WORKS.forEach((work, index) => {
-      if (index === 0) {
-        gsap.set(imagesRef.current[work.key], {
-          autoAlpha: 1,
-          position: 'relative',
-          zIndex: 2,
-        });
-      } else {
-        gsap.set(imagesRef.current[work.key], {
-          autoAlpha: 0,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          zIndex: 1,
-        });
-      }
+    // Animation to reveal home screen
+    ScrollTrigger.create({
+      trigger: '.home-controller',
+      scrub: 1,
+      animation: revealHome,
+      start: 'top bottom',
+      end: 'top top',
+      markers: true,
     });
+  }, [scaleValue]);
 
-    return () => {
-      tl.kill();
-    };
+  const [picDimension, setPicDimension] = useState<number | null>();
+
+  // Updates the value of the height and width on resize
+  useEffect(() => {
+    const biggerValue = Math.max(innerHeight, innerWidth);
+    setPicDimension(biggerValue);
+
+    window.addEventListener('resize', () => {
+      setPicDimension(biggerValue);
+    });
   }, []);
 
-  useEffect(() => {
-    if (!activeWork || !imageWrapperRef.current) return;
-
-    FEATURED_WORKS.forEach((work) => {
-      if (work.key !== activeWork.key && imagesRef.current[work.key]) {
-        gsap.to(imagesRef.current[work.key], {
-          autoAlpha: 0,
-          duration: 0.5,
-          ease: 'power2.out',
-          zIndex: 1,
-        });
-      }
-    });
-
-    if (imagesRef.current[activeWork.key]) {
-      gsap.to(imagesRef.current[activeWork.key], {
-        autoAlpha: 1,
-        duration: 0.5,
-        ease: 'power2.in',
-        zIndex: 2,
-      });
-    }
-  }, [activeWork]);
-
   return (
-    <PageWrapper showHeader={true} className="pageHome" lenis isHome={false}>
-      <section className="pageHome__main">
-        <div className="pageHome__main-leftSlot">
-          <div
-            className="pageHome__main-workImg cImg-reveal"
-            ref={imageWrapperRef}
-          >
-            {FEATURED_WORKS.map((work) => (
+    <section className="w-[100%] h-[100%]">
+      <PageWrapper showHeader={true} className="pageHome" lenis>
+        {pictures.map((pic, idx) => {
+          return (
+            <div
+              key={idx}
+              className="fixed h-[100vh] w-[100%] flex justify-center  scale-0 items-center img-container inset-0"
+              style={{ zIndex: 11 }}
+            >
               <Image
-                key={work.key}
-                ref={(el) => {
-                  imagesRef.current[work.key] = el;
+                src={pic}
+                className={`zoom-images scale-0  object-cover ${idx > 0 ? 'opacity-0' : ''} relative inset-0`}
+                style={{
+                  zIndex: 11,
+                  width: `${picDimension}px`,
+                  height: `${picDimension}px`,
                 }}
-                width={377}
-                height={500}
-                src={work.img}
-                alt={`${work.title} image`}
-                data-title={work.key}
-                priority
+                alt=""
               />
-            ))}
-          </div>
-        </div>
+            </div>
+          );
+        })}
 
-        <div className="pageHome__main-rightSlot">
-          <div className="pageHome__main-details">
-            <div className="pageHome__main-details--line cListLine" />
-            <h4 className="pageHome__main-details--title cTitleItem">Cases</h4>
-
-            <div className="pageHome__main-details--group">
-              <div className={`pageHome__main-details--list`}>
-                <div className="pageHome__main-details--listTitle cTitleItem">
-                  Featured
-                </div>
-                {FEATURED_WORKS.map((work) => (
-                  <p
-                    key={work.id}
-                    className={`pageHome__main-details--listItem cListItem cursor-pointer ${activeWork?.key === work.key ? 'active' : ''}`}
-                    onMouseEnter={() => setActiveWork(work)}
-                  >
-                    <a
-                      link-interaction="no-line"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      {work.title}
-                    </a>
-                  </p>
-                ))}
-              </div>
-
-              <div className={`pageHome__main-details--list`}>
-                <div className="pageHome__main-details--listTitle cTitleItem">
-                  Core services
-                </div>
-
-                <p className={`pageHome__main-details--listItem cListItem`}>
-                  Web, Product and Motion Design
+        <div className="flex items-start gap-[4px] image-number-container opacity-0 fixed bottom-[100px] left-[50%] translate-x-[-50%] z-[13] h-[19px] overflow-hidden mix-blend-difference leading-[100%]">
+          <div className="flex flex-col gap-[30px] image-number-list duration-500 ease-in-out">
+            {pictures.map((pic, idx) => {
+              return (
+                <p key={idx} className="image-number">
+                  {idx + 1}
                 </p>
-              </div>
-            </div>
+              );
+            })}
           </div>
-
-          <div className="pageHome__main-details">
-            <div className="pageHome__main-details--line cListLine" />
-            <h4 className="pageHome__main-details--title cTitleItem">Bio</h4>
-
-            <div className={`pageHome__main-details--list`}>
-              <div className="pageHome__main-details--listTitle cTitleItem">
-                Based in Lagos
-              </div>
-
-              <p className={`pageHome__main-details--listItem cListItem`}>
-                Creative visual designer focused on playing with layout
-                compositions, colors and typography to create immersive digital
-                experiences.
-              </p>
-            </div>
-          </div>
+          <div className="w-[20px] h-[1px] bg-white translate-y-[9px]"></div>
+          <p>{pictures.length}</p>
         </div>
-      </section>
 
-      <div className="pageHome__footer">
-        <small>
-          Currently at{' '}
-          <a link-interaction="no-line" target="_blank" rel="noopener">
-            Balky Studio
-          </a>
-        </small>
-        <small></small>
-      </div>
-    </PageWrapper>
+        {/* White space Heights to control the picture animation */}
+        {pictures.map((pic, idx) => {
+          return (
+            <div
+              key={idx}
+              style={{ height: `${innerHeight * 2.8}px` }}
+              className=" w-[100%] white-height"
+            ></div>
+          );
+        })}
+
+        <div
+          className=" w-[100%] home-controller bg-[transparent] relative "
+          style={{ height: `${innerHeight * 1.3}px` }}
+        ></div>
+
+        <div className="fixed inset-0 w-[100%] h-[100%] home-screen flex justify-end items-end">
+          <MainHomePage />
+        </div>
+      </PageWrapper>
+    </section>
   );
 }
