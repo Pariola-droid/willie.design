@@ -15,6 +15,16 @@ export const bagoss = localFont({
       weight: 'normal',
       style: 'normal',
     },
+    {
+      path: '../../public/fonts/bs/BSM.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/bs/BSSB.woff2',
+      weight: '600',
+      style: 'normal',
+    },
   ],
 });
 
