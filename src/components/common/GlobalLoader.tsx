@@ -23,6 +23,7 @@ export default function GlobalLoader() {
         gsap.set(loaderRef.current, {
           display: 'none',
           autoAlpha: 0,
+          // filter: 'brightness(0)',
         });
       }
     } else {
@@ -33,9 +34,11 @@ export default function GlobalLoader() {
 
   useGSAP(() => {
     if (!hasLoaded && loaderRef.current) {
-      const split = new SplitType('.split', { types: 'words,chars' });
+      const split = new SplitType('.split-loader-text', {
+        types: 'words,chars',
+      });
       const allTextContainers = document.querySelectorAll('.text-container');
-      const splitNames = document.querySelectorAll('.split-name .char');
+      const splitNames = document.querySelectorAll('.split-loader-name .char');
 
       splitNames.forEach((char) => {
         gsap.set(char, { y: 100 });
@@ -44,6 +47,7 @@ export default function GlobalLoader() {
       gsap.set(loaderRef.current, {
         display: 'flex',
         autoAlpha: 1,
+        // filter: 'brightness(1)',
       });
 
       for (let i = 0; i < 2; i++) {
@@ -51,7 +55,7 @@ export default function GlobalLoader() {
         loaderTimeline.current
           .to(
             i > 0
-              ? document.querySelector('.split-desc')
+              ? document.querySelector('.split-loader-desc')
               : container.querySelectorAll('.char'),
             {
               y: 0,
@@ -82,12 +86,14 @@ export default function GlobalLoader() {
               onComplete: () => {
                 gsap.to(loaderRef.current, {
                   autoAlpha: 0,
+                  // filter: 'brightness(0)',
                   delay: 0.8,
                   duration: 0.5,
                   onComplete: () => {
                     gsap.set(loaderRef.current, {
                       display: 'none',
                       autoAlpha: 0,
+                      // filter: 'brightness(0)',
                     });
 
                     const revealTl = gsap.timeline({
@@ -138,11 +144,15 @@ export default function GlobalLoader() {
   return (
     <div ref={loaderRef} className="global__loader">
       <div className="text-container absolute overflow-hidden">
-        <p className="leading-[100%] split split-name">Williams</p>
-        <p className="ml-[100px] leading-[100%] split split-name">Alamu</p>
+        <p className="leading-[100%] split-loader-text split-loader-name">
+          Williams
+        </p>
+        <p className="ml-[100px] leading-[100%] split-loader-text split-loader-name">
+          Alamu
+        </p>
       </div>
       <div className="text-container absolute overflow-hidden">
-        <p className="text-zoom scale-[0.2] opacity-0 split-desc mb-[10px] split">
+        <p className="text-zoom scale-[0.2] opacity-0 split-loader-desc mb-[10px] split-loader-text">
           a creative visual designer
         </p>
       </div>

@@ -10,9 +10,13 @@
     background-color: $white;
 
     & * {
-      font-size: toRem(48);
+      font-size: toRem(32);
       color: $black;
-      // pointer-events: none;
+      pointer-events: none;
+
+      @include media('>tablet') {
+        font-size: toRem(48);
+      }
     }
   }
 }

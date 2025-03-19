@@ -52,7 +52,6 @@ export default function HomePage() {
     gsap.timeline().to(
       '.img-container',
       {
-        //   display: "block",
         scale: 1,
         delay: 1,
         transformOrigin: 'center',
@@ -173,7 +172,12 @@ export default function HomePage() {
 
   return (
     <section className="w-[100%] h-[100%]">
-      <PageWrapper showHeader={true} className="pageHome" lenis>
+      <PageWrapper
+        showHeader={true}
+        className="pageHomeRoot"
+        overflowClass="loader"
+        lenis
+      >
         {pictures.map((pic, idx) => {
           return (
             <div
@@ -225,7 +229,7 @@ export default function HomePage() {
           style={{ height: `${innerHeight * 1.3}px` }}
         ></div>
 
-        <div className="fixed inset-0 w-[100%] h-[100%] home-screen flex justify-end items-end">
+        <div className="pageHome home-screen">
           <MainHomePage />
         </div>
       </PageWrapper>
