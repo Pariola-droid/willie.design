@@ -37,6 +37,7 @@ export default function HomePage() {
   const [scaleValue, setScaleValue] = useState(2);
   const hasLoaded = useStore((state) => state.hasLoaded);
   const setHasLoaded = useStore((state) => state.setHasLoaded);
+  const setIsHomeRevealed = useStore((state) => state.setIsHomeRevealed);
   const [picDimension, setPicDimension] = useState<number | undefined>();
 
   const lenisRef = useRef<Lenis | null>(null);
@@ -54,7 +55,6 @@ export default function HomePage() {
       gsap.set(zoomImages[0], { opacity: 1, scale: 1 });
     }
 
-    // Original animation for other containers
     gsap.timeline().to(
       '.img-container',
       {
@@ -217,6 +217,14 @@ export default function HomePage() {
       start: 'top bottom',
       end: 'top top',
       // markers: false,
+      onLeave: () => {
+        setTimeout(() => {
+          setIsHomeRevealed(true);
+        }, 100);
+      },
+      onEnterBack: () => {
+        setIsHomeRevealed(false);
+      },
     });
 
     scrollTriggersRef.current.push(finalTrigger);

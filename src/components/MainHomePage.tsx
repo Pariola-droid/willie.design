@@ -1,5 +1,6 @@
 'use client';
 
+import { useStore } from '@/lib/store';
 import { FEATURED_WORKS } from '@/utils/constant';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
@@ -20,9 +21,13 @@ interface IFeaturedWork {
 
 export default function MainHomePage() {
   const router = useRouter();
+  const isHomeRevealed = useStore((state) => state.isHomeRevealed);
+
   const [activeWork, setActiveWork] = useState<IFeaturedWork | null>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<{ [key: string]: HTMLImageElement | null }>({});
+  const hasAnimatedRef = useRef(false);
+  const tl = useRef(gsap.timeline({ paused: true }));
 
   useEffect(() => {
     const titleItem = document.querySelectorAll('.cTitleItem');
@@ -79,17 +84,20 @@ export default function MainHomePage() {
       transformStyle: 'preserve-3d',
     });
 
-    const tl = gsap.timeline({
+    tl.current.clear();
+    tl.current = gsap.timeline({
       defaults: {
         ease: 'ease-in-out-cubic',
       },
+      paused: true,
     });
 
     if (imageWrapper && image) {
-      tl.to(imageWrapper, {
-        clipPath: 'inset(0% 0 0 0)',
-        duration: 1.2,
-      })
+      tl.current
+        .to(imageWrapper, {
+          clipPath: 'inset(0% 0 0 0)',
+          duration: 1.2,
+        })
         .to(
           image,
           {
@@ -153,9 +161,19 @@ export default function MainHomePage() {
     });
 
     return () => {
-      tl.kill();
+      tl.current.kill();
     };
   }, []);
+
+  useEffect(() => {
+    if (isHomeRevealed && !hasAnimatedRef.current) {
+      tl.current.play();
+      hasAnimatedRef.current = true;
+    } else if (!isHomeRevealed && hasAnimatedRef.current) {
+      tl.current.reverse();
+      hasAnimatedRef.current = false;
+    }
+  }, [isHomeRevealed]);
 
   useEffect(() => {
     if (!activeWork || !imageWrapperRef.current) return;
