@@ -39,6 +39,7 @@ export const FEATURED_WORKS = [
   {
     id: 1,
     key: 'the-maker',
+    url: 'the-maker-studio',
     title: 'The Maker Studio',
     img: '/images/featured/casestudy/the-maker.webp',
     videoUrl: '/images/featured/casestudy/the-maker.mp4',
@@ -46,6 +47,7 @@ export const FEATURED_WORKS = [
   {
     id: 2,
     key: 'the-balky',
+    url: 'balky-studio',
     title: 'Balky Studio',
     img: '/images/featured/casestudy/the-balky.webp',
     videoUrl: '/images/featured/casestudy/the-balky.mp4',
@@ -53,6 +55,7 @@ export const FEATURED_WORKS = [
   {
     id: 3,
     key: 'the-topsphere',
+    url: 'topsphere-media',
     title: 'Topsphere Media',
     img: '/images/featured/casestudy/the-topsphere.webp',
     videoUrl: '/images/featured/casestudy/the-topsphere.mp4',

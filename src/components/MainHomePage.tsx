@@ -4,6 +4,7 @@ import { useStore } from '@/lib/store';
 import { FEATURED_WORKS } from '@/utils/constant';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
+import Link from 'next/link';
 import { Fragment, useEffect, useRef, useState } from 'react';
 
 gsap.registerPlugin(CustomEase);
@@ -12,6 +13,7 @@ CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
 interface IFeaturedWork {
   id: number;
+  url: string;
   title: string;
   key: string;
   img: string;
@@ -271,13 +273,9 @@ export default function MainHomePage() {
                     className={`pageHome__main-details--listItem cListItem cursor-pointer ${activeWork?.key === work.key ? 'active' : ''}`}
                     onMouseEnter={() => setActiveWork(work)}
                   >
-                    <a
-                      link-interaction="no-line"
-                      target="_blank"
-                      rel="noopener"
-                    >
+                    <Link link-interaction="no-line" href={`/work/${work.url}`}>
                       {work.title}
-                    </a>
+                    </Link>
                   </p>
                 ))}
               </div>
