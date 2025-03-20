@@ -69,6 +69,8 @@ export default function PageWrapper(props: PageWrapperProps) {
   const mobileHeaderRootRef = useRef<HTMLDivElement>(null);
   const mobileHeaderRef = useRef<HTMLDivElement>(null);
   const setIsAnimating = useStore((state) => state.setIsAnimating);
+  const hasLoaded = useStore((state) => state.hasLoaded);
+  const setHasLoaded = useStore((state) => state.setHasLoaded);
 
   const {
     backButton,
@@ -238,8 +240,19 @@ export default function PageWrapper(props: PageWrapperProps) {
 
   return (
     <div className={`wp ${overflowClass}`}>
-      <GlobalLoader />
-      {error && <GlobalError error={error} resetError={fetchWorks} />}
+      <GlobalLoader
+        hasLoaded={hasLoaded}
+        setHasLoaded={setHasLoaded}
+        setIsAnimating={setIsAnimating}
+        isDataReady={works.length > 0}
+      />
+      {error && (
+        <GlobalError
+          error={error}
+          resetError={fetchWorks}
+          setIsAnimating={setIsAnimating}
+        />
+      )}
 
       {showHeader && (
         <header

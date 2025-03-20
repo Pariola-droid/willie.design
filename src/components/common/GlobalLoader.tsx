@@ -1,6 +1,5 @@
 'use client';
 
-import { useStore } from '@/lib/store';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/all';
@@ -10,10 +9,19 @@ import SplitType from 'split-type';
 gsap.registerPlugin(CustomEase);
 CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 
-export default function GlobalLoader() {
-  const hasLoaded = useStore((state) => state.hasLoaded);
-  const setHasLoaded = useStore((state) => state.setHasLoaded);
-  const setIsAnimating = useStore((state) => state.setIsAnimating);
+interface GlobalLoaderProps {
+  hasLoaded: boolean;
+  setHasLoaded: (hasLoaded: boolean) => void;
+  setIsAnimating: (isAnimating: boolean) => void;
+  isDataReady: boolean;
+}
+
+export default function GlobalLoader({
+  hasLoaded,
+  setHasLoaded,
+  setIsAnimating,
+  isDataReady,
+}: GlobalLoaderProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
   const loaderTimeline = useRef<GSAPTimeline>(gsap.timeline());
 

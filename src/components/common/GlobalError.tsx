@@ -1,6 +1,5 @@
 'use client';
 
-import { useStore } from '@/lib/store';
 import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
 import Link from 'next/link';
@@ -12,15 +11,18 @@ CustomEase.create('ease-in-out-cubic', '0.645,0.045,0.355,1');
 interface GlobalErrorProps {
   error: Error | null;
   resetError?: () => void;
+  setIsAnimating: (isAnimating: boolean) => void;
 }
 
-export default function GlobalError({ error, resetError }: GlobalErrorProps) {
+export default function GlobalError({
+  error,
+  resetError,
+  setIsAnimating,
+}: GlobalErrorProps) {
   const errorRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const textSpansRef = useRef<HTMLSpanElement[]>([]);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const setIsAnimating = useStore((state) => state.setIsAnimating);
 
   useEffect(() => {
     if (!errorRef.current) return;
