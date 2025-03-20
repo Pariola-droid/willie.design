@@ -40,19 +40,22 @@ export const FEATURED_WORKS = [
     id: 1,
     key: 'the-maker',
     title: 'The Maker Studio',
-    img: '/images/works/the-maker.webp',
+    img: '/images/featured/casestudy/the-maker.webp',
+    videoUrl: '/images/featured/casestudy/the-maker.mp4',
   },
   {
     id: 2,
     key: 'the-balky',
     title: 'Balky Studio',
-    img: '/images/works/the-balky.webp',
+    img: '/images/featured/casestudy/the-balky.webp',
+    videoUrl: '/images/featured/casestudy/the-balky.mp4',
   },
   {
     id: 3,
     key: 'the-topsphere',
     title: 'Topsphere Media',
-    img: '/images/works/the-topsphere.webp',
+    img: '/images/featured/casestudy/the-topsphere.webp',
+    videoUrl: '/images/featured/casestudy/the-topsphere.mp4',
   },
 ];
 

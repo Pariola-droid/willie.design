@@ -34,7 +34,7 @@ export default function HomePage() {
   ];
 
   const { innerHeight, innerWidth } = window;
-  const [scaleValue, setScaleValue] = useState(2);
+  const [scaleValue, setScaleValue] = useState(1.5);
   const hasLoaded = useStore((state) => state.hasLoaded);
   const setHasLoaded = useStore((state) => state.setHasLoaded);
   const setIsHomeRevealed = useStore((state) => state.setIsHomeRevealed);
@@ -236,7 +236,7 @@ export default function HomePage() {
       onLeave: () => {
         setTimeout(() => {
           setIsHomeRevealed(true);
-        }, 100);
+        }, 10);
       },
       onEnterBack: () => {
         setIsHomeRevealed(false);
@@ -289,23 +289,18 @@ export default function HomePage() {
           </div>
         ))}
 
-        <div
-          className="flex items-center justify-center gap-[4px] image-number-container opacity-0 fixed bottom-[32px] left-[50%] translate-x-[-50%] z-[13] h-[19px] overflow-hidden mix-blend-difference leading-[100%]"
-          aria-hidden="true"
-        >
-          {/* <div className="flex flex-col gap-[30px] image-number-list duration-500 ease-in-out">
-            {pictures.map((_, idx) => (
-              <p
-                key={idx}
-                className="image-number text-center w-[16px] h-[19px]"
-              >
-                {idx + 1}
-              </p>
-            ))}
-          </div> */}
-          <p className="h-[19px] text-center w-[16px"></p>
-          <div className="w-[20px] h-[1px] bg-white"></div>
-          <p className="h-[19px] text-center w-[16px]">{pictures.length}</p>
+        <div className="flex items-start gap-[4px] image-number-container opacity-0 fixed bottom-[32px] left-[50%] translate-x-[-50%] z-[13] h-[19px] overflow-hidden mix-blend-difference leading-[100%]">
+          <div className="flex flex-col gap-[30px] image-number-list duration-500 ease-in-out">
+            {pictures.map((pic, idx) => {
+              return (
+                <p key={idx} className="image-number">
+                  {idx + 1}
+                </p>
+              );
+            })}
+          </div>
+          <div className="w-[20px] h-[1px] bg-white translate-y-[9px]"></div>
+          <p>{pictures.length}</p>
         </div>
 
         {/* White space Heights to control the picture animation */}

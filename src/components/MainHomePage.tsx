@@ -4,8 +4,6 @@ import { useStore } from '@/lib/store';
 import { FEATURED_WORKS } from '@/utils/constant';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/dist/CustomEase';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useRef, useState } from 'react';
 
 gsap.registerPlugin(CustomEase);
@@ -17,15 +15,15 @@ interface IFeaturedWork {
   title: string;
   key: string;
   img: string;
+  videoUrl?: string;
 }
 
 export default function MainHomePage() {
-  const router = useRouter();
   const isHomeRevealed = useStore((state) => state.isHomeRevealed);
 
   const [activeWork, setActiveWork] = useState<IFeaturedWork | null>(null);
-  const imageWrapperRef = useRef<HTMLDivElement>(null);
-  const imagesRef = useRef<{ [key: string]: HTMLImageElement | null }>({});
+  const videoWrapperRef = useRef<HTMLDivElement>(null);
+  const videosRef = useRef<{ [key: string]: HTMLVideoElement | null }>({});
   const hasAnimatedRef = useRef(false);
   const tl = useRef(gsap.timeline({ paused: true }));
 
@@ -48,19 +46,21 @@ export default function MainHomePage() {
       wrapper.appendChild(item);
     });
 
-    const imageWrapper = document.querySelector('.cImg-reveal');
-    const image = imageWrapper?.querySelector('img');
+    const videoWrapper = document.querySelector('.cImg-reveal');
+    const video = videoWrapper?.querySelector('video');
     const revealWrappers = gsap.utils.toArray('.cText-wrapper');
 
-    if (imageWrapper && image) {
-      gsap.set(imageWrapper, {
+    if (videoWrapper) {
+      gsap.set(videoWrapper, {
         clipPath: 'inset(100% 0 0 0)',
       });
 
-      gsap.set(image, {
-        filter: 'brightness(20%)',
-        scale: 1.4,
-      });
+      if (video) {
+        gsap.set(video, {
+          filter: 'brightness(20%)',
+          scale: 1.4,
+        });
+      }
     }
 
     gsap.set(revealWrappers, {
@@ -92,14 +92,14 @@ export default function MainHomePage() {
       paused: true,
     });
 
-    if (imageWrapper && image) {
+    if (videoWrapper && video) {
       tl.current
-        .to(imageWrapper, {
+        .to(videoWrapper, {
           clipPath: 'inset(0% 0 0 0)',
           duration: 1.2,
         })
         .to(
-          image,
+          video,
           {
             scale: 1,
             filter: 'brightness(100%)',
@@ -143,14 +143,19 @@ export default function MainHomePage() {
     setActiveWork(FEATURED_WORKS[0]);
 
     FEATURED_WORKS.forEach((work, index) => {
+      const videoElement = videosRef.current[work.key];
+
+      if (!videoElement) return;
+
       if (index === 0) {
-        gsap.set(imagesRef.current[work.key], {
+        gsap.set(videoElement, {
           autoAlpha: 1,
           position: 'relative',
           zIndex: 2,
         });
+        videoElement.load();
       } else {
-        gsap.set(imagesRef.current[work.key], {
+        gsap.set(videoElement, {
           autoAlpha: 0,
           position: 'absolute',
           top: 0,
@@ -176,25 +181,46 @@ export default function MainHomePage() {
   }, [isHomeRevealed]);
 
   useEffect(() => {
-    if (!activeWork || !imageWrapperRef.current) return;
+    if (!activeWork || !videoWrapperRef.current) return;
 
     FEATURED_WORKS.forEach((work) => {
-      if (work.key !== activeWork.key && imagesRef.current[work.key]) {
-        gsap.to(imagesRef.current[work.key], {
+      const video = videosRef.current[work.key];
+      if (!video) return;
+
+      if (work.key !== activeWork.key) {
+        gsap.to(video, {
           autoAlpha: 0,
           duration: 0.5,
           ease: 'power2.out',
           zIndex: 1,
+          onComplete: () => {
+            video.pause();
+          },
         });
       }
     });
 
-    if (imagesRef.current[activeWork.key]) {
-      gsap.to(imagesRef.current[activeWork.key], {
+    const activeVideo = videosRef.current[activeWork.key];
+    if (activeVideo) {
+      gsap.to(activeVideo, {
         autoAlpha: 1,
         duration: 0.5,
         ease: 'power2.in',
         zIndex: 2,
+        onComplete: () => {
+          if (activeVideo.readyState >= 2) {
+            activeVideo
+              .play()
+              .catch((err) => console.error('Video play failed:', err));
+          } else {
+            activeVideo.load();
+            activeVideo.oncanplay = () => {
+              activeVideo
+                .play()
+                .catch((err) => console.error('Video play failed:', err));
+            };
+          }
+        },
       });
     }
   }, [activeWork]);
@@ -205,21 +231,26 @@ export default function MainHomePage() {
         <div className="pageHome__main-leftSlot">
           <div
             className="pageHome__main-workImg cImg-reveal"
-            ref={imageWrapperRef}
+            ref={videoWrapperRef}
           >
             {FEATURED_WORKS.map((work) => (
-              <Image
+              <video
                 key={work.key}
                 ref={(el) => {
-                  imagesRef.current[work.key] = el;
+                  videosRef.current[work.key] = el;
                 }}
-                width={377}
-                height={500}
-                src={work.img}
-                alt={`${work.title} image`}
-                data-title={work.key}
-                priority
-              />
+                className="featured-work-video"
+                width="377"
+                height="500"
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                poster={work.img}
+              >
+                <source src={work.videoUrl || '#'} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             ))}
           </div>
         </div>
