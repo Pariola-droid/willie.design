@@ -18,5 +18,5 @@ export default function Error({
     console.error('Application error:', error);
   }, [error]);
 
-  return <GlobalError error={errorState} resetError={reset} />;
+  return <GlobalError error={errorState as Error | null} resetError={reset} />;
 }
